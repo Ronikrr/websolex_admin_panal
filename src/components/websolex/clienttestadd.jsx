@@ -7,7 +7,7 @@ import Primary from '../ui/primary'
 import Seconduray from '../ui/seconduray';
 import Breadcrumb from '../ui/breadcrumb';
 import Textarea from '../ui/textarea';
-
+import FeedbackMessage from '../ui/feedback';
 const Clienttestadd = () => {
     const [isOpenModel, setIsOpenModel] = useState(false);
     const [isOpenAddModel, setIsOpenAddModel] = useState(false);
@@ -20,9 +20,11 @@ const Clienttestadd = () => {
     const [rate, setRate] = useState(1);
     const [errors, setErrors] = useState({});
     const [isOpenLastAll, setIsOpenLastAll] = useState(false);
-    const [issucess, setissucess] = useState(false)
-    const [SucsessMessage, setSucsessMessage] = useState(null);
+    const [feedback, setFeedback] = useState({ message: '', type: '' });
 
+    const handleClear = () => {
+        setFeedback({ message: "", type: "" });
+    };
     useEffect(() => {
         setTimeout(() => {
             setIsOpenLastAll(false);
@@ -37,7 +39,10 @@ const Clienttestadd = () => {
             setLeads(data);
 
         } catch (error) {
-            setErrors("Error fetching team members:", error);
+            setFeedback({
+                message: `Error fetching team members:${error}`,
+                type: 'success',
+            });
         }
     };
     useEffect(() => {
@@ -81,19 +86,21 @@ const Clienttestadd = () => {
                 body: formData,
             });
             if (response.status === 200) {
-                setIsOpenAddModel(false);
-                setSucsessMessage(true);
-                setissucess('client rate  added:', response.data.clientrateadd.savedclientratekadd);
-                setTimeout(() => {
-                    setSucsessMessage(false);
-                }, 2000);
-                setLeads([...leads, response.data.clientrateadd.savedclientratekadd]);
+                setIsOpenModel(false);
+                setFeedback({
+                    message: `client rate  added`,
+                    type: 'success',
+                });
+                const result = await response.json();
+                setLeads([...leads, result.data.clientrateadd.savedclientratekadd]);
                 resetFormFields(e);
             }
 
         } catch (error) {
-            console.error("Error adding client rate:", error.response ? error.response.data : error.message);
-            setErrors({ ...errors, server: "Failed to add lead. Please try again." });
+            setFeedback({
+                message: `Failed to add lead. Please try again.${error.response ? error.response.data : error.message}`,
+                type: 'error',
+            });
         }
     };
 
@@ -122,13 +129,18 @@ const Clienttestadd = () => {
             const result = await response.json();
             if (response.status === 200) {
                 setIsOpenModel(false);
-                setSucsessMessage(true);
-                setissucess("client rate is updated")
                 setLeads(leads.map((lead) => (lead._id === selectedLead._id ? result.member : lead)));
+                setFeedback({
+                    message: `client rate is updated`,
+                    type: 'success',
+                });
                 resetFormFields(e);
             }
         } catch (error) {
-            console.error("Error updating team member:", error);
+            setFeedback({
+                message: `Error updating team member:: ${error}`,
+                type: 'error',
+            });
         }
     };
     const resetFormFields = (e) => {
@@ -167,8 +179,15 @@ const Clienttestadd = () => {
                 method: 'DELETE',
             });
             setLeads(leads.filter((lead) => lead._id !== id));
+            setFeedback({
+                message: `our team deleted success`,
+                type: 'success',
+            });
         } catch (error) {
-            console.error("Error deleting team member:", error);
+            setFeedback({
+                message: `Error deleting team member. Please try again.${error.response ? error.response.data : error.message}`,
+                type: 'error',
+            });
         }
     };
 
@@ -190,13 +209,8 @@ const Clienttestadd = () => {
     };
     return (
         <div className="w-full bg-gray-100 ">
-            {issucess && (
-                <div
-                    className={`fixed top-4 left-0 transform -translate-x-1/2 bg-green-500 text-white px-10 py-6 rounded shadow-lg transition-transform duration-500 ${SucsessMessage ? "translate-x-0  opacity-100" : "-translate-x-[500px] opacity-0"
-                        }`}
-                >
-                    {issucess}
-                </div>
+            {feedback.message && (
+                <FeedbackMessage message={feedback.message} type={feedback.type} onClear={handleClear} />
             )}
             <div className="flex items-center justify-between mb-4">
                 <h1 className='capitalize text-[26px] font-semibold  '>testimonial</h1>

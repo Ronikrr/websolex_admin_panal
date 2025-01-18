@@ -21,13 +21,13 @@ const Servicepagesection = () => {
     const [isOpenLastAll, setIsOpenLastAll] = useState(false);
     const [isOpenAddModel, setIsOpenAddModel] = useState(false);
     const [feedback, setFeedback] = useState({ message: '', type: '' });
-    const toggleViewMode = (leads) => {
-        setSelectedLead(leads);
-        setIsViewMode(true);
-    };
 
     const handleClear = () => {
         setFeedback({ message: "", type: "" });
+    };
+    const toggleViewMode = (leads) => {
+        setSelectedLead(leads);
+        setIsViewMode(true);
     };
 
     const API_URL = "https://websolex-admin.vercel.app/api/teampage";

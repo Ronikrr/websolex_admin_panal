@@ -18,8 +18,6 @@ const Valuedclientsection = () => {
     const [selectedLead, setSelectedLead] = useState(null);
     const [errors, setErrors] = useState({});
     const [isOpenLastAll, setIsOpenLastAll] = useState(false);
-    const [issucess, setissucess] = useState(false)
-    const [SucsessMessage, setSucsessMessage] = useState(null);
     const [feedback, setFeedback] = useState({ message: '', type: '' });
     const handleClear = () => {
         setFeedback({ message: "", type: "" });
