@@ -7,7 +7,7 @@ import Primary from '../ui/primary'
 import Seconduray from '../ui/seconduray';
 import Breadcrumb from '../ui/breadcrumb';
 import axios from 'axios';
-
+import FeedbackMessage from '../ui/feedback';
 
 
 const Servicepagesection = () => {
@@ -20,15 +20,15 @@ const Servicepagesection = () => {
     const [selectedLead, setSelectedLead] = useState(null);
     const [isOpenLastAll, setIsOpenLastAll] = useState(false);
     const [isOpenAddModel, setIsOpenAddModel] = useState(false);
-    const [issucess, setissucess] = useState(false)
-    const [SucsessMessage, setSucsessMessage] = useState(null);
-
+    const [feedback, setFeedback] = useState({ message: '', type: '' });
     const toggleViewMode = (leads) => {
         setSelectedLead(leads);
         setIsViewMode(true);
     };
 
-
+    const handleClear = () => {
+        setFeedback({ message: "", type: "" });
+    };
 
     const API_URL = "https://websolex-admin.vercel.app/api/teampage";
 
@@ -39,10 +39,13 @@ const Servicepagesection = () => {
             setLeads(data);
 
         } catch (error) {
-            setErrors("Error fetching team members:", error);
+            setFeedback({
+                message: `Error fetching team members:${error}`,
+                type: 'success',
+            });
         }
     };
- 
+
 
     useEffect(() => {
         fetchleads();
@@ -89,16 +92,21 @@ const Servicepagesection = () => {
                 headers: { "Content-Type": "multipart/form-data" }
             });
             if (response.status === 200) {
-                setIsOpenAddModel(false);
-                setissucess('Team member added:', response.data.member.savedMember);
-                setSucsessMessage(true);
-                setLeads([...leads, response.data.member.savedMember]);
+                setIsOpenModel(false);
+                setFeedback({
+                    message: `Team member added:`,
+                    type: 'success',
+                });
+                const result = await response.json();
+                setLeads([...leads, result.data.savedMember]);
                 resetFormFields(e);
             }
 
         } catch (error) {
-            console.error("Error adding team member:", error.response ? error.response.data : error.message);
-            setErrors({ ...errors, server: "Failed to add lead. Please try again." });
+            setFeedback({
+                message: `Failed to add lead. Please try again.${error.response ? error.response.data : error.message}`,
+                type: 'error',
+            });
         }
     };
 
@@ -129,14 +137,20 @@ const Servicepagesection = () => {
             });
             const result = await response.json();
             if (response.status === 200) {
-                setSucsessMessage(true);
-                setissucess("team is updated")
+                setIsOpenModel(false);
                 setLeads(leads.map((lead) => (lead._id === selectedLead._id ? result.member : lead)));
+                setFeedback({
+                    message: `Our team has been updated successfully!`,
+                    type: 'success',
+                });
                 resetFormFields(e);
             }
-            setIsOpenModel(false);
+
         } catch (error) {
-            console.error("Error updating team member:", error);
+            setFeedback({
+                message: `Error updating team member:: ${error}`,
+                type: 'error',
+            });
         }
     };
 
@@ -174,7 +188,7 @@ const Servicepagesection = () => {
     const handleEditClick = (lead) => {
         setSelectedLead(lead);
         setImagePreview(lead.image);
-        setIsOpenModel(true);   
+        setIsOpenModel(true);
     };
 
     const handleDelete = async (id) => {
@@ -183,8 +197,15 @@ const Servicepagesection = () => {
                 method: 'DELETE',
             });
             setLeads(leads.filter((lead) => lead._id !== id));
+            setFeedback({
+                message: `our team deleted success`,
+                type: 'success',
+            });
         } catch (error) {
-            console.error("Error deleting team member:", error);
+            setFeedback({
+                message: `Error deleting team member. Please try again.${error.response ? error.response.data : error.message}`,
+                type: 'error',
+            });
         }
     };
 
@@ -193,13 +214,8 @@ const Servicepagesection = () => {
 
     return (
         <div className="w-full h-screen bg-gray-100 ">
-            {issucess && (
-                <div
-                    className={`fixed top-4 left-0 transform -translate-x-1/2 bg-green-500 text-white px-10 py-6 rounded shadow-lg transition-transform duration-500 ${SucsessMessage ? "translate-x-0  opacity-100" : "-translate-x-[500px] opacity-0"
-                        }`}
-                >
-                    {issucess}
-                </div>
+            {feedback.message && (
+                <FeedbackMessage message={feedback.message} type={feedback.type} onClear={handleClear} />
             )}
             <div className="flex flex-col items-center justify-between mb-4 sm:flex-row">
                 <h1 className='capitalize text-[26px] font-semibold  '>team page</h1>
@@ -375,7 +391,7 @@ const Servicepagesection = () => {
                                 {errors.facebook && <p className="text-sm text-red-500">{errors.facebook}</p>}
                             </div>
 
-                            
+
                             <div className="flex flex-row w-full mb-3">
                                 <div className="flex flex-col w-8/12">
                                     <label className="text-gray-600">Image:</label>

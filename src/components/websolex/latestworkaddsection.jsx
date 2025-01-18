@@ -8,17 +8,17 @@ import Seconduray from '../ui/seconduray';
 import Breadcrumb from '../ui/breadcrumb';
 import Textarea from '../ui/textarea';
 import ProjectForm from './projectform'
+import FeedbackMessage from '../ui/feedback';
 const Latestworkaddsection = () => {
     const [isOpenModel, setIsOpenModel] = useState(false);
     const [isOpenAddModel, setIsOpenAddModel] = useState(false);
     const [imageFile, setImageFile] = useState(null);
-    const [imagePreview, setImagePreview] = useState(null);
     const [leads, setLeads] = useState([]);
     const [selectedLead, setSelectedLead] = useState(null);
-    const [issucess, setissucess] = useState(false)
-    const [SucsessMessage, setSucsessMessage] = useState(null);
+    const [imagePreview, setImagePreview] = useState(selectedLead?.image || '');
     const [errors, setErrors] = useState({});
     const [isOpenLastAll, setIsOpenLastAll] = useState(false);
+    const [feedback, setFeedback] = useState({ message: '', type: '' });
     const API_URL = "https://websolex-admin.vercel.app/api/lastworkadd";
 
     const fetchleads = async () => {
@@ -28,7 +28,10 @@ const Latestworkaddsection = () => {
             setLeads(data);
 
         } catch (error) {
-            setErrors("Error fetching team members:", error);
+            setFeedback({
+                message: `Error fetching team members:${error}`,
+                type: 'success',
+            });
         }
     };
 
@@ -59,33 +62,43 @@ const Latestworkaddsection = () => {
         const name = e.target.name.value;
         const description = e.target.description.value;
         const work = e.target.work.value;
+        const category = e.target.category.value;
         const formData = new FormData();
         formData.append("name", name);
         formData.append("description", description);
+        formData.append("category", category);
         formData.append("work", work);
         if (imageFile) formData.append("image_work", imageFile);
 
         // Validate form
-        if (!validateForm({ name, description, work, image_work: imageFile })) return;
+        if (!validateForm({ name, description, category, work, image_work: imageFile })) return;
 
         try {
             const response = await fetch('https://websolex-admin.vercel.app/api/lastworkadd', {
                 method: 'POST',
-               
                 body: formData,
             });
 
             if (response.status === 200) {
-                setIsOpenAddModel(false);
-                setSucsessMessage(true);
-                setissucess('our work added:', response.data.member.savedMember);
-                setLeads([...leads, response.data.member.savedMember]);
+                // Close the modal after successful addition
+                setIsOpenAddModel(false);  // Close the Add modal
+
+                const result = await response.json();
+                setLeads([...leads, result.data.savedMember]);
+
+                // Set success feedback
+                setFeedback({
+                    message: `Our work was added successfully!`,
+                    type: 'success',
+                });
+
                 resetFormFields();
             }
-
         } catch (error) {
-            console.error("Error adding team member:", error.response ? error.response.data : error.message);
-            setErrors({ ...errors, server: "Failed to add lead. Please try again." });
+            setFeedback({
+                message: `Failed to add lead. Please try again.${error.response ? error.response.data : error.message}`,
+                type: 'error',
+            });
         }
     };
 
@@ -94,15 +107,16 @@ const Latestworkaddsection = () => {
         const name = e.target.name.value;
         const description = e.target.description.value;
         const work = e.target.work.value;
-
+        const category = e.target.category.value;
 
         const formData = new FormData();
         formData.append("name", name);
         formData.append("description", description);
+        formData.append("category", category);
         formData.append("work", work);
         if (imageFile) formData.append("image_work", imageFile);
 
-        if (!validateForm({ name, description, work, image: imageFile })) return;
+        if (!validateForm({ name, category, description, work, image: imageFile })) return;
 
         try {
             const response = await fetch(`https://websolex-admin.vercel.app/api/lastworkadd/${selectedLead._id}`, {
@@ -111,14 +125,23 @@ const Latestworkaddsection = () => {
             });
             const result = await response.json();
             if (response.status === 200) {
+
                 setIsOpenModel(false);
-                setSucsessMessage(true);
-                setissucess("our work is updated")
+
                 setLeads(leads.map((lead) => (lead._id === selectedLead._id ? result.member : lead)));
+
+                setFeedback({
+                    message: `Our work has been updated successfully!`,
+                    type: 'success',
+                });
+
                 resetFormFields(e);
             }
         } catch (error) {
-            console.error("Error updating work  :", error);
+            setFeedback({
+                message: `Error updating work: ${error}`,
+                type: 'error',
+            });
         }
     };
 
@@ -126,7 +149,6 @@ const Latestworkaddsection = () => {
         if (e && e.target) {
             e.target.reset();
         }
-        setImageFile(null);
         setImagePreview(null);
         setErrors({});
     };
@@ -152,23 +174,28 @@ const Latestworkaddsection = () => {
                 method: 'DELETE',
             });
             setLeads(leads.filter((lead) => lead._id !== id));
+            setFeedback({
+                message: `our work deleted success`,
+                type: 'success',
+            });
         } catch (error) {
-            console.error("Error deleting team member:", error);
+            setFeedback({
+                message: `Failed to add lead. Please try again.${error.response ? error.response.data : error.message}`,
+                type: 'error',
+            });
         }
     };
-
+    const handleClear = () => {
+        setFeedback({ message: "", type: "" });
+    };
 
 
 
     return (
         <div className="w-full bg-gray-100 ">
-            {issucess && (
-                <div
-                    className={`fixed top-4 left-0 transform -translate-x-1/2 bg-green-500 text-white px-10 py-6 rounded shadow-lg transition-transform duration-500 ${SucsessMessage ? "translate-x-0  opacity-100" : "-translate-x-[500px] opacity-0"
-                        }`}
-                >
-                    {issucess}
-                </div>
+
+            {feedback.message && (
+                <FeedbackMessage message={feedback.message} type={feedback.type} onClear={handleClear} />
             )}
             <div className="flex items-center justify-between mb-4">
                 <h1 className='capitalize text-[26px] font-semibold  '>our work</h1>
@@ -195,6 +222,7 @@ const Latestworkaddsection = () => {
                             <div className="p-2.5 xl:p-5 flex-1">ID</div>
                             <div className="p-2.5 xl:p-5 flex-1">Image</div>
                             <div className="p-2.5 xl:p-5 flex-1">Name</div>
+                            <div className="p-2.5 xl:p-5 flex-1">category</div>
                             <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">work</div>
 
                             <div className="p-2.5 xl:p-5 flex-1">Action</div>
@@ -207,6 +235,7 @@ const Latestworkaddsection = () => {
                                         <img src={recentLead.image} alt={recentLead.name} className="object-cover w-16 h-16 aspect-square" />
                                     </div>
                                     <div className="flex-1">{recentLead.name}</div>
+                                    <div className="flex-1">{recentLead.category}</div>
                                     <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">{recentLead.work || 'N/A'}</div>
 
                                     {/* Render Star Rating for Recent Lead */}
@@ -236,6 +265,7 @@ const Latestworkaddsection = () => {
                             <div className="p-2.5 xl:p-5 flex-1">ID</div>
                             <div className="p-2.5 xl:p-5 flex-1">Image</div>
                             <div className="p-2.5 xl:p-5 flex-1">Name</div>
+                            <div className="p-2.5 xl:p-5 flex-1">category</div>
                             <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">Description</div>
                             <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">work</div>
 
@@ -250,6 +280,8 @@ const Latestworkaddsection = () => {
                                             <img src={lead.image} alt={lead.name || 'Lead Image'} className="object-cover w-16 h-16 aspect-w-1 aspect-h-1" />
                                         </div>
                                         <div className="flex-1">{lead.name}</div>
+                                        <div className="flex-1">{lead.category}</div>
+
                                         <div className="flex-1 hidden md:block">{lead.description || 'N/A'}</div>
                                         <div className="flex-1 hidden md:block">{lead.work || 'N/A'}</div>
 
@@ -303,6 +335,7 @@ const Latestworkaddsection = () => {
 
 
 
+
                                 {/* work */}
                                 <div className="flex flex-col w-full">
                                     <label className="text-gray-600">work:</label>
@@ -315,17 +348,35 @@ const Latestworkaddsection = () => {
                                     {errors.work && <p className="text-sm text-red-500">{errors.work}</p>}
                                 </div>
                             </div>
+                            <div className="flex flex-col items-center gap-1 lg:gap-4 lg:flex-row ">
+                                {/* Description */}
+                                <div className="flex flex-col w-full">
+                                    <label className="text-gray-600">Description:</label>
+                                    <Textarea
+                                        name="description"
+                                        className="p-2.5 xl:p-3 border border-gray-200 rounded-md"
+                                        defaultValue={isOpenModel ? selectedLead.description : ''}
+                                        placeholder="Enter description"
+                                    />
+                                    {errors.description && <p className="text-sm text-red-500">{errors.description}</p>}
+                                </div>
+                                <div className="flex flex-col w-full">
+                                    <label className="text-gray-600">Category:</label>
+                                    <select
+                                        name="category"
+                                        className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 px-4 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
+                                        defaultValue={isOpenModel ? selectedLead.category : ''}
+                                    >
+                                        <option value="">Select category</option>
+                                        <option value="web design">web design</option>
+                                        <option value="app design">app design</option>
+                                        <option value="Graphic Design">Graphic Design</option>
+                                        <option value="web development">web development</option>
+                                        <option value="app development">app development</option>
+                                    </select>
+                                    {errors.category && <p className="text-sm text-red-500">{errors.category}</p>}
+                                </div>
 
-                            {/* Description */}
-                            <div className="flex flex-col w-full">
-                                <label className="text-gray-600">Description:</label>
-                                <Textarea
-                                    name="description"
-                                    className="p-2.5 xl:p-3 border border-gray-200 rounded-md"
-                                    defaultValue={isOpenModel ? selectedLead.description : ''}
-                                    placeholder="Enter description"
-                                />
-                                {errors.description && <p className="text-sm text-red-500">{errors.description}</p>}
                             </div>
 
 
@@ -350,8 +401,8 @@ const Latestworkaddsection = () => {
 
                             {/* Buttons */}
                             <div className="flex justify-between mt-4">
-                                <Primary type="submit" label={ isOpenAddModel ? 'Save': 'Update' } className="btn btn-primary">
-                                    
+                                <Primary type="submit" label={isOpenAddModel ? 'Save' : 'Update'} className="btn btn-primary">
+
                                 </Primary>
                                 <Seconduray
                                     type="button"
