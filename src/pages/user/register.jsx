@@ -5,13 +5,16 @@ import { Link,useNavigate } from 'react-router-dom'
 import { AiOutlineUser } from "react-icons/ai";
 import Input from '../../components/ui/input';
 import Submit from '../../components/ui/submit';
+import FeedbackMessage from '../ui/feedback';
 const Register = () => {
     const [formdata, setformdata] = useState({});
     const [ishowpss, setishowpss] = useState(false);
     const [ishowrepss, setishowrepss] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
-    const [showError, setShowError] = useState(false);
+    const [feedback, setFeedback] = useState({ message: '', type: '' });
 
+    const handleClear = () => {
+        setFeedback({ message: "", type: "" });
+    };
     const navigate = useNavigate();
     const handlechange = (e) => {
         const { name, value } = e.target;
@@ -28,16 +31,19 @@ const Register = () => {
             !formdata.password ||
             !formdata.confirmPassword
         ) {
-            setErrorMessage("All fields are required!");
-            setShowError(true);
-            setTimeout(() => setShowError(false), 3000); 
+            setFeedback({
+                message: `All fields are required!`,
+                type: 'error',
+            }); 
             return;
         }
 
         if (formdata.password !== formdata.confirmPassword) {
-            setErrorMessage("Passwords do not match!");
-            setShowError(true);
-            setTimeout(() => setShowError(false), 3000); 
+
+            setFeedback({
+                message: `Passwords do not match!`,
+                type: 'error',
+            });
             return;
         }
 
@@ -50,39 +56,32 @@ const Register = () => {
                 },
             });
             
+            // Check if the response is successful
             if (!res.ok) {
-                setErrorMessage("An error occurred while submitting the form." ,res.message);
-                setShowError(true);
-                setTimeout(() => setShowError(false), 3000); 
+                setFeedback({
+                    message: `Error fetching user :${res.message}`,
+                    type: 'error',
+                });
             }
             else {
                 navigate("/");
             }
         } catch (error) {
-            console.error("Error submitting the form:", error);
-            setErrorMessage("An error occurred while submitting the form.");
-            setShowError(true);
-            setTimeout(() => setShowError(false), 3000);
+
+            setFeedback({
+                message: `An error occurred while submitting the form.: ${error}`,
+                type: 'error',
+            });
         }
     };
 
-    // const registerUser = async (userData) => {
-    //     // Add user to the database with 'is_approved' set to false
-    //     await db.collection('users').add({
-    //         ...userData,
-    //         is_approved: false,
-    //     });
-    // };
 
 
     return (
         <div className='flex items-center justify-center w-screen h-screen' >
-            <div
-                className={`fixed top-4 left-0 transform -translate-x-1/2 bg-red-500 text-white px-10 py-6 rounded shadow-lg transition-transform duration-500 ${showError ? "translate-x-0  opacity-100" : "-translate-x-[500px] opacity-0"
-                    }`}
-            >
-                {errorMessage}
-            </div>
+            {feedback.message && (
+                <FeedbackMessage message={feedback.message} type={feedback.type} onClear={handleClear} />
+            )}
 
             <div className="border rounded-sm border-[--border-color] bg-white w-[1280px] shadow-sm ">
                 <div className="flex flex-wrap items-center w-full">

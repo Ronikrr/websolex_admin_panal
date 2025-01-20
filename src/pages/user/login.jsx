@@ -4,17 +4,19 @@ import { ImEye, ImEyeBlocked } from 'react-icons/im'
 import { Link, useNavigate } from 'react-router-dom'
 import Input from '../../components/ui/input'
 import Submit from '../../components/ui/submit'
-
+import FeedbackMessage from '../../components/ui/feedback';
 const Login = () => {
     const [ishowpss, setishowpss] = useState(false);
     const [formdata, setFormData] = useState({
         email: '',
         password: '',
     });
-    const [error, setError] = useState('');
-    const [showError, setShowError] = useState(false);
     const navigate = useNavigate();
+    const [feedback, setFeedback] = useState({ message: '', type: '' });
 
+    const handleClear = () => {
+        setFeedback({ message: "", type: "" });
+    };
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({
@@ -27,9 +29,10 @@ const Login = () => {
         e.preventDefault();
 
         if (!formdata.email || !formdata.password) {
-            setShowError(true);
-            setTimeout(() => setShowError(false), 3000);
-            setError('Both fields are required!');
+            setFeedback({
+                message: `Both fields are required!`,
+                type: 'error',
+            });
             return;
         }
 
@@ -49,25 +52,23 @@ const Login = () => {
                 localStorage.setItem('adminToken', data.token);
                 navigate('/websolex');
             } else {
-                setError(data.message || 'Login failed. Please try again.');
-                setShowError(true);
-                setTimeout(() => setShowError(false), 3000);
+                setFeedback({
+                    message: `Login failed. Please try again: ${data.message}`,
+                    type: 'error',
+                });
             }
         } catch (error) {
-            console.error('Error during login:', error);
-            setError('An error occurred while submitting the form. Please check your network connection or server status.', error);
-            setShowError(true);
-            setTimeout(() => setShowError(false), 3000);
+            setFeedback({
+                message: `network connection error :${error}`,
+                type: 'error',
+            });
         }
     };
     return (
         <div className='flex items-center justify-center w-screen h-screen' >
-            <div
-                className={`fixed top-4 left-0 transform -translate-x-1/2 bg-red-500 text-white px-10 py-6 rounded shadow-lg transition-transform duration-500 ${showError ? "translate-x-0  opacity-100" : "-translate-x-[500px] opacity-0"
-                    }`}
-            >
-                {error}
-            </div>
+            {feedback.message && (
+                <FeedbackMessage message={feedback.message} type={feedback.type} onClear={handleClear} />
+            )}
             <div className="border rounded-sm border-[--border-color] bg-white w-[1280px] shadow-sm ">
                 <div className="flex flex-wrap items-center w-full">
                     <div className="hidden w-full xl:block xl:w-1/2">

@@ -8,7 +8,7 @@
     import { MdOutlineFileUpload, MdOutlineMailOutline } from 'react-icons/md';
     import { ImEye, ImEyeBlocked } from 'react-icons/im';
     import { useNavigate } from 'react-router-dom';
-
+import FeedbackMessage from '../ui/feedback';
     const Profile = () => {
         const [user, setUser] = useState({
             name: '',
@@ -17,14 +17,14 @@
             password: '',
             username: '',
         });
-        const [error, setError] = useState(null);
         const [profileImage, setProfileImage] = useState(null);
         const [isshowpass, setShowPassword] = useState(false);
-        const [successMessage, setSuccessMessage] = useState(null);
-        const [showError, setShowError] = useState(false);
-        const [showMessage, setShowMessage] = useState(false);
         const navigate = useNavigate();
+        const [feedback, setFeedback] = useState({ message: '', type: '' });
 
+        const handleClear = () => {
+            setFeedback({ message: "", type: "" });
+        };
         const handleShowPassword = () => {
             setShowPassword(!isshowpass);
         };
@@ -59,7 +59,11 @@
                 }
                 setProfileImage(file); 
             } else {
-                console.error("No file selected.");
+
+                setFeedback({
+                    message: `No file selected`,
+                    type: 'error',
+                });
             }
         };
 
@@ -92,18 +96,21 @@
                 });
 
                 if (!res.ok) {
-                    throw new Error(`Error updating profile: ${res.statusText}`);
+                    setFeedback({
+                        message: `Error updating profile:${res.statusText}`,
+                        type: 'error',
+                    });
                 }
 
-                // const data = await res.json();
-                setSuccessMessage('Profile updated successfully!');
-                setShowMessage(true);
-                setTimeout(() => setShowMessage(false), 3000);
+                setFeedback({
+                    message: `Profile updated successfully!`,
+                    type: 'success',
+                });
             } catch (error) {
-                console.error('Error updating profile:', error);
-                setError(error.message);
-                setShowError(true);
-                setTimeout(() => setShowError(false), 3000);
+                setFeedback({
+                    message: `Error updating profile: ${error.response ? error.response.data : error.message}`,
+                    type: 'error',
+                });
             }
         };
 
@@ -128,42 +135,36 @@
                         navigate("/");
                         return;
                     } else if (res.status === 500) {
-                        throw new Error('Server error. Please try again later.');
+                        setFeedback({
+                            message: `Server error. Please try again later.`,
+                            type: 'error',
+                        });
                     }
 
                     if (!res.ok) {
-                        throw new Error(`Error fetching profile: ${res.status}`);
+                        setFeedback({
+                            message: `Error fetching profile: ${res.status}`,
+                            type: 'error',
+                        });
                     }
 
                     const data = await res.json();
                     setUser(data.user);
                 } catch (error) {
-                    console.error('Error fetching user data:', error);
-                    setError(error.message);
-                    setShowError(true);
-                    setTimeout(() => setShowError(false), 3000);
+                    setFeedback({
+                        message: `Failed to add lead. Please try again.${error.response ? error.response.data : error.message}`,
+                        type: 'error',
+                    });
                 }
             };
 
             fetchData();
         }, [navigate]);
-        console.log('Profile Image:', profileImage);
 
         return (
             <div className="p-4 mx-auto max-w-screen-2xl md:p-6 2xl:p-10">
-                {error && (
-                    <div
-                        className={`fixed top-4 left-0 transform -translate-x-1/2 bg-red-500 text-white px-10 py-6 rounded shadow-lg transition-transform duration-500 ${showError ? 'translate-x-0 opacity-100' : '-translate-x-[500px] opacity-0'}`}
-                    >
-                        {error}
-                    </div>
-                )}
-                {successMessage && (
-                    <div
-                        className={`fixed top-4 left-0 transform -translate-x-1/2 bg-green-500 text-white px-10 py-6 rounded shadow-lg transition-transform duration-500 ${showMessage ? 'translate-x-0 opacity-100' : '-translate-x-[500px] opacity-0'}`}
-                    >
-                        {successMessage}
-                    </div>
+                {feedback.message && (
+                    <FeedbackMessage message={feedback.message} type={feedback.type} onClear={handleClear} />
                 )}
                 <div className="mx-auto max-w-[67.5rem]">
                     <div className="flex flex-col gap-3 mb-6 sm:flex-row sm:items-center sm:justify-between">
@@ -183,7 +184,7 @@
                                                 <div className="rounded-full h-14 w-14">
                                                     {
                                                         user.profileImage ? (
-                                                            <img src={user.profileImage} alt="Profile" className="profile-image" />
+                                                            <img src={user?.profileImage} alt="Profile" className="profile-image" />
                                                         ) : (
                                                                 <img src='https://www.t3bucket.com/f/0-user.svg' alt="Profile" className="w-12 h-12 rounded-full" />
                                                         )
@@ -243,7 +244,7 @@
                                                 <div className="relative">
                                                     <Input
                                                         name="name"
-                                                        value={user.name}
+                                                        value={user?.name}
                                                         onChange={handleChange}
                                                         placeholder="Enter full name"
                                                     />
@@ -259,7 +260,7 @@
                                                 <div className="relative">
                                                     <Input
                                                         name="phoneNo"
-                                                        value={user.phoneNo}
+                                                        value={user?.phoneNo}
                                                         onChange={handleChange}
                                                         placeholder="Enter phone number"
                                                     />
@@ -276,7 +277,7 @@
                                             <div className="relative">
                                                 <Input
                                                     name="email"
-                                                    value={user.email}
+                                                    value={user?.email}
                                                     onChange={handleChange}
                                                     placeholder="Enter email address"
                                                 />
@@ -293,7 +294,7 @@
                                                 <Input
                                                     name="password"
                                                     type={isshowpass ? 'text' : 'password'}
-                                                    value={user.password}
+                                                    value={user?.password}
                                                     onChange={handleChange}
                                                     placeholder="Enter password"
                                                 />
@@ -315,7 +316,7 @@
                                             </label>
                                             <Input
                                                 name="username"
-                                                value={user.username}
+                                                value={user?.username}
                                                 onChange={handleChange}
                                                 placeholder="Enter username"
                                             />
