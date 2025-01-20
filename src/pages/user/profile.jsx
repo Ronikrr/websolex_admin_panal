@@ -8,7 +8,7 @@
     import { MdOutlineFileUpload, MdOutlineMailOutline } from 'react-icons/md';
     import { ImEye, ImEyeBlocked } from 'react-icons/im';
     import { useNavigate } from 'react-router-dom';
-import FeedbackMessage from '../ui/feedback';
+import FeedbackMessage from '../../components/ui/feedback';
     const Profile = () => {
         const [user, setUser] = useState({
             name: '',

@@ -101,7 +101,7 @@ function Sidebar({ isopensidebar, closeslidebar }) {
 
     return (
         <div className="relative">
-            <div className={`flex-col hidden overflow-y-scroll box_container md:flex md:w-[289.9px] main_class h-screen text-white bg-[#1C2434] transition-all duration-500 ease-in-out`}>
+            <div className={`flex-col hidden overflow-y-scroll box_container md:flex md:w-[289.9px] main_class h-full text-white bg-[#1C2434] transition-all duration-500 ease-in-out`}>
                 <div className="flex items-center p-6 space-x-2 text-2xl font-bold">
                     <div className="flex items-center justify-center w-8 h-8 bg-blue-500 rounded-full">
                         <span className="text-lg font-bold text-white">T</span>

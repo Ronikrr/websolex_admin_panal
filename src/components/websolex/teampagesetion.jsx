@@ -322,7 +322,7 @@ const Servicepagesection = () => {
             {(isOpenAddModel || isOpenModel || isViewMode) && (
                 <div className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full capitalize bg-black bg-opacity-50">
 
-                    <div className="w-full p-10 bg-white rounded-md shadow-md md:w-1/2 xl:w-1/3">
+                    <div className="w-full p-5 bg-white rounded-md shadow-md md:p-8 md:w-2/3 2xl:w-1/3">
                         <h1 className="capitalize text-[26px] font-semibold mb-4 ">
                             {isOpenAddModel ? 'Add New Lead' : isViewMode ? 'View Lead' : 'Edit Lead'}
                         </h1>

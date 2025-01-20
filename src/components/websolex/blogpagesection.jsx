@@ -308,7 +308,7 @@ const Blogpagesection = () => {
 
             {(isOpenAddModel || isOpenModel) && (
                 <div className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full capitalize bg-black bg-opacity-50">
-                    <div className="w-1/3 p-8 bg-white rounded-md shadow-md">
+                    <div className="w-full p-5 bg-white rounded-md shadow-md md:p-8 md:w-2/3 2xl:w-1/3">
                         <h1 className="capitalize text-[26px] font-semibold mb-4 ">{isOpenAddModel ? 'Add New Lead' : 'Edit Lead'}</h1>
                         <form className="flex flex-col gap-4" onSubmit={isOpenAddModel ? handleAddSave : handleEditSave}>
 
@@ -323,7 +323,7 @@ const Blogpagesection = () => {
                                 />
                                 {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
                             </div>
-                            <div className="flex flex-row items-center gap-4">
+                            <div className="flex flex-row flex-col items-center gap-4 md:flex-row ">
                                 <div className="flex flex-col w-full">
                                     <label className="text-gray-600">title1:</label>
                                     <Input

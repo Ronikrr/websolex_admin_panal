@@ -15,9 +15,6 @@ const Clienttestadd = () => {
     const [imagePreview, setImagePreview] = useState(null);
     const [leads, setLeads] = useState([]);
     const [selectedLead, setSelectedLead] = useState(null);
-    const [description, setDescription] = useState('');
-    const [business, setBusiness] = useState('');
-    const [rate, setRate] = useState(1);
     const [errors, setErrors] = useState({});
     const [isOpenLastAll, setIsOpenLastAll] = useState(false);
 
@@ -118,7 +115,7 @@ const Clienttestadd = () => {
         formData.append("business", business);
         formData.append("rate", rate);
 
-        if (imageFile) formData.append("images", imageFile);
+        if (imageFile) formData.append("image_client_work", imageFile);
 
         if (!validateForm({ name, description, business, rate, image: imageFile })) return;
 
@@ -139,7 +136,7 @@ const Clienttestadd = () => {
             }
         } catch (error) {
             setFeedback({
-                message: `Error updating team member:: ${error}`,
+                message: `Error updating client rate: ${error}`,
                 type: 'error',
             });
         }
@@ -150,9 +147,6 @@ const Clienttestadd = () => {
         }
         setImageFile(null);
         setImagePreview(null);
-        setDescription('');
-        setBusiness('');
-        setRate(1);
         setErrors({});
     };
 
@@ -169,9 +163,6 @@ const Clienttestadd = () => {
         setSelectedLead(lead);
         setImageFile(lead.image);
         setImagePreview(lead.image);
-        setDescription(lead.description);
-        setBusiness(lead.business);
-        setRate(lead.rate);
         setIsOpenModel(true);
     };
 
@@ -322,7 +313,7 @@ const Clienttestadd = () => {
 
             {(isOpenAddModel || isOpenModel) && (
                 <div className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-50">
-                    <div className="w-1/3 p-10 bg-white rounded-md shadow-md">
+                    <div className="w-full p-5 bg-white rounded-md shadow-md md:p-8 md:w-2/3 2xl:w-1/3">
                         <h1 className="capitalize text-[26px] font-semibold mb-4 ">{isOpenAddModel ? 'Add New Lead' : 'Edit Lead'}</h1>
                         <form className="flex flex-col gap-4" onSubmit={isOpenAddModel ? handleAddSave : handleEditSave}>
                             {/* Name */}
@@ -343,8 +334,7 @@ const Clienttestadd = () => {
                                 <Textarea
                                     name="description"
                                     className="p-2.5 xl:p-3 border border-gray-200 rounded-md"
-                                    value={description}
-                                    onChange={(e) => setDescription(e.target.value)}
+                                    defaultValue={isOpenModel ? selectedLead.description : ''}
                                     placeholder="Enter description"
                                 />
                                 {errors.description && <p className="text-sm text-red-500">{errors.description}</p>}
@@ -356,8 +346,7 @@ const Clienttestadd = () => {
                                 <Input
                                     type="text"
                                     name="business"
-                                    value={business}
-                                    onChange={(e) => setBusiness(e.target.value)}
+                                    defaultValue={isOpenModel ? selectedLead.business : ''}
                                     placeholder="Enter business"
                                 />
                                 {errors.business && <p className="text-sm text-red-500">{errors.business}</p>}
@@ -369,8 +358,7 @@ const Clienttestadd = () => {
                                 <Input
                                     type="number"
                                     name="rate"
-                                    value={rate}
-                                    onChange={(e) => setRate(e.target.value)}
+                                    defaultValue={isOpenModel ? selectedLead.rate : ''}
                                     min="0"
                                     max="5"
                                     placeholder="Enter rate"
@@ -384,7 +372,7 @@ const Clienttestadd = () => {
                                     <label className="text-gray-600">Image:</label>
                                     <Input
                                         type="file"
-                                        name="image"
+                                        name="image_client_work"
                                         accept="image/*"
                                         onChange={handleFileChange}
                                     />

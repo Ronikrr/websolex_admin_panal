@@ -247,7 +247,7 @@ const Userloginedsection = () => {
             </div>
             {(isOpenAddModel) && (
                 <div className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full capitalize bg-black bg-opacity-50">
-                    <div className="w-1/3 p-8 bg-white rounded-md shadow-md">
+                    <div className="w-full p-5 bg-white rounded-md shadow-md md:p-8 md:w-2/3 2xl:w-1/3">
                         <h1 className="capitalize text-[26px] font-semibold mb-4 ">add user</h1>
                         <form action="" onSubmit={onsubmit}>
                             <div className="mb-4">

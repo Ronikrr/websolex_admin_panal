@@ -5,7 +5,7 @@ import { Link,useNavigate } from 'react-router-dom'
 import { AiOutlineUser } from "react-icons/ai";
 import Input from '../../components/ui/input';
 import Submit from '../../components/ui/submit';
-import FeedbackMessage from '../ui/feedback';
+import FeedbackMessage from '../../components/ui/feedback';
 const Register = () => {
     const [formdata, setformdata] = useState({});
     const [ishowpss, setishowpss] = useState(false);
