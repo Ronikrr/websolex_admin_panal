@@ -22,7 +22,7 @@ const FeedbackMessage = ({ type, message, onClear }) => {
 
     return (
         <div
-            className={`fixed top-4 right-0 px-10 py-6 rounded shadow-lg transition-opacity duration-500 ${showMessage ? "opacity-100 animate-fadeIn" : "opacity-0 animate-fadeOut"
+            className={`fixed top-4 right-0 px-10 py-6 rounded shadow-lg capitalize transition-opacity duration-500 ${showMessage ? "opacity-100 animate-fadeIn" : "opacity-0 animate-fadeOut"
                 } ${type === "success" ? "bg-green-500 text-green-100" : "bg-red-500 text-red-100"}`}
         >
             {message}

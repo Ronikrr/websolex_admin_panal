@@ -8,8 +8,7 @@ import Primary from '../ui/primary'
 import Seconduray from '../ui/seconduray';
 import Breadcrumb from '../ui/breadcrumb';
 import axios from 'axios';
-
-
+import FeedbackMessage from '../ui/feedback';
 const Blogpagesection = () => {
     const [isOpenModel, setIsOpenModel] = useState(false);
     const [isOpenAddModel, setIsOpenAddModel] = useState(false);
@@ -19,8 +18,11 @@ const Blogpagesection = () => {
     const [selectedLead, setSelectedLead] = useState(null);
     const [errors, setErrors] = useState({});
     const [isOpenLastAll, setIsOpenLastAll] = useState(false);
-    const [issucess, setissucess] = useState(false)
-    const [SucsessMessage, setSucsessMessage] = useState(null);
+    const [feedback, setFeedback] = useState({ message: '', type: '' });
+
+    const handleClear = () => {
+        setFeedback({ message: "", type: "" });
+    };
     useEffect(() => {
         setTimeout(() => {
             setIsOpenLastAll(false);
@@ -37,14 +39,19 @@ const Blogpagesection = () => {
 
                 // Check if the response is successful
                 if (!res.ok) {
-                    throw new Error(`HTTP error! Status: ${res.status}`);
+                    setFeedback({
+                        message: `Error fetching blog data:${res.message}`,
+                        type: 'error',
+                    });
                 }
 
                 const data = await res.json();
                 setLeads(data);
             } catch (error) {
-                console.error("Error fetching team members:", error);  // Log the full error for debugging
-                setErrors("Error fetching team members: " + error.message);
+                setFeedback({
+                    message: `Error fetching blog data:${error}`,
+                    type: 'error',
+                });
             }
         };
         fetchleads();
@@ -96,17 +103,18 @@ const Blogpagesection = () => {
             });
             if (response.status === 200) {
                 setIsOpenAddModel(false);  // Close the modal
-                setissucess('Team member added successfully');
-                setSucsessMessage(true);
-                setTimeout(() => {
-                    setSucsessMessage(false); 
-                }, 2000);
+                setFeedback({
+                    message: `blog added successfully`,
+                    type: 'success',
+                });
                 setLeads([...leads, response.data.blogadd.savedblogadd]);
                 resetFormFields(e);
             }
         } catch (error) {
-            console.error("Error adding team member:", error.response ? error.response.data : error.message);
-            setErrors({ ...errors, server: "Failed to add lead. Please try again." });
+            setFeedback({
+                message: `Failed to add lead. Please try again.${error.response ? error.response.data : error.message}`,
+                type: 'error',
+            });
         }
     };
 
@@ -140,14 +148,19 @@ const Blogpagesection = () => {
             });
             if (response.status === 200) {
                 setIsOpenModel(false);  
-                setissucess('Team member updated successfully');
-                setSucsessMessage(true);
+                setFeedback({
+                    message: `blog updated successfully`,
+                    type: 'success',
+                });
                 setLeads(leads.map(lead => (lead._id === selectedLead._id ? response.data.updatedBlog : lead)));
                 resetFormFields(e);
             }
         } catch (error) {
-            console.error("Error updating team member:", error.response ? error.response.data : error.message);
-            setErrors({ ...errors, server: "Failed to update lead. Please try again." });
+
+            setFeedback({
+                message: `Failed to updating lead. Please try again.${error.response ? error.response.data : error.message}`,
+                type: 'error',
+            });
         }
     };
 
@@ -171,6 +184,7 @@ const Blogpagesection = () => {
 
     const handleEditClick = (lead) => {
         setSelectedLead(lead);
+        setImageFile(lead.image);
         setImagePreview(lead.image);
         setIsOpenModel(true);
     };
@@ -181,8 +195,15 @@ const Blogpagesection = () => {
                 method: 'DELETE',
             });
             setLeads(leads.filter((lead) => lead._id !== id));
+            setFeedback({
+                message: `blog deleted success`,
+                type: 'success',
+            });
         } catch (error) {
-            console.error("Error deleting team member:", error);
+            setFeedback({
+                message: `Error deleting blog. Please try again.${error.response ? error.response.data : error.message}`,
+                type: 'error',
+            });
         }
     };
 
@@ -191,13 +212,8 @@ const Blogpagesection = () => {
 
     return (
         <div className="w-full bg-gray-100 ">
-            {issucess && (
-                <div
-                    className={`fixed top-4 left-0 transform -translate-x-1/2 bg-green-500 text-white px-10 py-6 rounded shadow-lg transition-transform duration-500 ${SucsessMessage ? "translate-x-0  opacity-100" : "-translate-x-[500px] opacity-0"
-                        }`}
-                >
-                    {issucess}
-                </div>
+            {feedback.message && (
+                <FeedbackMessage message={feedback.message} type={feedback.type} onClear={handleClear} />
             )}
             <div className="flex flex-col items-center justify-between mb-4 lg:flex-row">
                 <h1 className='capitalize text-[26px] font-semibold  '>blog page</h1>
@@ -220,26 +236,26 @@ const Blogpagesection = () => {
                     </div>
                 </div>
                 <div className="text-gray-600 text-[10px] md:text-[16px] uppercase leading-[1.5] bg-gray-100 flex w-full">
-                    <div className="p-2.5 xl:p-5 flex-1">ID</div>
-                    <div className="p-2.5 xl:p-5 flex-1">Image</div>
-                    <div className="p-2.5 xl:p-5 flex-1">Name</div>
-                    <div className="p-2.5 xl:p-5 flex-1">Action</div>
+                    <div className="p-2.5  flex-1">ID</div>
+                    <div className="p-2.5  flex-1">Image</div>
+                    <div className="p-2.5  flex-1">Name</div>
+                    <div className="p-2.5  flex-1">Action</div>
                 </div>
                 <div className="flex flex-col w-full">
                     {recentLead ? (
                         <div className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200">
-                            <div className="flex-1 p-2.5 xl:p-5">1</div>
-                            <div className="flex-1 p-2.5 xl:p-5">
-                                <img src={recentLead.image || "/placeholder.svg"} alt={recentLead.name} className="object-cover w-16 h-16 aspect-square" />
+                            <div className="flex-1 p-2.5">1</div>
+                            <div className="flex-1 p-2.5">
+                                <img src={recentLead?.image} alt={recentLead?.name} className="object-cover w-16 h-16 aspect-square" />
                             </div>
-                            <div className="flex-1 p-2.5 xl:p-5">{recentLead.name}</div>
+                            <div className="flex-1 p-2.5">{recentLead?.name}</div>
 
 
                             <div className="flex items-center flex-1 gap-2">
                                 <button className="text-gray-600 hover:text-black" onClick={() => handleEditClick(recentLead)}>
                                     <FaRegEdit />
                                 </button>
-                                <button className="text-red-500 hover:text-black" onClick={() => handleDelete(recentLead._id)}>
+                                <button className="text-red-500 hover:text-black" onClick={() => handleDelete(recentLead?._id)}>
                                     <RiDeleteBin6Line />
                                 </button>
                             </div>
@@ -256,31 +272,32 @@ const Blogpagesection = () => {
             <div className="w-full p-5 bg-white rounded-md shadow-md">
                 <h1 className='capitalize text-[26px] py-6 font-semibold'>All added</h1>
                 <div className="text-gray-600 text-[10px] md:text-[16px] uppercase leading-[1.5] bg-gray-100 flex w-full">
-                    <div className="p-2.5 xl:p-5 flex-1">ID</div>
-                    <div className="p-2.5 xl:p-5 flex-1">Image</div>
-                    <div className="p-2.5 xl:p-5 flex-1">Name</div>
-                    <div className="p-2.5 xl:p-5 flex-1">Action</div>
+                    <div className="p-2.5  flex-1">ID</div>
+                    <div className="p-2.5  flex-1">Image</div>
+                    <div className="p-2.5  flex-1">Name</div>
+                    <div className="p-2.5  flex-1">Action</div>
                 </div>
                 <div className="flex flex-col w-full">
                     {leads.length > 0 ? (
                         leads.map((lead, index) => (
-                            <div key={lead.id || index} className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200">
-                                <div className="p-2.5 xl:p-5 flex-1">{lead.id || index + 1}</div>
-                                <div className="p-2.5 xl:p-5 flex-1">
-                                    <img src={lead.image || "/placeholder.svg"} alt={lead.name || 'Lead Image'} className="object-cover w-16 h-16 aspect-w-1 aspect-h-1" />
+                            <div key={index} className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200">
+                                <div className="p-2.5  flex-1">{index + 1}</div>
+                                <div className="p-2.5  flex-1">
+                                    <img src={lead?.image} alt={lead?.name || 'Lead Image'} className="object-cover w-16 h-16 aspect-w-1 aspect-h-1" />
                                 </div>
-                                <div className="p-2.5 xl:p-5 flex-1">{lead.name}</div>
+                                <div className="p-2.5  flex-1">{lead?.name}</div>
 
                                 <div className="flex items-center flex-1 gap-2">
                                     <button className="text-gray-600 hover:text-black" onClick={() => handleEditClick(lead)}>
                                         <FaRegEdit />
                                     </button>
-                                    <button className="text-red-500 hover:text-black" onClick={() => handleDelete(lead._id)}>
+                                    <button className="text-red-500 hover:text-black" onClick={() => handleDelete(lead?._id)}>
                                         <RiDeleteBin6Line />
                                     </button>
                                 </div>
                             </div>
-                        ))
+                        )
+                        )
                     ) : (
                         <div className="p-4 text-center">
                             <p>No leads found.</p>

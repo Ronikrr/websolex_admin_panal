@@ -146,9 +146,8 @@ const Valuedclientsection = () => {
 
     const handleEditClick = (lead) => {
         setSelectedLead(lead);
+        setImageFile(lead.image);
         setImagePreview(lead.image);
-
-
         setIsOpenModel(true);
     };
 

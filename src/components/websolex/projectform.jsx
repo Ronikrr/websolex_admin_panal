@@ -2,16 +2,19 @@ import React, { useState, useEffect } from "react";
 import Seconduray from "../ui/seconduray";
 import Primary from "../ui/primary";
 import Input from "../ui/input";
-
+import FeedbackMessage from '../ui/feedback';
 const FormWithApiData = () => {
     const [project, setproject] = useState({
         totalClients: "",
         completedProjects: "",
     });
     const [id, setid] = useState(null);
-    const [showError, setShowError] = useState("");
-    const [error, setError] = useState(null);
 
+    const [feedback, setFeedback] = useState({ message: '', type: '' });
+
+    const handleClear = () => {
+        setFeedback({ message: "", type: "" });
+    };
     useEffect(() => {
         const fetchdata = async () => {
             try {
@@ -19,15 +22,15 @@ const FormWithApiData = () => {
                     method: "GET",
                 });
                 const data = await res.json();
-                console.log(data);
                 if (data && data.length > 0) {
                     setproject(data[0]);
                     setid(data[0]._id);
                 }
             } catch (error) {
-                setError(error.message);
-                setShowError(true);
-                setTimeout(() => setShowError(false), 3000);
+                setFeedback({
+                    message: `Error fetching team members:${error}`,
+                    type: 'error',
+                });
             }
         };
         fetchdata();
@@ -54,12 +57,17 @@ const FormWithApiData = () => {
                         ...project
                     }),
                 });
-                const data = await res.json();
-                console.log("project", data);
+                if (!res.ok) {
+                    setFeedback({
+                        message: `Error fetching team members:${res.message}`,
+                        type: 'error',
+                    });
+                }
             } catch (error) {
-                setError(error.message);
-                setShowError(true);
-                setTimeout(() => setShowError(false), 3000);
+                setFeedback({
+                    message: `Error fetching team members:${error}`,
+                    type: 'error',
+                });
             }
         } else {
             try {
@@ -70,27 +78,26 @@ const FormWithApiData = () => {
                     },
                     body: JSON.stringify(project),
                 });
+                if (!res.ok) {
+                    setFeedback({
+                        message: `Error fetching team members:${res.message}`,
+                        type: 'error',
+                    });
+                }
                 const data = await res.json();
-                console.log("project", data);
                 setid(data.member._id);
             } catch (error) {
-                setError(error.message);
-                setShowError(true);
-                setTimeout(() => setShowError(false), 3000);
+                setFeedback({
+                    message: `Error fetching team members:${error}`,
+                    type: 'error',
+                });
             }
         }
     };
     return (
         <form onSubmit={handlesubmit} >
-            {error && (
-                <div
-                    className={`fixed top-4 left-0 transform -translate-x-1/2 bg-red-500 text-white px-10 py-6 rounded shadow-lg transition-transform duration-500 ${showError
-                            ? "translate-x-0  opacity-100"
-                            : "-translate-x-[500px] opacity-0"
-                        }`}
-                >
-                    {error}
-                </div>
+            {feedback.message && (
+                <FeedbackMessage message={feedback.message} type={feedback.type} onClear={handleClear} />
             )}
             <div className="flex flex-col gap-5 mb-5 sm:flex-row">
                 <div className="w-full">
@@ -104,7 +111,7 @@ const FormWithApiData = () => {
                         type={'text'}
                         name={'totalClients'}
                         placeholder={"Total clients"}
-                        value={project.totalClients}
+                        value={project?.totalClients}
                         onChange={handleChange}
                     />
                 </div>
@@ -120,7 +127,7 @@ const FormWithApiData = () => {
                     type={"text"}
                     name={"completedProjects"}
                     placeholder={"Completed projects"}
-                    value={project.completedProjects}
+                    value={project?.completedProjects}
                     onChange={handleChange}
                 />
             </div>

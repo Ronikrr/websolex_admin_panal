@@ -1,28 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import Breadcrumb from '../ui/breadcrumb';
-import axios from 'axios';
 import { IoMdAdd } from 'react-icons/io';
-import Primary from '../ui/primary';
-import Seconduray from '../ui/seconduray';
 import Input from '../ui/input';
-import { useNavigate } from 'react-router-dom';
 import { AiOutlineUser } from 'react-icons/ai';
 import { HiOutlineMail } from 'react-icons/hi';
 import { ImEye, ImEyeBlocked } from 'react-icons/im';
 import Submit from '../ui/submit';
 import { RiDeleteBinLine } from 'react-icons/ri';
+import FeedbackMessage from '../ui/feedback';
 const Userloginedsection = () => {
 
     const [isOpenAddModel, setIsOpenAddModel] = useState(false);
     const [Users, setUser] = useState([]);
-    const [error, setError] = useState(null);
-    const [showError, setShowError] = useState(false);
-    const [isapruve, setisapruve] = useState(null)
     const [formdata, setformdata] = useState({});
     const [ishowpss, setishowpss] = useState(false);
     const [ishowrepss, setishowrepss] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
-   
+    const [feedback, setFeedback] = useState({ message: '', type: '' });
+
+    const handleClear = () => {
+        setFeedback({ message: "", type: "" });
+    };
     const handlechange = (e) => {
         const { name, value } = e.target;
         setformdata((prev) => ({
@@ -38,16 +35,18 @@ const Userloginedsection = () => {
             !formdata.password ||
             !formdata.confirmPassword
         ) {
-            setErrorMessage("All fields are required!");
-            setShowError(true);
-            setTimeout(() => setShowError(false), 3000);
+            setFeedback({
+                message: `All fields are required!`,
+                type: 'error',
+            });
             return;
         }
 
         if (formdata.password !== formdata.confirmPassword) {
-            setErrorMessage("Passwords do not match!");
-            setShowError(true);
-            setTimeout(() => setShowError(false), 3000);
+            setFeedback({
+                message: `Passwords do not match!`,
+                type: 'error',
+            });
             return;
         }
 
@@ -61,18 +60,23 @@ const Userloginedsection = () => {
             });
 
             if (!res.ok) {
-                setErrorMessage("An error occurred while submitting the form.", res.message);
-                setShowError(true);
-                setTimeout(() => setShowError(false), 3000);
+                setFeedback({
+                    message: `An error occurred while submitting the form.:${res.message}`,
+                    type: 'error',
+                });
             }
             else {
                 setIsOpenAddModel(false)
+                setFeedback({
+                    message: `user added succesfully`,
+                    type: 'success',
+                });
             }
         } catch (error) {
-            console.error("Error submitting the form:", error);
-            setErrorMessage("An error occurred while submitting the form.");
-            setShowError(true);
-            setTimeout(() => setShowError(false), 3000);
+            setFeedback({
+                message: `An error occurred while submitting the form :${error.message}`,
+                type: 'error',
+            });
         }
     };
     useEffect(() => {
@@ -83,16 +87,19 @@ const Userloginedsection = () => {
                 });
 
                 if (!res.ok) {
-                    throw new Error(`HTTP error! status: ${res.status}`);
+                    setFeedback({
+                        message: `An error occurred while submitting the form :${res.message}`,
+                        type: 'error',
+                    });
                 }
 
                 const data = await res.json();
                 setUser(data.users);  // Ensure the data is valid
             } catch (error) {
-                console.error('Error fetching user data:', error);
-                setError(error.toString());
-                setShowError(true);
-                setTimeout(() => setShowError(false), 3000);
+                setFeedback({
+                    message: `Error fetching user data::${error.message}`,
+                    type: 'error',
+                });
             }
         };
 
@@ -106,25 +113,27 @@ const Userloginedsection = () => {
                 body: JSON.stringify({ status: newStatus }),
             });
 
+
             if (!res.ok) {
-                const errorMessage = await res.text(); // Try reading text if JSON fails
-                console.error('Error:', errorMessage);
-                throw new Error(errorMessage);
+                setFeedback({
+                    message: `An error occurred while submitting the form :${res.message}`,
+                    type: 'error',
+                });
             }
 
-            const data = await res.json();
 
-            // Update local state
             setUser((prevUsers) =>
                 prevUsers.map((user) =>
                     user._id === id ? { ...user, status: newStatus } : user
                 )
             );
         } catch (error) {
-            console.error('Error updating status:', error);
-            setError(error.toString());
-            setShowError(true);
-            setTimeout(() => setShowError(false), 3000);
+
+            setFeedback({
+                message: `Error updating status :${error.message}`,
+                type: 'error',
+            });
+
         }
     };
 
@@ -133,22 +142,24 @@ const Userloginedsection = () => {
             await fetch(`http://localhost:8000/users/${id}`, {
                 method: 'DELETE',
             });
+            setFeedback({
+                message: `user deleted success`,
+                type: 'success',
+            });
         } catch (error) {
-            console.error("Error deleting team member:", error);
+            setFeedback({
+                message: `Error updating status :${error.message}`,
+                type: 'error',
+            });
         }
     };
 
     return (
         <>
-            {showError && error && <div className="error">{error}</div>}
+
             <div className='w-full' >
-                {error && (
-                    <div
-                        className={`fixed top-4 left-0 transform -translate-x-1/2 bg-red-500 text-white px-10 py-6 rounded shadow-lg transition-transform duration-500 ${showError ? "translate-x-0  opacity-100" : "-translate-x-[500px] opacity-0"
-                            }`}
-                    >
-                        {error}
-                    </div>
+                {feedback.message && (
+                    <FeedbackMessage message={feedback.message} type={feedback.type} onClear={handleClear} />
                 )}
                 <div className="flex items-center justify-between mb-4">
                     <h1 className='capitalize text-[26px] font-semibold  '>our users</h1>
@@ -183,12 +194,12 @@ const Userloginedsection = () => {
                                     return (
                                         <div className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200" key={user._id} >
 
-                                            <div className="flex-1 p-2.5 xl:p-4">{user.name}</div>
-                                            <div className="flex-1 p-2.5 xl:p-4 hidden lg:block">{user.username}</div>
-                                            <div className="flex-1 p-2.5 xl:p-4">{user.email}</div>
-                                            <div className="p-2.5 xl:p-4 flex-1 hidden lg:block">{user.phoneNo}</div>
+                                            <div className="flex-1 p-2.5 xl:p-4">{user?.name}</div>
+                                            <div className="flex-1 p-2.5 xl:p-4 hidden lg:block">{user?.username}</div>
+                                            <div className="flex-1 p-2.5 xl:p-4">{user?.email}</div>
+                                            <div className="p-2.5 xl:p-4 flex-1 hidden lg:block">{user?.phoneNo}</div>
 
-                                            {user.status === 'pending' && user._id ? (
+                                            {user.status === 'pending' && user?._id ? (
                                                 <>
                                                     <div className="flex-1 p-2.5 xl:p-7 ">
                                                         <button className='px-4 py-2 my-1 text-white capitalize duration-1000 bg-green-500 border border-green-500 rounded-xl hover:shadow-lg hover:border hover:bg-transparent hover:text-green-500 hover:border-green-500' onClick={() => handleStatusChange(user._id, 'Approved')} >
@@ -197,7 +208,7 @@ const Userloginedsection = () => {
                                                         <button className='px-4 py-2 my-1 text-white capitalize duration-1000 bg-red-500 border border-red-500 rounded-xl hover:shadow-lg hover:border hover:bg-transparent hover:text-red-500 hover:border-red-500' onClick={() => handleStatusChange(user._id, 'rejected')} >
                                                             reject
                                                         </button>
-                                                        <button className='text-red-500' onClick={() => handleDelete(user._id)} > <RiDeleteBinLine  /> </button>
+                                                        <button className='text-red-500' onClick={() => handleDelete(user._id)} > <RiDeleteBinLine /> </button>
                                                     </div>
                                                 </>
                                             ) : (
@@ -220,7 +231,7 @@ const Userloginedsection = () => {
                                                                     reject
                                                                 </button>
                                                                 <button className='text-red-500' onClick={() => handleDelete(user._id)}  > <RiDeleteBinLine /> </button>
-                                                       </>
+                                                            </>
                                                     ) : ""}
                                                 </div>
                                             )}
@@ -315,7 +326,7 @@ const Userloginedsection = () => {
 
                                 />
                             </div>
-                           
+
                         </form>
                     </div>
                 </div>

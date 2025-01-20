@@ -8,18 +8,19 @@ import Primary from '../ui/primary'
 import Seconduray from '../ui/seconduray';
 import Breadcrumb from '../ui/breadcrumb';
 import axios from 'axios';
-
+import FeedbackMessage from '../ui/feedback';
 
 const Blogpagesection = () => {
     const [isOpenModel, setIsOpenModel] = useState(false);
     const [isOpenAddModel, setIsOpenAddModel] = useState(false);
     const [leads, setLeads] = useState([]);
     const [selectedLead, setSelectedLead] = useState(null);
-    const [isSuccess, setIsSuccess] = useState(false);
-    const [successMessage, setSuccessMessage] = useState(null);
     const [errors, setErrors] = useState({});
-    const [errorMessage, seterrorMessage] = useState(null);
+    const [feedback, setFeedback] = useState({ message: '', type: '' });
    
+    const handleClear = () => {
+        setFeedback({ message: "", type: "" });
+    };
     // Status options
     const statusOptions = [
         "Active",
@@ -35,23 +36,27 @@ const Blogpagesection = () => {
     // Fetch employees
     const fetchLeads = async () => {
         try {
-            const response = await fetch("https://websolex-admin.vercel.app/api/employee", {
+            const res = await fetch("https://websolex-admin.vercel.app/api/employee", {
                 method: "GET", // Specify the HTTP method
                 headers: {
                     "Content-Type": "application/json", // Specify the content type
                 },
             });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            if (!res.ok) {
+                setFeedback({
+                    message: `Error fetching emplyees :${res.message}`,
+                    type: 'error',
+                });
             }
 
-            const data = await response.json();
+            const data = await res.json();
             setLeads(data);
         } catch (error) {
-            console.error("Error fetching team members:", error);
-            setErrors(true);
-            seterrorMessage({ fetch: "Error fetching team members: " + error.message });
+            setFeedback({
+                message: `Error fetching emplyees :${error}`,
+                type: 'error',
+            });
         }
     };
 
@@ -71,8 +76,7 @@ const Blogpagesection = () => {
         if (!data.salary || isNaN(data.salary)) newErrors.salary = "Valid salary is required";
         if (!data.join_date || data.join_date.trim() === "") newErrors.join_date = "Join date is required";
         if (!data.status || data.status.trim() === "") newErrors.status = "Status is required";
-        setErrors(true);
-        seterrorMessage(newErrors)
+        setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
     
@@ -91,8 +95,6 @@ const Blogpagesection = () => {
             return;
         }
 
-        console.log("Form Values:", formValues);
-
         try {
             // Send form data using fetch
             const response = await fetch("https://websolex-admin.vercel.app/api/employee", {
@@ -107,20 +109,19 @@ const Blogpagesection = () => {
             if (response.ok) {
                 const data = await response.json();
                 setIsOpenModel(false);
-                setIsSuccess(true);
-                setSuccessMessage("Employee added successfully.");
+
+                setFeedback({
+                    message: `Employee added successfully.`,
+                    type: 'success',
+                });
                 setLeads([...leads, data]);  // Assuming response data contains the newly added employee
                 e.target.reset();
-            } else {
-                const errorData = await response.json();
-                console.error("Error adding employee:", errorData.message);
-                setErrors(true);
-                seterrorMessage({ server: errorData.message || "Failed to add employee. Please try again." });
-            }
+            } 
         } catch (error) {
-            console.error("Error adding employee:", error.message);
-            setErrors(true);
-            seterrorMessage({ server: "Failed to add employee. Please try again." });
+            setFeedback({
+                message: `Failed to add lead. Please try again.${error.response ? error.response.data : error.message}`,
+                type: 'error',
+            });
         }
     };
 
@@ -144,20 +145,18 @@ const Blogpagesection = () => {
             );
          
             if (response.ok) {
-                const data = await response.json();
-                console.log(data)
                 setIsOpenModel(false);
+                setFeedback({
+                    message: `employee updated success`,
+                    type: 'success',
+                });
                 setLeads(leads.map((lead) => (lead._id === selectedLead._id ? updatedLead : lead)));
-            } else {
-                const errordata = await response.json()
-                console.log(errordata)
-                setErrors(true);
-                seterrorMessage({ server: errordata.message || "Failed to update employee. Please try again." });
             }
         } catch (error) {
-            console.error("Error editing employee:", error);
-            setErrors(true);
-            seterrorMessage({ server: error.response ? error.response.data.message : "Failed to add employee. Please try again." })
+            setFeedback({
+                message: `Failed to add lead. Please try again.${error.response ? error.response.data : error.message}`,
+                type: 'error',
+            });
         }
     };
 
@@ -166,22 +165,22 @@ const Blogpagesection = () => {
         try {
             await axios.delete(`https://websolex-admin.vercel.app/api/employee/${id}`);
             setLeads(leads.filter((lead) => lead._id !== id));
+            setFeedback({
+                message: `employee deleted success`,
+                type: 'success',
+            });
         } catch (error) {
-            console.error("Error deleting employee:", error);
-            setErrors(true);
-            seterrorMessage({ server: error.response ? error.response.data.message : "Failed to add employee. Please try again." })
+            setFeedback({
+                message: `Failed to add lead. Please try again.${error.response ? error.response.data : error.message}`,
+                type: 'error',
+            });
         }
     };
     const handleEditClick = (lead) => {
         setSelectedLead(lead); 
         setIsOpenModel(true); 
     };
-    useEffect(() => {
-    setTimeout(() => {
-        seterrorMessage(false)
-        setSuccessMessage(false)
-    }, 3000);
-    })
+
     const handleStatusUpdate = async (employeeId, newStatus) => {
         try {
             const response = await fetch(`https://websolex-admin.vercel.app/api/employee/${employeeId}`, {
@@ -198,17 +197,16 @@ const Blogpagesection = () => {
                 setLeads(leads.map((lead) =>
                     lead._id === employeeId ? { ...lead, status: newStatus } : lead
                 ));
-
-                setSuccessMessage('Employee status updated successfully!');
-                setIsSuccess(true);
-            } else {
-                const errorData = await response.json();
-                console.error('Error updating status:', errorData.message);
-                seterrorMessage('Failed to update status. Please try again.');
+                setFeedback({
+                    message: `Employee status updated successfully!`,
+                    type: 'success',
+                });
             }
         } catch (error) {
-            console.error('Error updating status:', error);
-            seterrorMessage('Failed to update status. Please try again.');
+            setFeedback({
+                message: `Failed to add lead. Please try again.${error.response ? error.response.data : error.message}`,
+                type: 'error',
+            });
         }
     };
     const handleChangeStatus = (employeeId, newStatus) => {
@@ -220,23 +218,8 @@ const Blogpagesection = () => {
 
     return (
         <div className="w-full bg-gray-100 ">
-            {isSuccess && successMessage && (
-                <div
-                    className={`fixed top-4 left-0 transform -translate-x-1/2 bg-green-500 text-white px-10 py-6 rounded shadow-lg transition-transform duration-500 ${isSuccess ? "translate-x-0 opacity-100" : "-translate-x-[500px] opacity-0"
-                        }`}
-                >
-                    {successMessage}
-                </div>
-            )}
-            {Object.keys(errors).length > 0 && (
-                <div
-                    className={`fixed top-4 left-0 transform -translate-x-1/2 bg-red-500 text-white px-10 py-6 rounded shadow-lg transition-transform duration-500 ${errorMessage ? "translate-x-0 opacity-100" : "-translate-x-[500px] opacity-0"
-                        }`}
-                >
-                    {Object.values(errors).map((error, index) => (
-                        <p key={index} className="text-sm">{error}</p>
-                    ))}
-                </div>
+            {feedback.message && (
+                <FeedbackMessage message={feedback.message} type={feedback.type} onClear={handleClear} />
             )}
             <div className="flex items-center justify-between mb-4">
                 <h1 className='capitalize text-[26px] font-semibold  '>employee mangement</h1>
@@ -269,12 +252,12 @@ const Blogpagesection = () => {
                     {recentLead ? (
                         <div className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200">
                             <div className="flex-1 p-2.5 xl:p-5">1</div>
-                            <div className="flex-1 p-2.5 xl:p-5">{recentLead.email}</div>
-                            <div className="flex-1 p-2.5 xl:p-5">{recentLead.name}</div>
+                            <div className="flex-1 p-2.5 xl:p-5">{recentLead?.email}</div>
+                            <div className="flex-1 p-2.5 xl:p-5">{recentLead?.name}</div>
                             <div className="p-2.5 xl:p-5 flex-1">
                                 <select
-                                    value={recentLead.status}
-                                    onChange={(e) => handleChangeStatus(recentLead._id, e.target.value)}
+                                    value={recentLead?.status}
+                                    onChange={(e) => handleChangeStatus(recentLead?._id, e.target.value)}
                             >
                                 {statusOptions.map((status, index) => (
                                     <option key={index} value={status}>
@@ -287,7 +270,7 @@ const Blogpagesection = () => {
                                 <button className="text-gray-600 hover:text-black" onClick={() => handleEditClick(recentLead)}>
                                     <FaRegEdit />
                                 </button>
-                                <button className="text-red-500 hover:text-black" onClick={() => handleDelete(recentLead._id)}>
+                                <button className="text-red-500 hover:text-black" onClick={() => handleDelete(recentLead?._id)}>
                                     <RiDeleteBin6Line />
                                 </button>
                             </div>
@@ -313,16 +296,16 @@ const Blogpagesection = () => {
                 <div className="flex flex-col w-full">
                     {leads.length > 0 ? (
                         leads.map((lead, index) => (
-                            <div key={lead.id || index} className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200">
-                                <div className="p-2.5 xl:p-5 flex-1">{lead.id || index + 1}</div>
+                            <div key={index} className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200">
+                                <div className="p-2.5 xl:p-5 flex-1">{index + 1}</div>
                                 <div className="p-2.5 xl:p-5 flex-1">
-                                    {lead.email}
+                                    {lead?.email}
                                 </div>
-                                <div className="p-2.5 xl:p-5 flex-1">{lead.name}</div>
+                                <div className="p-2.5 xl:p-5 flex-1">{lead?.name}</div>
                                 <div className="p-2.5 xl:p-5 flex-1">
                                     <select
-                                        value={lead.status}
-                                        onChange={(e) => handleChangeStatus(lead._id, e.target.value)}
+                                        value={lead?.status}
+                                        onChange={(e) => handleChangeStatus(lead?._id, e.target.value)}
                                     >
                                         {statusOptions.map((status, index) => (
                                             <option key={index} value={status}>
@@ -336,7 +319,7 @@ const Blogpagesection = () => {
                                     <button className="text-gray-600 hover:text-black" onClick={() => handleEditClick(lead)}>
                                         <FaRegEdit />
                                     </button>
-                                    <button className="text-red-500 hover:text-black" onClick={() => handleDelete(lead._id)}>
+                                    <button className="text-red-500 hover:text-black" onClick={() => handleDelete(lead?._id)}>
                                         <RiDeleteBin6Line />
                                     </button>
                                 </div>
@@ -361,7 +344,7 @@ const Blogpagesection = () => {
                                 <Input
                                     type="text"
                                     name="name"
-                                    defaultValue={isOpenModel ? selectedLead.name : ''}
+                                    defaultValue={isOpenModel ? selectedLead?.name : ''}
                                     placeholder="Enter name"
                                 />
                                 {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
@@ -372,7 +355,7 @@ const Blogpagesection = () => {
                                     <Input
                                         type="text"
                                         name="designation"
-                                        defaultValue={isOpenModel ? selectedLead.designation : ''}
+                                        defaultValue={isOpenModel ? selectedLead?.designation : ''}
                                         placeholder="Enter designation"
                                     />
                                     {errors.designation && <p className="text-sm text-red-500">{errors.designation}</p>}
@@ -381,7 +364,7 @@ const Blogpagesection = () => {
                                     <Input
                                         type="text"
                                         name="department"
-                                        defaultValue={isOpenModel ? selectedLead.department : ''}
+                                        defaultValue={isOpenModel ? selectedLead?.department : ''}
                                         placeholder="Enter department"
                                     />
                                     {errors.department && <p className="text-sm text-red-500">{errors.department}</p>}
@@ -393,7 +376,7 @@ const Blogpagesection = () => {
                                     <Input
                                         type="email"
                                         name="email"
-                                        defaultValue={isOpenModel ? selectedLead.email : ''}
+                                        defaultValue={isOpenModel ? selectedLead?.email : ''}
 
                                         placeholder="Enter email"
                                     />
@@ -403,7 +386,7 @@ const Blogpagesection = () => {
                                     <Input
                                         type="tel"
                                         name="phone"
-                                        defaultValue={isOpenModel ? selectedLead.phone : ''}
+                                        defaultValue={isOpenModel ? selectedLead?.phone : ''}
 
                                         placeholder="Enter phone"
                                     />
@@ -416,7 +399,7 @@ const Blogpagesection = () => {
                                     <Input
                                         type="number"
                                         name="salary"
-                                        defaultValue={isOpenModel ? selectedLead.salary : ''}
+                                        defaultValue={isOpenModel ? selectedLead?.salary : ''}
 
                                         placeholder="Enter salary"
                                     />
@@ -427,7 +410,7 @@ const Blogpagesection = () => {
                                     <Input
                                         type="date"
                                         name="join_date"
-                                        defaultValue={isOpenModel ? selectedLead.join_date : ''}
+                                        defaultValue={isOpenModel ? selectedLead?.join_date : ''}
 
                                         placeholder="Enter join date"
                                     />
@@ -442,7 +425,7 @@ const Blogpagesection = () => {
                                         className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 px-4 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
                                         id="status"
                                         name="status"
-                                        defaultValue={isOpenModel ? selectedLead.status : ''}
+                                        defaultValue={isOpenModel ? selectedLead?.status : ''}
                                         
                                     >
                                         {statusOptions.map((statusOption) => (

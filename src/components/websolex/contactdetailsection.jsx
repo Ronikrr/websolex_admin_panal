@@ -6,7 +6,7 @@ import Primary from '../../components/ui/primary';
 import { FaFacebook, FaInstagram, FaLinkedin, FaPhoneAlt, FaWhatsapp } from 'react-icons/fa';
 import { MdOutlineMailOutline } from 'react-icons/md';
 import { BiCurrentLocation } from 'react-icons/bi';
-
+import FeedbackMessage from '../ui/feedback';
 const Contactdetailsection = () => {
     const [contactDetails, setContactDetails] = useState({
         address: '',
@@ -23,7 +23,11 @@ const Contactdetailsection = () => {
 
     const [soid, setsoId] = useState(null);
     const [id, setId] = useState(null);
+    const [feedback, setFeedback] = useState({ message: '', type: '' });
 
+    const handleClear = () => {
+        setFeedback({ message: "", type: "" });
+    };
     useEffect(() => {
         const fetchContactDetails = async () => {
             try {
@@ -37,7 +41,10 @@ const Contactdetailsection = () => {
                     setId(data[0]._id);
                 }
             } catch (error) {
-                console.error("Error fetching contact details:", error);
+                setFeedback({
+                    message: `Error fetching contact :${error}`,
+                    type: 'error',
+                });
             }
         };
         const fetchsocialDetails = async () => {
@@ -52,7 +59,10 @@ const Contactdetailsection = () => {
                     setsoId(data[0]._id);
                 }
             } catch (error) {
-                console.error("Error fetching contact details:", error);
+                setFeedback({
+                    message: `Error fetching social details:${error}`,
+                    type: 'error',
+                });
             }
         };
         fetchsocialDetails();
@@ -90,10 +100,17 @@ const Contactdetailsection = () => {
                     }),
                 });
                 if (!res.ok) {
-                    
+                    const errorData = await res.json();
+                    setFeedback({
+                        message: `Error fetching contact details:${errorData}`,
+                        type: 'error',
+                    });
                 }
             } catch (error) {
-                console.error("Error updating contact:", error);
+                setFeedback({
+                    message: `Error fetching contact details:${error}`,
+                    type: 'error',
+                });
             }
         } else {
             try {
@@ -105,10 +122,12 @@ const Contactdetailsection = () => {
                     body: JSON.stringify(contactDetails),
                 });
                 const data = await res.json();
-                console.log("Contact created:", data);
                 setId(data.member._id);
             } catch (error) {
-                console.error("Error creating contact:", error);
+                setFeedback({
+                    message: `Error fetching contact details:${error}`,
+                    type: 'error',
+                });
             }
         }
     };
@@ -131,13 +150,19 @@ const Contactdetailsection = () => {
 
                 if (!res.ok) {
                     const errorData = await res.json();
-                    throw new Error(`Error: ${errorData.message || 'Failed to update social details'}`);
+                    setFeedback({
+                        message: `Error: ${errorData.message || 'Failed to update social details'}`,
+                        type: 'error',
+                    });
                 }
 
               
             
             } catch (error) {
-                console.error("Error updating social links:", error.message);
+                setFeedback({
+                    message: `Error fetching social details:${error}`,
+                    type: 'error',
+                });
             }
         } else {
             try {
@@ -151,19 +176,28 @@ const Contactdetailsection = () => {
 
                 if (!res.ok) {
                     const errorData = await res.json();
-                    throw new Error(`Error: ${errorData.message || 'Failed to create social details'}`);
+                    setFeedback({
+                        message: `Error: ${errorData.message || 'Failed to update social details'}`,
+                        type: 'error',
+                    });
                 }
 
                 const data = await res.json();
                 
                 setsocial({ ...socialdetails, _id: data.member._id }); // Update state with new ID
             } catch (error) {
-                console.error("Error creating social links:", error.message);
+                setFeedback({
+                    message: `Error: ${error.message || 'Failed to update social details'}`,
+                    type: 'error',
+                });
             }
         }
     };
     return (
         <div className=''>
+            {feedback.message && (
+                <FeedbackMessage message={feedback.message} type={feedback.type} onClear={handleClear} />
+            )}
             <div className="w-full">
                 <div className="flex flex-col gap-3 mb-6 sm:flex-row sm:items-center sm:justify-between">
                     <h2 className="font-semibold text-black text-[26px] ">Contact details</h2>
@@ -183,7 +217,7 @@ const Contactdetailsection = () => {
                                             <div className="relative">
                                                 <input
                                                     name={'address'}
-                                                    value={contactDetails.address}
+                                                    value={contactDetails?.address}
                                                     onChange={handleChange}
                                                     placeholder={"contact address"}
                                                     className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 pl-4 pr-10 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
@@ -198,7 +232,7 @@ const Contactdetailsection = () => {
                                             <div className="relative">
                                                 <input
                                                     name={'phoneno'}
-                                                    value={contactDetails.phoneno}
+                                                    value={contactDetails?.phoneno}
                                                     onChange={handleChange}
                                                     placeholder={"enter phone number"}
                                                     className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 pl-4 pr-10 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
@@ -215,7 +249,7 @@ const Contactdetailsection = () => {
                                             <div className="relative">
                                                 <input
                                                     name={'avaliablity'}
-                                                    value={contactDetails.avaliablity}
+                                                    value={contactDetails?.avaliablity}
                                                     onChange={handleChange}
                                                     placeholder={"enter avaliablity"}
                                                     className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 pl-4 pr-10 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
@@ -229,7 +263,7 @@ const Contactdetailsection = () => {
                                             <div className="relative">
                                                 <input
                                                     name={'email'}
-                                                    value={contactDetails.email}
+                                                    value={contactDetails?.email}
                                                     onChange={handleChange}
                                                     placeholder={"enter email"}
                                                     className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 pl-4 pr-10 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
@@ -264,7 +298,7 @@ const Contactdetailsection = () => {
                                                 <input
                                                     name={'facebook'}
                                                     onChange={handlesocialChange}
-                                                    value={socialdetails.facebook}
+                                                    value={socialdetails?.facebook}
                                                     placeholder={"enter facebook link"}
                                                     className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 pl-4 pr-10 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
                                                 />
@@ -279,7 +313,7 @@ const Contactdetailsection = () => {
                                                 <input
                                                     name={'whatsapp'}
                                                     onChange={handlesocialChange}
-                                                    value={socialdetails.whatsapp}
+                                                    value={socialdetails?.whatsapp}
                                                     placeholder={"enter whatsapp link"}
                                                     className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 pl-4 pr-10 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
                                                 />
@@ -296,7 +330,7 @@ const Contactdetailsection = () => {
                                                 <input
                                                     name={'instagram'}
                                                     onChange={handlesocialChange}
-                                                    value={socialdetails.instagram}
+                                                    value={socialdetails?.instagram}
                                                     placeholder={"enter instagram link"}
                                                     className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 pl-4 pr-10 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
                                                 />
@@ -313,7 +347,7 @@ const Contactdetailsection = () => {
                                                 <input
                                                     name={'linkedin'}
                                                     onChange={handlesocialChange}
-                                                    value={socialdetails.linkedin}
+                                                    value={socialdetails?.linkedin}
                                                     placeholder={"enter linkedin link"}
                                                     className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 pl-4 pr-10 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
                                                 />

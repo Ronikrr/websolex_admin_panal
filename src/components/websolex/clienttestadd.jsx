@@ -20,6 +20,7 @@ const Clienttestadd = () => {
     const [rate, setRate] = useState(1);
     const [errors, setErrors] = useState({});
     const [isOpenLastAll, setIsOpenLastAll] = useState(false);
+
     const [feedback, setFeedback] = useState({ message: '', type: '' });
 
     const handleClear = () => {
@@ -40,7 +41,7 @@ const Clienttestadd = () => {
 
         } catch (error) {
             setFeedback({
-                message: `Error fetching team members:${error}`,
+                message: `Error fetching :${error}`,
                 type: 'success',
             });
         }
@@ -81,7 +82,7 @@ const Clienttestadd = () => {
         if (!validateForm({ name, description, business, rate, image: imageFile })) return;
 
         try {
-            const response = await fetch(`https://websolex-admin.vercel.app/api/clientrate`, {
+            const response = await fetch(`https://websolex-admin.vercel.app/clientrate`, {
                 method: 'POST',
                 body: formData,
             });
@@ -122,7 +123,7 @@ const Clienttestadd = () => {
         if (!validateForm({ name, description, business, rate, image: imageFile })) return;
 
         try {
-            const response = await fetch(`https://websolex-admin.vercel.app/api/clientrate/${selectedLead._id}`, {
+            const response = await fetch(`https://websolex-admin.vercel.app/clientrate/${selectedLead._id}`, {
                 method: 'PUT',
                 body: formData,
             });
@@ -166,6 +167,7 @@ const Clienttestadd = () => {
 
     const handleEditClick = (lead) => {
         setSelectedLead(lead);
+        setImageFile(lead.image);
         setImagePreview(lead.image);
         setDescription(lead.description);
         setBusiness(lead.business);
@@ -247,22 +249,22 @@ const Clienttestadd = () => {
                         <div className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200">
                             <div className="flex-1">{1}</div>
                             <div className="flex-1">
-                                <img src={recentLead.image} alt={recentLead.name} className="object-cover w-16 h-16 aspect-square" />
+                                <img src={recentLead?.image} alt={recentLead.name} className="object-cover w-16 h-16 aspect-square" />
                             </div>
-                            <div className="flex-1">{recentLead.name}</div>
-                            <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">{recentLead.description || 'N/A'}</div>
-                            <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">{recentLead.business || 'N/A'}</div>
+                            <div className="flex-1">{recentLead?.name}</div>
+                            <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">{recentLead?.description || 'N/A'}</div>
+                            <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">{recentLead?.business || 'N/A'}</div>
 
                             {/* Render Star Rating for Recent Lead */}
                             <div className="p-2.5 xl:p-5 flex-1 hidden lg:flex">
-                                {recentLead.rate ? renderStars(recentLead.rate) : 'N/A'}
+                                {recentLead?.rate ? renderStars(recentLead?.rate) : 'N/A'}
                             </div>
 
                             <div className="flex items-center flex-1 gap-2">
                                 <button className="text-gray-600 hover:text-black" onClick={() => handleEditClick(recentLead)}>
                                     <FaRegEdit />
                                 </button>
-                                <button className="text-gray-600 hover:text-black" onClick={() => handleDelete(recentLead._id)}>
+                                <button className="text-gray-600 hover:text-black" onClick={() => handleDelete(recentLead?._id)}>
                                     <RiDeleteBin6Line />
                                 </button>
                             </div>
@@ -290,21 +292,21 @@ const Clienttestadd = () => {
                 <div className="flex flex-col w-full">
                     {leads.length > 0 ? (
                         leads.map((lead, index) => (
-                            <div key={lead.id || index} className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200">
-                                <div className="flex-1">{lead.id || index + 1}</div>
+                            <div key={index} className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200">
+                                <div className="flex-1">{index + 1}</div>
                                 <div className="flex-1">
-                                    <img src={lead.image} alt={lead.name || 'Lead Image'} className="object-cover w-16 h-16 aspect-w-1 aspect-h-1" />
+                                    <img src={lead?.image} alt={lead?.name || 'Lead Image'} className="object-cover w-16 h-16 aspect-w-1 aspect-h-1" />
                                 </div>
-                                <div className="flex-1">{lead.name}</div>
-                                <div className="flex-1 hidden md:block">{lead.description || 'N/A'}</div>
-                                <div className="flex-1 hidden md:block">{lead.business || 'N/A'}</div>
-                                <div className="flex flex-row flex-1 hidden md:flex">{lead.rate ? renderStars(lead.rate) : 'N/A'}</div>
+                                <div className="flex-1">{lead?.name}</div>
+                                <div className="flex-1 hidden md:block">{lead?.description || 'N/A'}</div>
+                                <div className="flex-1 hidden md:block">{lead?.business || 'N/A'}</div>
+                                <div className="flex flex-row flex-1 hidden md:flex">{lead?.rate ? renderStars(lead?.rate) : 'N/A'}</div>
 
                                 <div className="flex items-center flex-1 gap-2">
                                     <button className="text-gray-600 hover:text-black" onClick={() => handleEditClick(lead)}>
                                         <FaRegEdit />
                                     </button>
-                                    <button className="text-gray-600 hover:text-black" onClick={() => handleDelete(lead._id)}>
+                                    <button className="text-gray-600 hover:text-black" onClick={() => handleDelete(lead?._id)}>
                                         <RiDeleteBin6Line />
                                     </button>
                                 </div>

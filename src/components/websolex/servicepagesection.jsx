@@ -8,7 +8,7 @@ import Seconduray from '../ui/seconduray';
 import Breadcrumb from '../ui/breadcrumb';
 import Textarea from '../ui/textarea';
 import axios from 'axios';
-
+import FeedbackMessage from '../ui/feedback';
 const Servicepagesection = () => {
     const [isOpenModel, setIsOpenModel] = useState(false);
     const [isOpenAddModel, setIsOpenAddModel] = useState(false);
@@ -18,9 +18,11 @@ const Servicepagesection = () => {
     const [selectedLead, setSelectedLead] = useState(null);
     const [errors, setErrors] = useState({});
     const [isOpenLastAll, setIsOpenLastAll] = useState(false);
-    const [issucess, setissucess] = useState(false)
-    const [SucsessMessage, setSucsessMessage] = useState(null);
+    const [feedback, setFeedback] = useState({ message: '', type: '' });
 
+    const handleClear = () => {
+        setFeedback({ message: "", type: "" });
+    };
     useEffect(() => {
         setTimeout(() => {
             setIsOpenLastAll(false);
@@ -35,7 +37,10 @@ const Servicepagesection = () => {
             setLeads(data);
          
         } catch (error) {
-            setErrors("Error fetching team members:", error);
+            setFeedback({
+                message: `Error fetching service data:${error}`,
+                type: 'error',
+            });
         }
     };
   
@@ -80,18 +85,19 @@ const Servicepagesection = () => {
             });
             if (response.status === 200) {
                 setIsOpenAddModel(false);
-                setissucess('service member added:', response.data.serviceadd.savedserviceadd);
-                setSucsessMessage(true);
-                setTimeout(() => {
-                    setSucsessMessage(false);
-                }, 2000);
+                setFeedback({
+                    message: `service  added successfully`,
+                    type: 'success',
+                });
                 setLeads([...leads, response.data.serviceadd.savedserviceadd]);
                 resetFormFields(e);
             }
 
         } catch (error) {
-            console.error("Error adding team member:", error.response ? error.response.data : error.message);
-            setErrors({ ...errors, server: "Failed to add lead. Please try again." });
+            setFeedback({
+                message: `Failed to add lead. Please try again.${error.response ? error.response.data : error.message}`,
+                type: 'error',
+            });
         }
     };
    
@@ -119,15 +125,17 @@ const Servicepagesection = () => {
             });
             const result = await response.json();
             setIsOpenModel(false);
-            setissucess("service is updated")
-            setSucsessMessage(true);
-            setTimeout(() => {
-                setSucsessMessage(false);
-            }, 2000);
+            setFeedback({
+                message: `service is updated successfully`,
+                type: 'success',
+            });
             setLeads(leads.map((lead) => (lead._id === selectedLead._id ? result.member : lead)));
             resetFormFields(e);
         } catch (error) {
-            console.error("Error updating team member:", error);
+            setFeedback({
+                message: `Failed service is update. Please try again.${error.response ? error.response.data : error.message}`,
+                type: 'error',
+            });
         }
     };
 
@@ -161,8 +169,16 @@ const Servicepagesection = () => {
                 method: 'DELETE',
             });
             setLeads(leads.filter((lead) => lead._id !== id));
+            setFeedback({
+                message: `service deleted successfully`,
+                type: 'success',
+            });
         } catch (error) {
-            console.error("Error deleting team member:", error);
+
+            setFeedback({
+                message: `Error deleting service data${error.response ? error.response.data : error.message}`,
+                type: 'error',
+            });
         }
     };
  
@@ -170,13 +186,8 @@ const Servicepagesection = () => {
 
     return (
         <div className="w-full bg-gray-100 ">
-            {issucess && (
-                <div
-                    className={`fixed top-4 left-0 transform -translate-x-1/2 bg-green-500 text-white px-10 py-6 rounded shadow-lg transition-transform duration-500 ${SucsessMessage ? "translate-x-0  opacity-100" : "-translate-x-[500px] opacity-0"
-                        }`}
-                >
-                    {issucess}
-                </div>
+            {feedback.message && (
+                <FeedbackMessage message={feedback.message} type={feedback.type} onClear={handleClear} />
             )}
             <div className="flex items-center justify-between mb-4">
                 <h1 className='capitalize text-[26px] font-semibold  '>service page</h1>

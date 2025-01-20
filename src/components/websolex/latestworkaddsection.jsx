@@ -30,7 +30,7 @@ const Latestworkaddsection = () => {
         } catch (error) {
             setFeedback({
                 message: `Error fetching team members:${error}`,
-                type: 'success',
+                type: 'error',
             });
         }
     };
@@ -232,11 +232,11 @@ const Latestworkaddsection = () => {
                                 <div className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200">
                                     <div className="flex-1">1</div>
                                     <div className="flex-1">
-                                        <img src={recentLead.image} alt={recentLead.name} className="object-cover w-16 h-16 aspect-square" />
+                                        <img src={recentLead?.image} alt={recentLead?.name} className="object-cover w-16 h-16 aspect-square" />
                                     </div>
-                                    <div className="flex-1">{recentLead.name}</div>
-                                    <div className="flex-1">{recentLead.category}</div>
-                                    <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">{recentLead.work || 'N/A'}</div>
+                                    <div className="flex-1">{recentLead?.name}</div>
+                                    <div className="flex-1">{recentLead?.category}</div>
+                                    <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">{recentLead?.work || 'N/A'}</div>
 
                                     {/* Render Star Rating for Recent Lead */}
 
@@ -245,7 +245,7 @@ const Latestworkaddsection = () => {
                                         <button className="text-gray-600 hover:text-black" onClick={() => handleEditClick(recentLead)}>
                                             <FaRegEdit />
                                         </button>
-                                        <button className="text-red-500 hover:text-black" onClick={() => handleDelete(recentLead._id)}>
+                                        <button className="text-red-500 hover:text-black" onClick={() => handleDelete(recentLead?._id)}>
                                             <RiDeleteBin6Line />
                                         </button>
                                     </div>
@@ -274,23 +274,23 @@ const Latestworkaddsection = () => {
                         <div className="flex flex-col w-full">
                             {leads.length > 0 ? (
                                 leads.map((lead, index) => (
-                                    <div key={lead.id || index} className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200">
-                                        <div className="flex-1">{lead.id || index + 1}</div>
+                                    <div key={index} className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200">
+                                        <div className="flex-1">{index + 1}</div>
                                         <div className="flex-1">
-                                            <img src={lead.image} alt={lead.name || 'Lead Image'} className="object-cover w-16 h-16 aspect-w-1 aspect-h-1" />
+                                            <img src={lead?.image} alt={lead?.name || 'Lead Image'} className="object-cover w-16 h-16 aspect-w-1 aspect-h-1" />
                                         </div>
-                                        <div className="flex-1">{lead.name}</div>
-                                        <div className="flex-1">{lead.category}</div>
+                                        <div className="flex-1">{lead?.name}</div>
+                                        <div className="flex-1">{lead?.category}</div>
 
-                                        <div className="flex-1 hidden md:block">{lead.description || 'N/A'}</div>
-                                        <div className="flex-1 hidden md:block">{lead.work || 'N/A'}</div>
+                                        <div className="flex-1 hidden md:block">{lead?.description || 'N/A'}</div>
+                                        <div className="flex-1 hidden md:block">{lead?.work || 'N/A'}</div>
 
 
                                         <div className="flex items-center flex-1 gap-2">
                                             <button className="text-gray-600 hover:text-black" onClick={() => handleEditClick(lead)}>
                                                 <FaRegEdit />
                                             </button>
-                                            <button className="text-red-500 hover:text-black" onClick={() => handleDelete(lead._id)}>
+                                            <button className="text-red-500 hover:text-black" onClick={() => handleDelete(lead?._id)}>
                                                 <RiDeleteBin6Line />
                                             </button>
                                         </div>
@@ -327,7 +327,7 @@ const Latestworkaddsection = () => {
                                     <Input
                                         type="text"
                                         name="name"
-                                        defaultValue={isOpenModel ? selectedLead.name : ''}
+                                        defaultValue={isOpenModel ? selectedLead?.name : ''}
                                         placeholder="Enter name"
                                     />
                                     {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
@@ -342,7 +342,7 @@ const Latestworkaddsection = () => {
                                     <Input
                                         type="text"
                                         name="work"
-                                        defaultValue={isOpenModel ? selectedLead.work : ''}
+                                        defaultValue={isOpenModel ? selectedLead?.work : ''}
                                         placeholder="Enter work"
                                     />
                                     {errors.work && <p className="text-sm text-red-500">{errors.work}</p>}
@@ -355,7 +355,7 @@ const Latestworkaddsection = () => {
                                     <Textarea
                                         name="description"
                                         className="p-2.5 xl:p-3 border border-gray-200 rounded-md"
-                                        defaultValue={isOpenModel ? selectedLead.description : ''}
+                                        defaultValue={isOpenModel ? selectedLead?.description : ''}
                                         placeholder="Enter description"
                                     />
                                     {errors.description && <p className="text-sm text-red-500">{errors.description}</p>}
@@ -365,7 +365,7 @@ const Latestworkaddsection = () => {
                                     <select
                                         name="category"
                                         className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 px-4 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
-                                        defaultValue={isOpenModel ? selectedLead.category : ''}
+                                        defaultValue={isOpenModel ? selectedLead?.category : ''}
                                     >
                                         <option value="">Select category</option>
                                         <option value="web design">web design</option>
