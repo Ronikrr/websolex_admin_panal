@@ -14,6 +14,7 @@ import Login from "./pages/user/login";
 import Register from "./pages/user/register";
 import Profile from "./pages/user/profile";
 import Servicepage from "./pages/websolex/servicepage";
+import Userallchats from "./components/websolex/userallchats";
 import Teampage from "./pages/websolex/teampage";
 import Blogpage from "./pages/websolex/blogpage";
 import Contactdetails from "./pages/websolex/contactdetails";
@@ -229,7 +230,17 @@ function App() {
               path="/profile"
               element={
                 <Layout>
+                  <Pagetitle title={"profile"} />
                   <Profile />
+                </Layout>
+              }
+            />
+            <Route
+              path="/websolex/userschat"
+              element={
+                <Layout>
+                  <Pagetitle title={"Userallchats"} />
+                  <Userallchats />
                 </Layout>
               }
             />

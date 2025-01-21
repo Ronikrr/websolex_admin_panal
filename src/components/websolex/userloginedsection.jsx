@@ -107,7 +107,7 @@ const Userloginedsection = () => {
     }, []);
     const handleStatusChange = async (id, newStatus) => {
         try {
-            const res = await fetch(`http://localhost:8000/users/${id}`, {
+            const res = await fetch(`http://websolex-admin.vercel.app/users/${id}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status: newStatus }),
@@ -139,7 +139,7 @@ const Userloginedsection = () => {
 
     const handleDelete = async (id) => {
         try {
-            await fetch(`http://localhost:8000/users/${id}`, {
+            await fetch(`http://websolex-admin.vercel.app/users/${id}`, {
                 method: 'DELETE',
             });
             setFeedback({

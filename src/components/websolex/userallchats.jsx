@@ -8,7 +8,7 @@ import { BsSend } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import defaultim from '../../assets/img/rb_859.png'
 const Userallchats = () => {
-    const [User, setUsers] = useState(null);
+    const [User, setUsers] = useState([]);
     const [error, seterror] = useState(false);
     const [activeChat, setactiveChat] = useState(null);
     const [message, setmessage] = useState([])
@@ -34,6 +34,7 @@ const Userallchats = () => {
             e.target.reset();
         }
     }
+    console.log(activeChat)
 
     useEffect(() => {
         const adminToken = localStorage.getItem('adminToken');
@@ -44,7 +45,7 @@ const Userallchats = () => {
 
         const fetchUsers = async () => {
             try {
-                const res = await fetch('http://localhost:8000/users', {
+                const res = await fetch('https://websolex-admin.vercel.app/users', {
                     method: 'GET',
                 });
 
@@ -100,8 +101,8 @@ const Userallchats = () => {
                             {User.users.map(user =>
                             {
                                 const profileImage = user.profileImage
-                                    ? require(`../../image/${user.profileImage}`)
-                                    : defaultim;
+                                    ? require(user.profileImage)
+                                    : 'https://www.t3bucket.com/f/0-user.svg';
                                 return (
                                     <div
                                         key={user.id}
@@ -147,7 +148,7 @@ const Userallchats = () => {
                                     <div className="mr-[1.125rem] h-12 w-12 max-w-12 overflow-hidden rounded-full">
                                         <img
                                                 src={activeChat.profileImage
-                                                    ? require(`../../image/${activeChat.profileImage}`)
+                                                    ? require(`${activeChat.profileImage}`)
                                                     : defaultim}
                                             className="object-cover object-center w-full h-full"
                                             alt=""

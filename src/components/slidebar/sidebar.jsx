@@ -37,6 +37,7 @@ function Sidebar({ isopensidebar, closeslidebar }) {
                         { id: 9, icon: <RiContactsFill />, label: "contact & subscribe", link: "/websolex/contactform" },
                         { id: 10, icon: <FaUsers />, label: "logined users", link: "/userlogined" },
                         { id: 11, icon: <FaUserNinja />, label: "emplyee", link: "/websolex/emmangement" },
+                        { id: 12, icon: <FaUserNinja />, label: "users chat", link: "/websolex/userschat" },
                     ],
                 },
                 {
