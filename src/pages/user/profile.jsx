@@ -53,10 +53,6 @@ import FeedbackMessage from '../../components/ui/feedback';
                 }
 
                 // Validate file size (max 800 KB)
-                if (file.size > 800 * 1024) {
-                    alert("File size exceeds the limit of 800 KB.");
-                    return;
-                }
                 setProfileImage(file); 
             } else {
 
@@ -179,14 +175,14 @@ import FeedbackMessage from '../../components/ui/feedback';
                                 </div>
                                 <div className="p-7">
                                     <form onSubmit={handleSubmit}>
-                                        <div className="flex items-center">
+                                        <div className="flex flex-col items-center lg:flex-row">
                                             <div className="flex items-center w-full gap-4 mb-4 xl:w-6/12">
                                                 <div className="rounded-full h-14 w-14">
                                                     {
                                                         user.profileImage ? (
-                                                            <img src={user?.profileImage} alt="Profile" className="profile-image" />
+                                                            <img src={user?.profileImage} alt="Profile" className="object-cover w-12 h-12 rounded-full" />
                                                         ) : (
-                                                                <img src='https://www.t3bucket.com/f/0-user.svg' alt="Profile" className="w-12 h-12 rounded-full" />
+                                                                <img src='https://www.t3bucket.com/f/0-user.svg' alt="Profile" className="object-cover w-12 h-12 rounded-full" />
                                                         )
                                                     }
                                                 </div>

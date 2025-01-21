@@ -182,10 +182,10 @@ const Header = ({ toogleslidebar }) => {
 
                                 {user.profileImage == null
                                     ? (
-                                        <img src='https://www.t3bucket.com/f/0-user.svg' alt="Profile" className="w-12 h-12 rounded-full" />
+                                        <img src='https://www.t3bucket.com/f/0-user.svg' alt="Profile" className="object-cover w-12 h-12 rounded-full" />
                                     ) :
                                     (
-                                        <img src={user.profileImage} alt="Profile" className="w-12 h-12 rounded-full" />
+                                        <img src={user.profileImage} alt="Profile" className="object-cover w-12 h-12 rounded-full" />
                                     )
 
                                 }
