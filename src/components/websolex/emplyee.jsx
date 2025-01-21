@@ -111,7 +111,7 @@ const Blogpagesection = () => {
                 setIsOpenModel(false);
 
                 setFeedback({
-                    message: `Employee added successfully.`,
+                    message: `Employee added successfully!.`,
                     type: 'success',
                 });
                 setLeads([...leads, data]);  // Assuming response data contains the newly added employee
@@ -147,7 +147,7 @@ const Blogpagesection = () => {
             if (response.ok) {
                 setIsOpenModel(false);
                 setFeedback({
-                    message: `employee updated success`,
+                    message: `employee updated successfully!`,
                     type: 'success',
                 });
                 setLeads(leads.map((lead) => (lead._id === selectedLead._id ? updatedLead : lead)));
@@ -166,7 +166,7 @@ const Blogpagesection = () => {
             await axios.delete(`https://websolex-admin.vercel.app/api/employee/${id}`);
             setLeads(leads.filter((lead) => lead._id !== id));
             setFeedback({
-                message: `employee deleted success`,
+                message: `employee deleted successfully!`,
                 type: 'success',
             });
         } catch (error) {
@@ -191,14 +191,13 @@ const Blogpagesection = () => {
                 body: JSON.stringify({ status: newStatus }), 
             });
             if (response.ok) {
-                const updatedEmployee = await response.json();
-                console.log('Employee status updated:', updatedEmployee);
+                // const updatedEmployee = await response.json();
  
                 setLeads(leads.map((lead) =>
                     lead._id === employeeId ? { ...lead, status: newStatus } : lead
                 ));
                 setFeedback({
-                    message: `Employee status updated successfully!`,
+                    message: `Employee status updated successfully!!`,
                     type: 'success',
                 });
             }

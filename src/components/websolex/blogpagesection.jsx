@@ -104,7 +104,7 @@ const Blogpagesection = () => {
             if (response.status === 200) {
                 setIsOpenAddModel(false);  // Close the modal
                 setFeedback({
-                    message: `blog added successfully`,
+                    message: `blog added successfully!`,
                     type: 'success',
                 });
                 setLeads([...leads, response.data.blogadd.savedblogadd]);
@@ -112,7 +112,7 @@ const Blogpagesection = () => {
             }
         } catch (error) {
             setFeedback({
-                message: `Failed to add lead. Please try again.${error.response ? error.response.data : error.message}`,
+                message: `Error : Failed to add lead. Please try again.${error.response ? error.response.data : error.message}`,
                 type: 'error',
             });
         }
@@ -149,7 +149,7 @@ const Blogpagesection = () => {
             if (response.status === 200) {
                 setIsOpenModel(false);  
                 setFeedback({
-                    message: `blog updated successfully`,
+                    message: `blog updated successfully!`,
                     type: 'success',
                 });
                 setLeads(leads.map(lead => (lead._id === selectedLead._id ? response.data.updatedBlog : lead)));
@@ -158,7 +158,7 @@ const Blogpagesection = () => {
         } catch (error) {
 
             setFeedback({
-                message: `Failed to updating lead. Please try again.${error.response ? error.response.data : error.message}`,
+                message: `Error : Failed to updating lead. Please try again.${error.response ? error.response.data : error.message}`,
                 type: 'error',
             });
         }
@@ -196,7 +196,7 @@ const Blogpagesection = () => {
             });
             setLeads(leads.filter((lead) => lead._id !== id));
             setFeedback({
-                message: `blog deleted success`,
+                message: `blog deleted successfully!`,
                 type: 'success',
             });
         } catch (error) {

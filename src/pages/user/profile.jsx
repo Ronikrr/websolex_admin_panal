@@ -103,7 +103,7 @@ import FeedbackMessage from '../../components/ui/feedback';
                 }
 
                 setFeedback({
-                    message: `Profile updated successfully!`,
+                    message: `Profile updated successfully!!`,
                     type: 'success',
                 });
             } catch (error) {

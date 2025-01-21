@@ -41,7 +41,7 @@ const Servicepagesection = () => {
         } catch (error) {
             setFeedback({
                 message: `Error fetching team members:${error}`,
-                type: 'success',
+                type: 'error',
             });
         }
     };
@@ -94,7 +94,7 @@ const Servicepagesection = () => {
             if (response.status === 200) {
                 setIsOpenModel(false);
                 setFeedback({
-                    message: `Team member added:`,
+                    message: `Team member added successfully!`,
                     type: 'success',
                 });
                 const result = await response.json();
@@ -199,7 +199,7 @@ const Servicepagesection = () => {
             });
             setLeads(leads.filter((lead) => lead._id !== id));
             setFeedback({
-                message: `our team deleted success`,
+                message: `our team deleted successfully!`,
                 type: 'success',
             });
         } catch (error) {

@@ -55,8 +55,7 @@ const Register = () => {
                     "Content-Type": "application/json",
                 },
             });
-            
-            // Check if the response is successful
+
             if (!res.ok) {
                 setFeedback({
                     message: `Error fetching user :${res.message}`,

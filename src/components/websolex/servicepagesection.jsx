@@ -86,7 +86,7 @@ const Servicepagesection = () => {
             if (response.status === 200) {
                 setIsOpenAddModel(false);
                 setFeedback({
-                    message: `service  added successfully`,
+                    message: `service  added successfully!`,
                     type: 'success',
                 });
                 setLeads([...leads, response.data.serviceadd.savedserviceadd]);
@@ -126,7 +126,7 @@ const Servicepagesection = () => {
             const result = await response.json();
             setIsOpenModel(false);
             setFeedback({
-                message: `service is updated successfully`,
+                message: `service is updated successfully!`,
                 type: 'success',
             });
             setLeads(leads.map((lead) => (lead._id === selectedLead._id ? result.member : lead)));
@@ -171,7 +171,7 @@ const Servicepagesection = () => {
             });
             setLeads(leads.filter((lead) => lead._id !== id));
             setFeedback({
-                message: `service deleted successfully`,
+                message: `service deleted successfully!`,
                 type: 'success',
             });
         } catch (error) {

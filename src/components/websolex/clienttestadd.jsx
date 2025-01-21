@@ -39,7 +39,7 @@ const Clienttestadd = () => {
         } catch (error) {
             setFeedback({
                 message: `Error fetching :${error}`,
-                type: 'success',
+                type: 'error',
             });
         }
     };
@@ -79,14 +79,14 @@ const Clienttestadd = () => {
         if (!validateForm({ name, description, business, rate, image: imageFile })) return;
 
         try {
-            const response = await fetch(`https://websolex-admin.vercel.app/clientrate`, {
+            const response = await fetch(`https://websolex-admin.vercel.app/api/clientrate`, {
                 method: 'POST',
                 body: formData,
             });
             if (response.status === 200) {
                 setIsOpenModel(false);
                 setFeedback({
-                    message: `client rate  added`,
+                    message: `client rate added successfully!`,
                     type: 'success',
                 });
                 const result = await response.json();
@@ -120,7 +120,7 @@ const Clienttestadd = () => {
         if (!validateForm({ name, description, business, rate, image: imageFile })) return;
 
         try {
-            const response = await fetch(`https://websolex-admin.vercel.app/clientrate/${selectedLead._id}`, {
+            const response = await fetch(`https://websolex-admin.vercel.app/api/clientrate/${selectedLead._id}`, {
                 method: 'PUT',
                 body: formData,
             });
@@ -129,7 +129,7 @@ const Clienttestadd = () => {
                 setIsOpenModel(false);
                 setLeads(leads.map((lead) => (lead._id === selectedLead._id ? result.member : lead)));
                 setFeedback({
-                    message: `client rate is updated`,
+                    message: `client rate is updated successfully!`,
                     type: 'success',
                 });
                 resetFormFields(e);
@@ -173,7 +173,7 @@ const Clienttestadd = () => {
             });
             setLeads(leads.filter((lead) => lead._id !== id));
             setFeedback({
-                message: `our team deleted success`,
+                message: `our team deleted successfully!`,
                 type: 'success',
             });
         } catch (error) {

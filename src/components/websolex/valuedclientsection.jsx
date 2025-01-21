@@ -39,7 +39,7 @@ const Valuedclientsection = () => {
         } catch (error) {
             setFeedback({
                 message: `Error fetching team members:${error}`,
-                type: 'success',
+                type: 'error',
             });
         }
     };
@@ -75,7 +75,7 @@ const Valuedclientsection = () => {
             if (res.status === 200) {
                 setIsOpenAddModel(false);
                 setFeedback({
-                    message: `Valued client added`,
+                    message: `Valued client added successfully!`,
                     type: 'success',
                 });
                 const result = await res.json();
@@ -113,7 +113,7 @@ const Valuedclientsection = () => {
                 setIsOpenModel(false);
                 setLeads(leads.map((lead) => (lead._id === selectedLead._id ? result.member : lead)));
                 setFeedback({
-                    message: `Our client has been updated successfully!`,
+                    message: `Our client has been updated successfully!!`,
                     type: 'success',
                 });
                 resetFormFields(e);
@@ -160,7 +160,7 @@ const Valuedclientsection = () => {
             });
             setLeads(leads.filter((lead) => lead._id !== id));
             setFeedback({
-                message: `our team deleted success`,
+                message: `our team deleted successfully!`,
                 type: 'success',
             });
         } catch (error) {

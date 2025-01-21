@@ -80,15 +80,15 @@ const Latestworkaddsection = () => {
             });
 
             if (response.status === 200) {
-                // Close the modal after successful addition
-                setIsOpenAddModel(false);  // Close the Add modal
+
+                setIsOpenAddModel(false);  
 
                 const result = await response.json();
                 setLeads([...leads, result.data.savedMember]);
 
                 // Set success feedback
                 setFeedback({
-                    message: `Our work was added successfully!`,
+                    message: `Our work was added successfully!!`,
                     type: 'success',
                 });
 
@@ -131,7 +131,7 @@ const Latestworkaddsection = () => {
                 setLeads(leads.map((lead) => (lead._id === selectedLead._id ? result.member : lead)));
 
                 setFeedback({
-                    message: `Our work has been updated successfully!`,
+                    message: `Our work has been updated successfully!!`,
                     type: 'success',
                 });
 
@@ -177,7 +177,7 @@ const Latestworkaddsection = () => {
             });
             setLeads(leads.filter((lead) => lead._id !== id));
             setFeedback({
-                message: `our work deleted success`,
+                message: `our work deleted successfully!`,
                 type: 'success',
             });
         } catch (error) {

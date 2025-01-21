@@ -143,7 +143,7 @@ const Userloginedsection = () => {
                 method: 'DELETE',
             });
             setFeedback({
-                message: `user deleted success`,
+                message: `user deleted successfully!`,
                 type: 'success',
             });
         } catch (error) {
