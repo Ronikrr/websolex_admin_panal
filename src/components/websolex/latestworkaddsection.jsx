@@ -125,11 +125,8 @@ const Latestworkaddsection = () => {
             });
             const result = await response.json();
             if (response.status === 200) {
-
                 setIsOpenModel(false);
-
                 setLeads(leads.map((lead) => (lead._id === selectedLead._id ? result.member : lead)));
-
                 setFeedback({
                     message: `Our work has been updated successfully!!`,
                     type: 'success',
@@ -155,11 +152,37 @@ const Latestworkaddsection = () => {
     };
 
     const handleFileChange = (e) => {
+        // const file = e.target.files[0];
+        // if (file) {
+        //     setImageFile(file);
+        //     setImagePreview(URL.createObjectURL(file));
+        // }
         const file = e.target.files[0];
-        if (file) {
-            setImageFile(file);
-            setImagePreview(URL.createObjectURL(file));
-        }
+        if (!file) return;
+
+        const img = new Image();
+        const reader = new FileReader();
+
+        reader.onload = (event) => {
+            img.src = event.target.result;
+        };
+
+        img.onload = () => {
+            if (img.width === img.height) {
+
+                setImageFile(file);
+                setImagePreview(URL.createObjectURL(file));
+            } else {
+                setFeedback({
+                    message: `Only square images are allowed.`,
+                    type: 'error',
+                });
+                setImageFile(null);
+                setImagePreview(null);
+            }
+        };
+
+        reader.readAsDataURL(file);
     };
     const recentLead = leads[leads.length - 1];
 

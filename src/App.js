@@ -23,7 +23,7 @@ import UnauthorizedPage from "./pages/websolex/unauthorizedPage";
 import Userlogied from "./pages/user/userlogied";
 import { UserProvider } from "./pages/user/userrolecontext";
 import Emmangement from "./pages/websolex/emmangement";
-
+import Userchat from "./pages/user/userchat";
 import Pagetitle from "./components/pagetitle";
 
 const Layout = ({ children }) => {
@@ -240,7 +240,7 @@ function App() {
               element={
                 <Layout>
                   <Pagetitle title={"Userallchats"} />
-                  <Userallchats />
+                  <Userchat />
                 </Layout>
               }
             />

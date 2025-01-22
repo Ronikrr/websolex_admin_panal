@@ -149,11 +149,37 @@ const Servicepagesection = () => {
     };
 
     const handleFileChange = (e) => {
+        // const file = e.target.files[0];
+        // if (file) {
+        //     setImageFile(file);
+        //     setImagePreview(URL.createObjectURL(file));
+        // }
         const file = e.target.files[0];
-        if (file) {
-            setImageFile(file);
-            setImagePreview(URL.createObjectURL(file));
-        }
+        if (!file) return;
+
+        const img = new Image();
+        const reader = new FileReader();
+
+        reader.onload = (event) => {
+            img.src = event.target.result;
+        };
+
+        img.onload = () => {
+            if (img.width === img.height) {
+
+                setImageFile(file);
+                setImagePreview(URL.createObjectURL(file));
+            } else {
+                setFeedback({
+                    message: `Only square images are allowed.`,
+                    type: 'error',
+                });
+                setImageFile(null);
+                setImagePreview(null);
+            }
+        };
+
+        reader.readAsDataURL(file);
     };
     const recentLead = leads[leads.length - 1];
 

@@ -183,6 +183,7 @@ const Userloginedsection = () => {
                             <div className="text-gray-600 text-[10px] md:text-[16px] uppercase leading-[1.5] bg-gray-100 flex w-full">
 
                                 <div className="p-2.5 xl:p-4 flex-1">name</div>
+                                <div className="p-2.5 xl:p-4 flex-1 hidden lg:block">image</div>
                                 <div className="p-2.5 xl:p-4 flex-1 hidden lg:block">username</div>
                                 <div className="p-2.5 xl:p-4 flex-1">email</div>
                                 <div className="p-2.5 xl:p-4 flex-1 hidden lg:block">phone</div>
@@ -195,6 +196,11 @@ const Userloginedsection = () => {
                                         <div className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200" key={user._id} >
 
                                             <div className="flex-1 p-2.5 xl:p-4">{user?.name}</div>
+                                            <div className="flex-1 p-2.5 xl:p-4 hidden lg:block">
+
+                                                <img src={user?.profileImage} className='object-cover w-12 h-12 ' alt="" />
+                                            </div>
+
                                             <div className="flex-1 p-2.5 xl:p-4 hidden lg:block">{user?.username}</div>
                                             <div className="flex-1 p-2.5 xl:p-4">{user?.email}</div>
                                             <div className="p-2.5 xl:p-4 flex-1 hidden lg:block">{user?.phoneNo}</div>

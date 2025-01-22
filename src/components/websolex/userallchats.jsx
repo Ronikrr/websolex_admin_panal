@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react'
 import Breadcrumb from '../ui/breadcrumb'
 import Input from '../ui/input'
@@ -7,21 +8,21 @@ import { IoMdHappy } from 'react-icons/io';
 import { BsSend } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import defaultim from '../../assets/img/rb_859.png'
+
 const Userallchats = () => {
-    const [User, setUsers] = useState([]);
-    const [error, seterror] = useState(false);
+    const [User, setUsers] = useState({ users: [] }); // Initialize as an object with 'users' as an empty array.
+    const [error, seterror] = useState(null);
     const [activeChat, setactiveChat] = useState(null);
-    const [message, setmessage] = useState([])
+    const [message, setmessage] = useState([]);
     const navigate = useNavigate();
 
-
     const handleuserclick = (user) => {
-        setactiveChat(user)
+        setactiveChat(user);
         setmessage([
-            { sender: 'user', text: "hi there!", thme: "2:00 PM" },
-            { sender: 'self', text: "Hello! How can I help?", thme: "2:05 PM" },
-        ])
-    }
+            { sender: 'user', text: "hi there!", time: "2:00 PM" },
+            { sender: 'self', text: "Hello! How can I help?", time: "2:05 PM" },
+        ]);
+    };
 
     const handlesendmessage = (e) => {
         e.preventDefault();
@@ -30,11 +31,10 @@ const Userallchats = () => {
             setmessage((prevmessage) => [
                 ...prevmessage,
                 { sender: 'self', text: messageInput, time: new Date().toLocaleTimeString() },
-            ])
+            ]);
             e.target.reset();
         }
-    }
-    console.log(activeChat)
+    };
 
     useEffect(() => {
         const adminToken = localStorage.getItem('adminToken');
@@ -54,7 +54,8 @@ const Userallchats = () => {
                     seterror(errorText);
                 } else {
                     const data = await res.json();
-                    setUsers(data);
+                    console.log(data)
+                    setUsers(data); // Ensure the API returns the correct structure.
                 }
             } catch (err) {
                 console.error('Error fetching users:', err);
@@ -65,30 +66,31 @@ const Userallchats = () => {
         fetchUsers();
     }, [navigate]);
 
-    if (User === null && !error) {
+    if (!User.users.length && !error) {
         return <div>Loading...</div>;
     }
 
     if (error) {
         return <div>Error: {error}</div>;
     }
-   
+
     return (
-        <div className="w-full bg-gray-100 ">
+        <div className="w-full bg-gray-100">
             <div className="flex items-center justify-between mb-4">
                 <h1 className="capitalize text-[26px] font-semibold">team page</h1>
                 <Breadcrumb />
             </div>
 
-            {/* Most Recent Lead */}
             <div className="flex items-start w-full bg-white rounded-md shadow-md mb-7">
                 {/* Sidebar */}
                 <div className="sticky top-0 w-3/12">
                     <div className="flex sticky top-0 items-center px-6 py-7 border-b border-[var(--border-color)]">
                         <h3 className="text-lg font-semibold text-black">Active Conversations</h3>
-                        <span className="ml-4 text-base text-black bg-[#f7f9fc] py-[.125rem] px-2 rounded-md">7</span>
+                        <span className="ml-4 text-base text-black bg-[#f7f9fc] py-[.125rem] px-2 rounded-md">
+                            {User.users.length}
+                        </span>
                     </div>
-                    <div className="flex flex-col max-h-full p-5 overflow-auto">
+                    <div className="flex flex-col max-h-full p-5 overflow-auto no-scrollbar">
                         <form action="" className="sticky top-0 mb-7">
                             <div className="relative">
                                 <Input placeholder={'Search...'} />
@@ -98,10 +100,9 @@ const Userallchats = () => {
                             </div>
                         </form>
                         <div className="h-full max-h-full no-scrollbar space-y-2.5 overflow-auto">
-                            {User.users.map(user =>
-                            {
+                            {User.users.map((user) => {
                                 const profileImage = user.profileImage
-                                    ? require(user.profileImage)
+                                    ? user.profileImage
                                     : 'https://www.t3bucket.com/f/0-user.svg';
                                 return (
                                     <div
@@ -113,43 +114,39 @@ const Userallchats = () => {
                                             }`}
                                     >
                                         <div className="relative w-16 h-12">
-                                            {user.profileImage === null ? "" : (
+                                            {user.profileImage && (
                                                 <img
                                                     src={profileImage}
                                                     className="object-cover object-center w-full h-full rounded-full aspect-square"
                                                     alt={user.name}
                                                 />
                                             )}
-
                                             <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full ring-2 ring-white"></span>
                                         </div>
                                         <div className="w-full">
                                             <h5 className="text-sm font-semibold text-black">
                                                 {user.name}
                                             </h5>
-                                            <p className="text-sm"></p>
                                         </div>
                                     </div>
-                                )
-                            }
-                            )}
+                                );
+                            })}
                         </div>
                     </div>
                 </div>
 
                 {/* Chat Box */}
-                <div className="w-9/12 border-l border-[var(--border-color)]">
-                    {activeChat ?
-                        (
+                <div className="w-9/12 border-l  border-[var(--border-color)]">
+                    {activeChat ? (
                         <>
-                            {/* Header */}
+                            {/* Chat Header */}
                             <div className="flex sticky top-0 bg-white items-center justify-between px-6 py-7 border-b border-[var(--border-color)]">
                                 <div className="flex items-center">
                                     <div className="mr-[1.125rem] h-12 w-12 max-w-12 overflow-hidden rounded-full">
                                         <img
-                                                src={activeChat.profileImage
-                                                    ? require(`${activeChat.profileImage}`)
-                                                    : defaultim}
+                                            src={activeChat.profileImage
+                                                ? activeChat.profileImage
+                                                : defaultim}
                                             className="object-cover object-center w-full h-full"
                                             alt=""
                                         />
@@ -160,13 +157,10 @@ const Userallchats = () => {
                                         </h5>
                                     </div>
                                 </div>
-                                <span className="ml-4 text-base text-black bg-[#f7f9fc] py-[.125rem] px-2 rounded-md">
-                                    0
-                                </span>
                             </div>
 
-                            {/* Scrollable Messages */}
-                            <div className="max-h-[70vh] space-y-3.5 overflow-hidden px-6 py-[1.875rem]">
+                            {/* Messages */}
+                            <div className="max-h-[100vh] space-y-3.5 overflow-auto px-6 py-[1.875rem]">
                                 {message.map((msg, index) => (
                                     <div
                                         className={`max-w-[31.25rem] ${msg.sender === 'self' ? 'ml-auto text-right' : ''
@@ -187,7 +181,7 @@ const Userallchats = () => {
                             </div>
 
                             {/* Input Box */}
-                            <div className="sticky bottom-0 border-t border-[var(--border-color)] bg-white py-5 px-6">
+                            <div className="sticky bottom-0 border-t border-[var(--border-color)] bg-white py-5 px-6 hidden-overflow">
                                 <form
                                     className="flex items-center justify-between space-x-4"
                                     onSubmit={handlesendmessage}
@@ -198,7 +192,6 @@ const Userallchats = () => {
                                             name="message"
                                             className="w-full pl-5 py-3 pr-20 text-black bg-[rgb(239,244,251)] border rounded-md outline-none h-13 border-[var(--border-color)] placeholder-body focus:border focus:border-[var(--primary-color)]"
                                             placeholder="type something here"
-                                            id=""
                                         />
                                         <div className="absolute inline-flex items-center justify-end space-x-4 cursor-pointer top-4 right-5">
                                             <button className="hover:text-[var(--primary-color)]">
@@ -223,8 +216,7 @@ const Userallchats = () => {
                 </div>
             </div>
         </div>
+    );
+};
 
-    )
-}
-
-export default Userallchats
+export default Userallchats;
