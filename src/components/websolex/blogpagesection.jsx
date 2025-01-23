@@ -35,8 +35,6 @@ const Blogpagesection = () => {
                 const res = await fetch('https://websolex-admin.vercel.app/api/blogpage', {
                     method: "GET",
                 });
-
-                // Check if the response is successful
                 if (!res.ok) {
                     setFeedback({
                         message: `Error fetching blog data:${res.message}`,

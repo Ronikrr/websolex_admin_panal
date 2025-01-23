@@ -1,5 +1,5 @@
 import React from 'react'
-import Blogpagesection from '../../components/websolex/blogpagesection'
+import Blogpagesection from '../../components/websolex/blogpagedata'
 
 const Blogpage = () => {
     return (
