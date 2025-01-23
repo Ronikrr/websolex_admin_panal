@@ -29,7 +29,6 @@ const Blogpagesection = () => {
         }, 3000);
     }, [isOpenLastAll]);
 
-
     useEffect(() => {
         const fetchleads = async () => {
             try {
