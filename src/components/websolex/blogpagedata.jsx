@@ -34,7 +34,7 @@ const Blogpagesection = () => {
     useEffect(() => {
         const fetchleads = async () => {
             try {
-                const res = await fetch("http://localhost:8000/api/blogpage", {
+                const res = await fetch("https://websolex-admin.vercel.app/api/blogpage", {
                     method: "GET",
                 })
                 if (!res.ok) {
@@ -97,7 +97,7 @@ const Blogpagesection = () => {
         if (!validateForm({ name, ...formData })) return
 
         try {
-            const response = await axios.post(`http://localhost:8000/api/blogpage`, formDataToSend, {
+            const response = await axios.post(`https://websolex-admin.vercel.app/api/blogpage`, formDataToSend, {
                 headers: { "Content-Type": "multipart/form-data" },
             })
             if (response.status === 200) {
@@ -135,7 +135,7 @@ const Blogpagesection = () => {
 
         try {
             const response = await axios.put(
-                `http://localhost:8000/api/blogpage/${selectedLead._id}`,
+                `https://websolex-admin.vercel.app/api/blogpage/${selectedLead._id}`,
                 formDataToSend,
                 {
                     headers: { "Content-Type": "multipart/form-data" },
@@ -194,7 +194,7 @@ const Blogpagesection = () => {
 
     const handleDelete = async (id) => {
         try {
-            await fetch(`http://localhost:8000/api/blogpage/${id}`, {
+            await fetch(`https://websolex-admin.vercel.app/api/blogpage/${id}`, {
                 method: "DELETE",
             })
             setLeads(leads.filter((lead) => lead._id !== id))
