@@ -9,6 +9,7 @@ import Breadcrumb from '../ui/breadcrumb';
 import Textarea from '../ui/textarea';
 import ProjectForm from './projectform'
 import FeedbackMessage from '../ui/feedback';
+import Static from './static';
 const Latestworkaddsection = () => {
     const [isOpenModel, setIsOpenModel] = useState(false);
     const [isOpenAddModel, setIsOpenAddModel] = useState(false);
@@ -337,6 +338,16 @@ const Latestworkaddsection = () => {
                         <div className="p-7">
                             <ProjectForm />
                         </div>
+
+                    </div>
+                    <div className="bg-white lg:mt-7 border rounded-sm border-[var(--border-color)] shadow-default ">
+                        <div className="py-4 border-b border-[var(--border-color)] capitalize  px-7 ">
+                            set static
+                        </div>
+                        <div className="p-7">
+                            <Static />
+                        </div>
+
                     </div>
                 </div>
             </div>

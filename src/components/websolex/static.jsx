@@ -3,11 +3,13 @@ import Seconduray from "../ui/seconduray";
 import Primary from "../ui/primary";
 import Input from "../ui/input";
 import FeedbackMessage from '../ui/feedback';
-const FormWithApiData = () => {
-    const [project, setproject] = useState({
-        totalClients: "",
-        completedProjects: "",
+const Static = () => {
+    const [statics, setstatic] = useState({
+        successfulproject: 0,
+        joiningcomparies: 0,
+        registeredcustomers: 0,
     });
+
     const [id, setid] = useState(null);
 
     const [feedback, setFeedback] = useState({ message: '', type: '' });
@@ -18,17 +20,17 @@ const FormWithApiData = () => {
     useEffect(() => {
         const fetchdata = async () => {
             try {
-                const res = await fetch("https://websolex-admin.vercel.app/api/project", {
+                const res = await fetch("https://websolex-admin.vercel.app/api/setstatic", {
                     method: "GET",
                 });
                 const data = await res.json();
                 if (data && data.length > 0) {
-                    setproject(data[0]);
+                    setstatic(data[0]);
                     setid(data[0]._id);
                 }
             } catch (error) {
                 setFeedback({
-                    message: `Error fetching project form:${error}`,
+                    message: `Error fetching team members:${error}`,
                     type: 'error',
                 });
             }
@@ -38,8 +40,8 @@ const FormWithApiData = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setproject({
-            ...project,
+        setstatic({
+            ...statics,
             [name]: value,
         });
     };
@@ -47,48 +49,53 @@ const FormWithApiData = () => {
         e.preventDefault();
         if (id) {
             try {
-                const res = await fetch("https://websolex-admin.vercel.app/api/project", {
+                const res = await fetch("https://websolex-admin.vercel.app/api/setstatic", {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
                         id,
-                        ...project
+                        ...statics
                     }),
                 });
                 if (!res.ok) {
                     setFeedback({
-                        message: `Error fetching project form:${res.message}`,
+                        message: `Error fetching team members:${res.message}`,
                         type: 'error',
                     });
                 }
             } catch (error) {
                 setFeedback({
-                    message: `Error fetching project form:${error}`,
+                    message: `Error fetching team members:${error}`,
                     type: 'error',
                 });
             }
         } else {
             try {
-                const res = await fetch("https://websolex-admin.vercel.app/api/project", {
+                const res = await fetch("https://websolex-admin.vercel.app/api/setstatic", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify(project),
+                    body: JSON.stringify(statics),
                 });
                 if (!res.ok) {
                     setFeedback({
-                        message: `Error fetching project form:${res.message}`,
+                        message: `Error fetching team members:${res.message}`,
                         type: 'error',
                     });
                 }
                 const data = await res.json();
+                setFeedback({
+                    message: `data is added`,
+                    type: 'success',
+                });
                 setid(data.member._id);
+
             } catch (error) {
                 setFeedback({
-                    message: `Error fetching project form:${error}`,
+                    message: `Error fetching team members:${error}`,
                     type: 'error',
                 });
             }
@@ -105,13 +112,13 @@ const FormWithApiData = () => {
                         htmlFor="totalClients"
                         className="block mb-3 text-sm font-medium text-black capitalize"
                     >
-                        Total Clients
+                        Successful Project
                     </label>
                     <Input
                         type={'text'}
-                        name={'totalClients'}
-                        placeholder={"Total clients"}
-                        value={project?.totalClients}
+                        name={'successfulproject'}
+                        placeholder={"Successful Project"}
+                        value={statics.successfulproject}
                         onChange={handleChange}
                     />
                 </div>
@@ -121,13 +128,28 @@ const FormWithApiData = () => {
                     htmlFor="completedProjects"
                     className="block mb-3 text-sm font-medium text-black capitalize"
                 >
-                    Completed Projects
+                    Joining Comparies
                 </label>
                 <Input
                     type={"text"}
-                    name={"completedProjects"}
-                    placeholder={"Completed projects"}
-                    value={project?.completedProjects}
+                    name={"joiningcomparies"}
+                    placeholder={"Joining Comparies"}
+                    value={statics.joiningcomparies}
+                    onChange={handleChange}
+                />
+            </div>
+            <div className="mb-5">
+                <label
+                    htmlFor="completedProjects"
+                    className="block mb-3 text-sm font-medium text-black capitalize"
+                >
+                    Registered Customers
+                </label>
+                <Input
+                    type={"text"}
+                    name={"registeredcustomers"}
+                    placeholder={"Registered Customers"}
+                    value={statics.registeredcustomers}
                     onChange={handleChange}
                 />
             </div>
@@ -139,4 +161,4 @@ const FormWithApiData = () => {
     );
 };
 
-export default FormWithApiData;
+export default Static;
