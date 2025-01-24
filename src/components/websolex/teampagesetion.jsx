@@ -163,30 +163,8 @@ const Servicepagesection = () => {
         setErrors({});
     };
 
-    // const handleFileChange = (e) => {
-    //     const file = e.target.files[0];
 
-    //     if (file) {
-    //         const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
-    //         if (!validTypes.includes(file.type)) {
-    //             alert('Please upload a valid image (JPEG, PNG, or GIF)');
-    //             return;
-    //         }
-    //         const maxSize = 5 * 1024 * 1024; // 5MB
-    //         if (file.size > maxSize) {
-    //             alert('File is too large. Please upload an image smaller than 5MB');
-    //             return;
-    //         }
-    //         setImageFile(file);
-    //         setImagePreview(URL.createObjectURL(file));
-    //     }
-    // };
     const handleFileChange = (e) => {
-        // const file = e.target.files[0];
-        // if (file) {
-        //     setImageFile(file);
-        //     setImagePreview(URL.createObjectURL(file));
-        // }
         const file = e.target.files[0];
         if (!file) return;
 

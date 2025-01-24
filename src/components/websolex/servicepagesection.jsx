@@ -28,7 +28,7 @@ const Servicepagesection = () => {
             setIsOpenLastAll(false);
         }, 3000);
     }, [isOpenLastAll]);
-    const API_URL = "http://localhost:8000/api/service";
+    const API_URL = "https://websolex-admin.vercel.app/api/service";
 
     const fetchleads = async () => {
         try {
@@ -83,7 +83,7 @@ const Servicepagesection = () => {
         if (!validateForm({ name, title, category, dis1, dis2, image: imageFile })) return;
 
         try {
-            const response = await axios.post(`http://localhost:8000/api/service`, formData, {
+            const response = await axios.post(`https://websolex-admin.vercel.app/api/service`, formData, {
                 headers: { "Content-Type": "multipart/form-data" }
             });
             if (response.status === 200) {
@@ -125,7 +125,7 @@ const Servicepagesection = () => {
         if (!validateForm({ name, title, category, dis1, dis2, image: imageFile })) return;
 
         try {
-            const response = await fetch(`http://localhost:8000/api/service/${selectedLead._id}`, {
+            const response = await fetch(`https://websolex-admin.vercel.app/api/service/${selectedLead._id}`, {
                 method: 'PUT',
                 body: formData,
             });
@@ -198,7 +198,7 @@ const Servicepagesection = () => {
 
     const handleDelete = async (id) => {
         try {
-            await fetch(`http://localhost:8000/api/service/${id}`, {
+            await fetch(`https://websolex-admin.vercel.app/api/service/${id}`, {
                 method: 'DELETE',
             });
             setLeads(leads.filter((lead) => lead._id !== id));
