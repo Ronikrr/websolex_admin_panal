@@ -54,7 +54,6 @@ const Userallchats = () => {
                     seterror(errorText);
                 } else {
                     const data = await res.json();
-                    console.log(data)
                     setUsers(data); // Ensure the API returns the correct structure.
                 }
             } catch (err) {

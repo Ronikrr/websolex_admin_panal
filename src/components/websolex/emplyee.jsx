@@ -87,7 +87,6 @@ const Blogpagesection = () => {
         const formData = new FormData(e.target);
         const formValues = Object.fromEntries(formData.entries());
 
-        console.log("Form Values:", formValues);
 
         // Validate form
         if (!validateForm(formValues)) {
@@ -129,8 +128,7 @@ const Blogpagesection = () => {
     // Handle editing an employee
     const handleEditSave = async (e) => {
         e.preventDefault();
-        const updatedLead = { ...selectedLead};
-        console.log(updatedLead)
+        const updatedLead = { ...selectedLead };
         if (!validateForm(updatedLead)) return;
 
         try {

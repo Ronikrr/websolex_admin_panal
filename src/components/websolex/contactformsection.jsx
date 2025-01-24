@@ -57,7 +57,6 @@ const Contactformsection = () => {
         fetchleadssub()
         fetchleads();
     }, []);
-    console.log(contactdata)
     return (
 
         <div className='w-full' >
