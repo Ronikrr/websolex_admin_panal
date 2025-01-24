@@ -258,11 +258,19 @@ const Latestworkaddsection = () => {
                                 <div className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200">
                                     <div className="flex-1">1</div>
                                     <div className="flex-1">
-                                        <img src={recentLead?.image} alt={recentLead?.name} className="object-cover w-16 h-16 aspect-square" />
+                                        <img src={recentLead?.image}
+                                            alt={recentLead?.name} className="object-cover w-16 h-16 aspect-square"
+                                        />
                                     </div>
-                                    <div className="flex-1">{recentLead?.name}</div>
-                                    <div className="flex-1">{recentLead?.category}</div>
-                                    <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">{recentLead?.work || 'N/A'}</div>
+                                    <div className="flex-1">
+                                        {recentLead?.name}
+                                    </div>
+                                    <div className="flex-1">
+                                        {recentLead?.category}
+                                    </div>
+                                    <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">
+                                        {recentLead?.work}
+                                    </div>
 
                                     {/* Render Star Rating for Recent Lead */}
 
