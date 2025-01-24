@@ -282,9 +282,9 @@ const Servicepagesection = () => {
                         <div className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200">
                             <div className="flex-1">{1}</div>
                             <div className="flex-1">
-                                <img src={recentLead.image} alt={recentLead.name} className="object-cover w-16 h-16 aspect-square" />
+                                <img src={recentLead?.image} alt={recentLead?.name} className="object-cover w-16 h-16 aspect-square" />
                             </div>
-                            <div className="flex-1">{recentLead.name}</div>
+                            <div className="flex-1">{recentLead?.name}</div>
 
 
                             {/* Render Star Rating for Recent Lead */}
@@ -297,7 +297,7 @@ const Servicepagesection = () => {
                                 <button className="text-gray-600 hover:text-black" onClick={() => toggleViewMode(recentLead)}>
                                     <FaRegEye />
                                 </button>
-                                <button className="text-red-500 hover:text-black" onClick={() => handleDelete(recentLead._id)}>
+                                <button className="text-red-500 hover:text-black" onClick={() => handleDelete(recentLead?._id)}>
                                     <RiDeleteBin6Line />
                                 </button>
                             </div>
@@ -325,18 +325,18 @@ const Servicepagesection = () => {
                         leads.map((lead, index) => {
 
                             return (
-                                <div key={lead._id || index} className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200">
-                                    <div className="flex-1"> {lead.id || index + 1}</div>
+                                <div key={lead?._id || index} className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200">
+                                    <div className="flex-1"> {lead?.id || index + 1}</div>
                                     <div className="flex-1">
-                                        <img src={lead.image} alt={lead.name || 'Lead Image'} className="object-cover w-16 h-16 aspect-w-1 aspect-h-1" />
+                                        <img src={lead?.image} alt={lead?.name || 'Lead Image'} className="object-cover w-16 h-16 aspect-w-1 aspect-h-1" />
                                     </div>
-                                    <div className="flex-1">{lead.name}</div>
+                                    <div className="flex-1">{lead?.name}</div>
 
                                     <div className="flex items-center flex-1 gap-2">
-                                        <button className="text-gray-600 hover:text-black" onClick={() => handleEditClick(lead._id)}>
+                                        <button className="text-gray-600 hover:text-black" onClick={() => handleEditClick(lead)}>
                                             <FaRegEdit />
                                         </button>
-                                        <button className="text-red-500 hover:text-black" onClick={() => handleDelete(lead._id)}>
+                                        <button className="text-red-500 hover:text-black" onClick={() => handleDelete(lead?._id)}>
                                             <RiDeleteBin6Line />
                                         </button>
                                     </div>
@@ -446,17 +446,13 @@ const Servicepagesection = () => {
 
                             <div className="flex justify-between mt-4">
                                 {!isViewMode && (
-                                    <Primary type="submit" className="btn btn-primary">
-                                        {isOpenAddModel ? 'Save' : 'Update'}
-                                    </Primary>
+                                    <Primary type="submit" label={isOpenAddModel ? 'Save' : 'Update'} />
                                 )}
                                 <Seconduray
                                     type="button"
                                     label={"Cancel"}
                                     onClick={() => (isOpenAddModel ? setIsOpenAddModel(false) : isViewMode ? setIsViewMode(false) : setIsOpenModel(false))}
-                                >
-                                    Cancel
-                                </Seconduray>
+                                />
                             </div>
                         </form>
                     </div>
