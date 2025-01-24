@@ -12,10 +12,10 @@ import FeedbackMessage from '../ui/feedback';
 const Servicepagesection = () => {
     const [isOpenModel, setIsOpenModel] = useState(false);
     const [isOpenAddModel, setIsOpenAddModel] = useState(false);
-    const [imageFile, setImageFile] = useState(null);
-    const [imagePreview, setImagePreview] = useState(null);
+    const [imageFile, setImageFile] = useState([]);
+    const [imagePreview, setImagePreview] = useState([]);
     const [leads, setLeads] = useState([]);
-    const [selectedLead, setSelectedLead] = useState(null);
+    const [selectedLead, setSelectedLead] = useState([]);
     const [errors, setErrors] = useState({});
     const [isOpenLastAll, setIsOpenLastAll] = useState(false);
     const [feedback, setFeedback] = useState({ message: '', type: '' });
@@ -28,14 +28,14 @@ const Servicepagesection = () => {
             setIsOpenLastAll(false);
         }, 3000);
     }, [isOpenLastAll]);
-    const API_URL = "https://websolex-admin.vercel.app/api/service";
+    const API_URL = "http://localhost:8000/api/service";
 
     const fetchleads = async () => {
         try {
             const res = await fetch(API_URL);
             const data = await res.json();
             setLeads(data);
-         
+
         } catch (error) {
             setFeedback({
                 message: `Error fetching service data:${error}`,
@@ -43,7 +43,7 @@ const Servicepagesection = () => {
             });
         }
     };
-  
+
 
     useEffect(() => {
         fetchleads();
@@ -52,6 +52,7 @@ const Servicepagesection = () => {
         const newErrors = {};
         if (!data.name || data.name.trim() === '') newErrors.name = 'Name is required';
         if (!data.title || data.title.trim() === '') newErrors.title = 'title is required';
+        if (!data.category || data.category.trim() === '') newErrors.category = 'category is required';
         if (!data.dis1 || data.dis1.trim() === '') newErrors.dis1 = 'dis1 is required';
         if (!data.dis2 || data.dis2.trim() === '') newErrors.dis2 = 'dis2 details are required';
 
@@ -59,7 +60,7 @@ const Servicepagesection = () => {
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
-    
+
     const handleAddSave = async (e) => {
         e.preventDefault();
 
@@ -67,20 +68,22 @@ const Servicepagesection = () => {
         const title = e.target.title.value;
         const dis1 = e.target.dis1.value;
         const dis2 = e.target.dis2.value;
+        const category = e.target.category.value;
 
         // Prepare form data for the request
         const formData = new FormData();
         formData.append("name", name);
         formData.append("title", title);
+        formData.append("category", category);
         formData.append("dis1", dis1);
         formData.append("dis2", dis2);
         if (imageFile) formData.append("image_client_work", imageFile);
 
         // Validate form
-        if (!validateForm({ name, title, dis1, dis2, image: imageFile })) return;
+        if (!validateForm({ name, title, category, dis1, dis2, image: imageFile })) return;
 
         try {
-            const response = await axios.post(`https://websolex-admin.vercel.app/api/service`, formData, {
+            const response = await axios.post(`http://localhost:8000/api/service`, formData, {
                 headers: { "Content-Type": "multipart/form-data" }
             });
             if (response.status === 200) {
@@ -98,28 +101,31 @@ const Servicepagesection = () => {
                 message: `Failed to add lead. Please try again.${error.response ? error.response.data : error.message}`,
                 type: 'error',
             });
+            console.log(error.message)
         }
     };
-   
+
     const handleEditSave = async (e) => {
         e.preventDefault();
         const name = e.target.name.value;
         const title = e.target.title.value;
         const dis1 = e.target.dis1.value;
         const dis2 = e.target.dis2.value;
+        const category = e.target.category.value;
 
         // Prepare form data for the request
         const formData = new FormData();
         formData.append("name", name);
         formData.append("title", title);
+        formData.append("category", category);
         formData.append("dis1", dis1);
         formData.append("dis2", dis2);
         if (imageFile) formData.append("image_client_work", imageFile);
 
-        if (!validateForm({ name, title, dis1, dis2, image: imageFile })) return;
+        if (!validateForm({ name, title, category, dis1, dis2, image: imageFile })) return;
 
         try {
-            const response = await fetch(`https://websolex-admin.vercel.app/api/service/${selectedLead._id}`, {
+            const response = await fetch(`http://localhost:8000/api/service/${selectedLead._id}`, {
                 method: 'PUT',
                 body: formData,
             });
@@ -192,7 +198,7 @@ const Servicepagesection = () => {
 
     const handleDelete = async (id) => {
         try {
-            await fetch(`https://websolex-admin.vercel.app/api/service/${id}`, {
+            await fetch(`http://localhost:8000/api/service/${id}`, {
                 method: 'DELETE',
             });
             setLeads(leads.filter((lead) => lead._id !== id));
@@ -208,7 +214,6 @@ const Servicepagesection = () => {
             });
         }
     };
- 
 
 
     return (
@@ -230,12 +235,12 @@ const Servicepagesection = () => {
                     </div>
                     <div className="flex items-center">
                         <div className="relative cursor-pointer ">
-                           
+
                             <button className='flex items-center gap-3 rounded-lg px-6 py-2 shadow-md border text-[var(--primary-color)] border-[var(--primary-color)] uppercase hover:bg-[var(--primary-color)] hover:text-white duration-1000' title='add' onClick={() => setIsOpenAddModel(true)} >
                                 <IoMdAdd /> add
-                           </button>
-                                
-                           
+                            </button>
+
+
                         </div>
                     </div>
                 </div>
@@ -244,8 +249,7 @@ const Servicepagesection = () => {
                     <div className="p-2.5 xl:p-5 flex-1">Image</div>
                     <div className="p-2.5 xl:p-5 flex-1">Name</div>
                     <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">title</div>
-                    <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">dis1</div>
-                    <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">dis2</div>
+
 
                     <div className="p-2.5 xl:p-5 flex-1">Action</div>
                 </div>
@@ -254,21 +258,18 @@ const Servicepagesection = () => {
                         <div className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200">
                             <div className="flex-1">1</div>
                             <div className="flex-1">
-                                <img src={recentLead.image} alt={recentLead.name} className="object-cover w-16 h-16 aspect-square" />
+                                <img src={recentLead?.image} alt={recentLead?.name} className="object-cover w-16 h-16 aspect-square" />
                             </div>
-                            <div className="flex-1">{recentLead.name}</div>
-                            <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">{recentLead.title}</div>
-                            <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">{recentLead.dis1}</div>
-                            <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">{recentLead.dis2}</div>
-
-                            {/* Render Star Rating for Recent Lead */}
-
-
+                            <div className="flex-1">
+                                {recentLead?.name}
+                            </div>
+                            <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">{recentLead?.title}
+                            </div>
                             <div className="flex items-center flex-1 gap-2">
                                 <button className="text-gray-600 hover:text-black" onClick={() => handleEditClick(recentLead)}>
                                     <FaRegEdit />
                                 </button>
-                                <button className="text-red-500 hover:text-black" onClick={() => handleDelete(recentLead._id)}>
+                                <button className="text-red-500 hover:text-black" onClick={() => handleDelete(recentLead?._id)}>
                                     <RiDeleteBin6Line />
                                 </button>
                             </div>
@@ -289,30 +290,31 @@ const Servicepagesection = () => {
                     <div className="p-2.5 xl:p-5 flex-1">Image</div>
                     <div className="p-2.5 xl:p-5 flex-1">Name</div>
                     <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">title</div>
-                    <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">dis1</div>
-                    <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">dis2</div>
+
 
                     <div className="p-2.5 xl:p-5 flex-1">Action</div>
                 </div>
                 <div className="flex flex-col w-full">
                     {leads.length > 0 ? (
-                        leads.map((lead,index) => (
-                            <div key={lead.id} className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200">
-                                <div className="flex-1">{index+1}</div>
+                        leads.map((lead, index) => (
+                            <div key={lead?._id} className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200">
+                                <div className="flex-1">{index + 1}</div>
                                 <div className="flex-1">
-                                    <img src={lead.image} alt={lead.name || 'Lead Image'} className="object-cover w-16 h-16 aspect-w-1 aspect-h-1" />
+                                    <img src={lead?.image}
+                                        alt={lead?.name || 'Lead Image'} className="object-cover w-16 h-16 aspect-w-1 aspect-h-1"
+                                    />
                                 </div>
-                                <div className="flex-1">{lead.name}</div>
-                                <div className="flex-1 hidden md:block">{lead.title || 'N/A'}</div>
-                                <div className="flex-1 hidden md:block">{lead.dis1 || 'N/A'}</div>
-                                <div className="flex-1 hidden md:block">{lead.dis2 || 'N/A'}</div>
-
-
+                                <div className="flex-1">
+                                    {lead?.name}
+                                </div>
+                                <div className="flex-1 hidden md:block">
+                                    {lead?.title}
+                                </div>
                                 <div className="flex items-center flex-1 gap-2">
                                     <button className="text-gray-600 hover:text-black" onClick={() => handleEditClick(lead)}>
                                         <FaRegEdit />
                                     </button>
-                                    <button className="text-red-500 hover:text-black" onClick={() => handleDelete(lead._id)}>
+                                    <button className="text-red-500 hover:text-black" onClick={() => handleDelete(lead?._id)}>
                                         <RiDeleteBin6Line />
                                     </button>
                                 </div>
@@ -360,8 +362,26 @@ const Servicepagesection = () => {
                                     {errors.dis2 && <p className="text-sm text-red-500">{errors.dis2}</p>}
                                 </div>
                             </div>
+                            {/* dis2 */}
 
-                            {/* dis1 */}
+                            <div className="flex flex-col w-full">
+                                <label className="text-gray-600">Category:</label>
+                                <select
+                                    name="category"
+                                    className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 px-4 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
+                                    defaultValue={isOpenModel ? selectedLead?.category : ''}
+                                >
+                                    <option value="">Select category</option>
+                                    <option value="Web Development">Web Development</option>
+                                    <option value="Graphic Design">Graphic Design</option>
+                                    <option value="UI/UX Design">UI/UX Design</option>
+                                    <option value="Mobile Apps">Mobile Apps</option>
+                                    <option value="Digital Marketing">Digital Marketing</option>
+                                </select>
+                                {errors.category && <p className="text-sm text-red-500">{errors.category}</p>}
+                            </div>
+
+
                             <div className="flex flex-col w-full">
                                 <label className="text-gray-600">dis1:</label>
                                 <Textarea
@@ -374,9 +394,11 @@ const Servicepagesection = () => {
                                 />
                                 {errors.dis1 && <p className="text-sm text-red-500">{errors.dis1}</p>}
                             </div>
+
+
                             <div className="flex flex-col w-full">
                                 <label className="text-gray-600">dis2:</label>
-                                <Input
+                                <Textarea
                                     type="text"
                                     name="dis2"
                                     defaultValue={isOpenModel ? selectedLead.dis2 : ''}
@@ -392,30 +414,28 @@ const Servicepagesection = () => {
                                     <label className="text-gray-600">Image:</label>
                                     <Input
                                         type="file"
-                                        name="image"
+                                        name="image_client_work"
                                         accept="image/*"
                                         onChange={handleFileChange}
                                     />
                                     {errors.image && <p className="text-sm text-red-500">{errors.image}</p>}
                                 </div>
-                                {imagePreview && (
+                                {imagePreview ? (
                                     <div className="flex justify-center mt-2">
                                         <img src={isOpenModel ? imagePreview : imagePreview} alt="Preview" className="w-16 h-16" />
                                     </div>
-                                )}
+                                ) : (`no image`)}
                             </div>
 
                             {/* Buttons */}
                             <div className="flex justify-between mt-4">
-                                <Primary type="submit" label={isOpenAddModel? 'Save': 'Update' } />
-                                    
-                             
+                                <Primary type="submit" label={isOpenAddModel ? 'Save' : 'Update'} />
                                 <Seconduray
                                     type="button"
                                     label={"Cancel"}
                                     onClick={() => (isOpenAddModel ? setIsOpenAddModel(false) : setIsOpenModel(false))}
                                 />
-                              
+
                             </div>
                         </form>
                     </div>
