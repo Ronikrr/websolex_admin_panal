@@ -38,9 +38,8 @@ const Layout = ({ children }) => {
     setisopensidebar(false);
   };
 
-  // Simulate loading delay
   React.useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 3000); // 1 second delay
+    const timer = setTimeout(() => setLoading(false), 3000);
     return () => clearTimeout(timer);
   }, []);
 

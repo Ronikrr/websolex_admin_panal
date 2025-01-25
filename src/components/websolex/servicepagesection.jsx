@@ -341,7 +341,6 @@ const Servicepagesection = () => {
                                         type="text"
                                         name="name"
                                         defaultValue={isOpenModel ? selectedLead.name : ''}
-
                                         placeholder="Enter name"
                                     />
                                     {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
@@ -356,7 +355,6 @@ const Servicepagesection = () => {
                                         type="text"
                                         name="title"
                                         defaultValue={isOpenModel ? selectedLead.title : ''}
-
                                         placeholder="Enter dis2"
                                     />
                                     {errors.dis2 && <p className="text-sm text-red-500">{errors.dis2}</p>}
