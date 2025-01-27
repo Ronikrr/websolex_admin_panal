@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FaAngleUp, FaAngleDown, FaChartBar, FaChartLine, FaBullhorn, FaUserCheck, FaCrown, FaPen, FaUsers } from "react-icons/fa";
 import { MdDashboard, MdBusiness } from "react-icons/md";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 import { FaHandshake } from "react-icons/fa";
 import { MdOutlineWorkspacePremium } from "react-icons/md";
-import { RiContactsFill, RiCustomerService2Fill } from "react-icons/ri";
+import { RiContactsFill } from "react-icons/ri";
 import { MdContactPage } from "react-icons/md";
 import { FaUserNinja } from "react-icons/fa6";
 
@@ -13,7 +13,6 @@ function Sidebar({ isopensidebar, closeslidebar }) {
     const [activeMenu, setActiveMenu] = useState(null);
     const [activeSubMenu, setActiveSubMenu] = useState(null);
     const [activeSubSubMenu, setActiveSubSubMenu] = useState(null);
-    const location = useLocation();
 
     const menuItems = [
         {
