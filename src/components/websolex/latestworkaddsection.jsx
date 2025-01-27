@@ -85,7 +85,7 @@ const Latestworkaddsection = () => {
                 setIsOpenAddModel(false);
 
                 const result = await response.json();
-                setLeads([...leads, result.data.savedMember]);
+                setLeads([...leads, result.data]);
 
                 // Set success feedback
                 setFeedback({
