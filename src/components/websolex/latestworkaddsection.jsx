@@ -249,8 +249,6 @@ const Latestworkaddsection = () => {
                             <div className="p-2.5 xl:p-5 flex-1">Image</div>
                             <div className="p-2.5 xl:p-5 flex-1">Name</div>
                             <div className="p-2.5 xl:p-5 flex-1">category</div>
-                            <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">work</div>
-
                             <div className="p-2.5 xl:p-5 flex-1">Action</div>
                         </div>
                         <div className="flex flex-col w-full">
@@ -268,13 +266,6 @@ const Latestworkaddsection = () => {
                                     <div className="flex-1">
                                         {recentLead?.category}
                                     </div>
-                                    <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">
-                                        {recentLead?.work}
-                                    </div>
-
-                                    {/* Render Star Rating for Recent Lead */}
-
-
                                     <div className="flex items-center flex-1 gap-2">
                                         <button className="text-gray-600 hover:text-black" onClick={() => handleEditClick(recentLead)}>
                                             <FaRegEdit />
@@ -300,9 +291,6 @@ const Latestworkaddsection = () => {
                             <div className="p-2.5 xl:p-5 flex-1">Image</div>
                             <div className="p-2.5 xl:p-5 flex-1">Name</div>
                             <div className="p-2.5 xl:p-5 flex-1">category</div>
-                            <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">Description</div>
-                            <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">work</div>
-
                             <div className="p-2.5 xl:p-5 flex-1">Action</div>
                         </div>
                         <div className="flex flex-col w-full">
@@ -315,11 +303,6 @@ const Latestworkaddsection = () => {
                                         </div>
                                         <div className="flex-1">{lead?.name}</div>
                                         <div className="flex-1">{lead?.category}</div>
-
-                                        <div className="flex-1 hidden md:block">{lead?.description || 'N/A'}</div>
-                                        <div className="flex-1 hidden md:block">{lead?.work || 'N/A'}</div>
-
-
                                         <div className="flex items-center flex-1 gap-2">
                                             <button className="text-gray-600 hover:text-black" onClick={() => handleEditClick(lead)}>
                                                 <FaRegEdit />
