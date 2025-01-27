@@ -104,7 +104,7 @@ const Servicepagesection = () => {
 
         } catch (error) {
             setFeedback({
-                message: `Failed to add lead. Please try again.${error.response ? error.response.data : error.message}`,
+                message: `Failed to add lead:${error.response ? error.response.data : error.message}`,
                 type: 'error',
             });
         }
@@ -164,6 +164,34 @@ const Servicepagesection = () => {
     };
 
 
+    // const handleFileChange = (e) => {
+    //     const file = e.target.files[0];
+    //     if (!file) return;
+
+    //     const img = new Image();
+    //     const reader = new FileReader();
+
+    //     reader.onload = (event) => {
+    //         img.src = event.target.result;
+    //     };
+
+    //     img.onload = () => {
+    //         if (img.width === img.height) {
+
+    //             setImageFile(file);
+    //             setImagePreview(URL.createObjectURL(file));
+    //         } else {
+    //             setFeedback({
+    //                 message: `Only square images are allowed.`,
+    //                 type: 'error',
+    //             });
+    //             setImageFile(null);
+    //             setImagePreview(null);
+    //         }
+    //     };
+
+    //     reader.readAsDataURL(file);
+    // };
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -176,13 +204,15 @@ const Servicepagesection = () => {
         };
 
         img.onload = () => {
-            if (img.width === img.height) {
+            const aspectRatio = img.width / img.height;
 
+            // Check if the aspect ratio is 3:4
+            if (Math.abs(aspectRatio - 0.75) < 0.01) { // Allow a small margin for floating-point precision
                 setImageFile(file);
                 setImagePreview(URL.createObjectURL(file));
             } else {
                 setFeedback({
-                    message: `Only square images are allowed.`,
+                    message: `Only 3:4 aspect ratio images are allowed.`,
                     type: 'error',
                 });
                 setImageFile(null);
@@ -192,6 +222,7 @@ const Servicepagesection = () => {
 
         reader.readAsDataURL(file);
     };
+
 
     const recentLead = leads[leads.length - 1];
 
