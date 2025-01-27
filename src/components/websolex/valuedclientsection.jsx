@@ -77,14 +77,15 @@ const Valuedclientsection = () => {
                     message: `Valued client added successfully!`,
                     type: 'success',
                 });
-                const result = await res.json();
+                const result = res.data;
                 setLeads([...leads, result.data.client.savedclient]);
                 resetFormFields(e);
             }
         }
         catch (error) {
+            console.log(error.message)
             setFeedback({
-                message: `Failed to add lead. Please try again.${error.response ? error.response.data : error.message}`,
+                message: `Failed to add lead. Please try again.${error.message}`,
                 type: 'error',
             });  
         }

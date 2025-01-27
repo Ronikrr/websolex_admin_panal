@@ -31,7 +31,7 @@ function Sidebar({ isopensidebar, closeslidebar }) {
                         { id: 3, icon: <FaHandshake />, label: "Trusted Bond", link: "/websolex/valuedclient" },
                         { id: 4, icon: <MdOutlineWorkspacePremium />, label: "Our work", link: "/websolex/latestworkadd" },
                         { id: 5, icon: <FaUserCheck />, label: "client rate", link: "/websolex/clientrate" },
-                        { id: 6, icon: <RiCustomerService2Fill />, label: "service page", link: "/websolex/servicepage" },
+                        // { id: 6, icon: <RiCustomerService2Fill />, label: "service page", link: "/websolex/servicepage" },
                         { id: 7, icon: <FaPen />, label: "blog page", link: "/websolex/blogpage" },
                         { id: 8, icon: <MdContactPage />, label: "contact details", link: "/websolex/contactdetails" },
                         { id: 9, icon: <RiContactsFill />, label: "contact & subscribe", link: "/websolex/contactform" },
