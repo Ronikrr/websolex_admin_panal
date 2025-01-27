@@ -82,7 +82,7 @@ const Latestworkaddsection = () => {
 
             if (response.status === 200) {
 
-                setIsOpenAddModel(false);  
+                setIsOpenAddModel(false);
 
                 const result = await response.json();
                 setLeads([...leads, result.data.savedMember]);
@@ -376,11 +376,6 @@ const Latestworkaddsection = () => {
                                     />
                                     {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
                                 </div>
-
-
-
-
-                                {/* work */}
                                 <div className="flex flex-col w-full">
                                     <label className="text-gray-600">work:</label>
                                     <Input
@@ -392,7 +387,7 @@ const Latestworkaddsection = () => {
                                     {errors.work && <p className="text-sm text-red-500">{errors.work}</p>}
                                 </div>
                             </div>
-                            <div className="flex flex-col items-center gap-1 lg:gap-4 lg:flex-row ">
+                            <div className="flex flex-col items-center gap-1 lg:gap-4 ">
                                 {/* Description */}
                                 <div className="flex flex-col w-full">
                                     <label className="text-gray-600">Description:</label>
@@ -420,8 +415,9 @@ const Latestworkaddsection = () => {
                                     </select>
                                     {errors.category && <p className="text-sm text-red-500">{errors.category}</p>}
                                 </div>
-
                             </div>
+
+
 
 
                             {/* Image Upload */}
