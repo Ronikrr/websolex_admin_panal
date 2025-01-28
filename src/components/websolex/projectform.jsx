@@ -236,9 +236,7 @@ const FormWithApiData = () => {
         }
     }
 
-    if (isLoading) {
-        return <div>Loading...</div>
-    }
+
 
     return (
         <form onSubmit={handleSubmit}>
