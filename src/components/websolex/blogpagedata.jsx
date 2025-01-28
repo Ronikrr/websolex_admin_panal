@@ -872,8 +872,8 @@ const Blogpagesection = () => {
         imagePreview: null,
     })
 
-    const API = "http://localhost:8000"
-    // const API = "https://websolex-admin.vercel.app"
+    // const API = "http://localhost:8000"
+    const API = "https://websolex-admin.vercel.app"
 
     const handleClear = () => {
         setFeedback({ message: "", type: "" })
