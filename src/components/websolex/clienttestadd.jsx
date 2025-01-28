@@ -151,11 +151,6 @@ const Clienttestadd = () => {
     };
 
     const handleFileChange = (e) => {
-        // const file = e.target.files[0];
-        // if (file) {
-        //     setImageFile(file);
-        //     setImagePreview(URL.createObjectURL(file));
-        // }
         const file = e.target.files[0];
         if (!file) return;
 
@@ -256,8 +251,7 @@ const Clienttestadd = () => {
                     <div className="p-2.5 xl:p-5 flex-1">ID</div>
                     <div className="p-2.5 xl:p-5 flex-1">Image</div>
                     <div className="p-2.5 xl:p-5 flex-1">Name</div>
-                    <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">Description</div>
-                    <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">Business</div>
+
                     <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">Rate</div>
                     <div className="p-2.5 xl:p-5 flex-1">Action</div>
                 </div>
@@ -269,8 +263,6 @@ const Clienttestadd = () => {
                                 <img src={recentLead?.image} alt={recentLead.name} className="object-cover w-16 h-16 aspect-square" />
                             </div>
                             <div className="flex-1">{recentLead?.name}</div>
-                            <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">{recentLead?.description || 'N/A'}</div>
-                            <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">{recentLead?.business || 'N/A'}</div>
 
                             {/* Render Star Rating for Recent Lead */}
                             <div className="p-2.5 xl:p-5 flex-1 hidden lg:flex">
@@ -301,8 +293,6 @@ const Clienttestadd = () => {
                     <div className="p-2.5 xl:p-5 flex-1">ID</div>
                     <div className="p-2.5 xl:p-5 flex-1">Image</div>
                     <div className="p-2.5 xl:p-5 flex-1">Name</div>
-                    <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">Description</div>
-                    <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">Business</div>
                     <div className="p-2.5 xl:p-5 flex-1 hidden lg:block">Rate</div>
                     <div className="p-2.5 xl:p-5 flex-1">Action</div>
                 </div>
@@ -315,8 +305,6 @@ const Clienttestadd = () => {
                                     <img src={lead?.image} alt={lead?.name || 'Lead Image'} className="object-cover w-16 h-16 aspect-w-1 aspect-h-1" />
                                 </div>
                                 <div className="flex-1">{lead?.name}</div>
-                                <div className="flex-1 hidden md:block">{lead?.description || 'N/A'}</div>
-                                <div className="flex-1 hidden md:block">{lead?.business || 'N/A'}</div>
                                 <div className="flex flex-row flex-1 hidden md:flex">{lead?.rate ? renderStars(lead?.rate) : 'N/A'}</div>
 
                                 <div className="flex items-center flex-1 gap-2">
