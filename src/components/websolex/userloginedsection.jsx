@@ -30,7 +30,7 @@ const Userloginedsection = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetch('http://websolex-admin.vercel.app/users', {
+                const res = await fetch('https://websolex-admin.vercel.app/users', {
                     method: 'GET',
                 });
 
@@ -42,7 +42,8 @@ const Userloginedsection = () => {
                 }
 
                 const data = await res.json();
-                setUser(data.users);  // Ensure the data is valid
+                setUser(data.users);
+                console.log(data)
             } catch (error) {
                 setFeedback({
                     message: `Error fetching user data:${error.message}`,
@@ -108,7 +109,7 @@ const Userloginedsection = () => {
 
     const handleStatusChange = async (id, newStatus) => {
         try {
-            const res = await fetch(`http://websolex-admin.vercel.app/users/${id}`, {
+            const res = await fetch(`https://websolex-admin.vercel.app/users/${id}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status: newStatus }),
@@ -140,7 +141,7 @@ const Userloginedsection = () => {
 
     const handleDelete = async (id) => {
         try {
-            await fetch(`http://websolex-admin.vercel.app/users/${id}`, {
+            await fetch(`https://websolex-admin.vercel.app/users/${id}`, {
                 method: 'DELETE',
             });
             setFeedback({
