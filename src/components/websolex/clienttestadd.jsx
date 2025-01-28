@@ -90,7 +90,7 @@ const Clienttestadd = () => {
                     type: 'success',
                 });
                 const result = await response.json();
-                setLeads([...leads, result.data.clientrateadd.savedclientratekadd]);
+                setLeads([...leads, result.data]);
                 resetFormFields(e);
             }
 
