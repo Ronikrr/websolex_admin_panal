@@ -87,7 +87,6 @@ const Latestworkaddsection = () => {
                 const result = await response.json();
                 setLeads([...leads, result.data]);
 
-                // Set success feedback
                 setFeedback({
                     message: `Our work was added successfully!!`,
                     type: 'success',
@@ -102,6 +101,8 @@ const Latestworkaddsection = () => {
             });
         }
     };
+
+
 
     const handleEditSave = async (e) => {
         e.preventDefault();
@@ -399,10 +400,6 @@ const Latestworkaddsection = () => {
                                     {errors.category && <p className="text-sm text-red-500">{errors.category}</p>}
                                 </div>
                             </div>
-
-
-
-
                             {/* Image Upload */}
                             <div className="flex flex-row w-full mb-3">
                                 <div className="flex flex-col w-8/12">
