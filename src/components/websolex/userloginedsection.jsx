@@ -27,6 +27,32 @@ const Userloginedsection = () => {
             [name]: value,
         }));
     };
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await fetch('http://websolex-admin.vercel.app/users', {
+                    method: 'GET',
+                });
+
+                if (!res.ok) {
+                    setFeedback({
+                        message: `An error occurred while submitting the form :${res.message}`,
+                        type: 'error',
+                    });
+                }
+
+                const data = await res.json();
+                setUser(data.users);  // Ensure the data is valid
+            } catch (error) {
+                setFeedback({
+                    message: `Error fetching user data:${error.message}`,
+                    type: 'error',
+                });
+            }
+        };
+
+        fetchData();
+    }, []);
     const onsubmit = async (e) => {
         e.preventDefault();
         if (
@@ -79,32 +105,7 @@ const Userloginedsection = () => {
             });
         }
     };
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const res = await fetch('http://websolex-admin.vercel.app/users', {
-                    method: 'GET',
-                });
 
-                if (!res.ok) {
-                    setFeedback({
-                        message: `An error occurred while submitting the form :${res.message}`,
-                        type: 'error',
-                    });
-                }
-
-                const data = await res.json();
-                setUser(data.users);  // Ensure the data is valid
-            } catch (error) {
-                setFeedback({
-                    message: `Error fetching user data::${error.message}`,
-                    type: 'error',
-                });
-            }
-        };
-
-        fetchData();
-    }, []);
     const handleStatusChange = async (id, newStatus) => {
         try {
             const res = await fetch(`http://websolex-admin.vercel.app/users/${id}`, {
