@@ -144,7 +144,7 @@
 
 import React from "react"
 import { useState, useEffect } from "react"
-import Secondary from "../ui/secondary"
+import Secondary from "../ui/seconduray"
 import Primary from "../ui/primary"
 import Input from "../ui/input"
 import FeedbackMessage from "../ui/feedback"
@@ -187,7 +187,7 @@ const FormWithApiData = () => {
             }
         }
         fetchData()
-    }, []) // Empty dependency array to run only once on mount
+    }, []) 
 
     const handleChange = (e) => {
         const { name, value } = e.target
