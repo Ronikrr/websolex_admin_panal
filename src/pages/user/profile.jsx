@@ -331,10 +331,10 @@ import FeedbackMessage from '../../components/ui/feedback';
                                 </div>
                             </div>
                         </div>
-                        {/* Additional UI components */}
+
                     </div>
-                </div >
-            </div >
+                </div>
+            </div>
         );
     };
 
