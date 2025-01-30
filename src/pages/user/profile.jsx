@@ -46,13 +46,10 @@ import FeedbackMessage from '../../components/ui/feedback';
             const file = e.target.files[0];
 
             if (file) {
-                // Validate file type
                 if (!["image/png", "image/jpeg", "image/gif"].includes(file.type)) {
                     alert("Only PNG, JPG, or GIF files are allowed.");
                     return;
                 }
-
-                // Validate file size (max 800 KB)
                 setProfileImage(file); 
             } else {
 
