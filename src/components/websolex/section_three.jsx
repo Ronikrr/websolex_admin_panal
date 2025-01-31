@@ -20,8 +20,6 @@ const Section_three = () => {
     const handleonclick = () => {
         setisopen(!isopen);
     }
-
-
     const leads = [
         {
             name: "Google",
