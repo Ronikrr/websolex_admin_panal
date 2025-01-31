@@ -89,7 +89,7 @@ const Register = () => {
                             <Link to="/" className='inline-block text-[50px] capitalize font-semibold mb-3' >websolex </Link>
                             <p className='2xl:px-20 text-[30px]' >admin</p>
                             <span className="inline-block mt-16">
-                                <img src="https://www.t3bucket.com/f/0-Group15.png" className='w-[350px] h-[350px]' alt="" />
+                                <img src="https://www.t3bucket.com/f/0-Group152.png" className='w-[350px] h-[350px]' alt="" />
                             </span>
                         </div>
                     </div>

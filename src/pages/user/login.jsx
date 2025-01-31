@@ -78,7 +78,7 @@ const Login = () => {
                             </Link>
                             <p className='2xl:px-20 text-[16px]' >Lorem ipsum dolor sit amet, consectetur adipiscing elit suspendisse.</p>
                             <span className="inline-block mt-16">
-                                <img src="https://www.t3bucket.com/f/0-Group15.png" className='w-[350px] h-[350px]' alt="" />
+                                <img src="https://www.t3bucket.com/f/0-Group152.png" className='w-[350px] h-[350px]' alt="" />
                             </span>
                         </div>
                     </div>
