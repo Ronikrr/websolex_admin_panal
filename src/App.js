@@ -47,7 +47,7 @@ const Layout = ({ children }) => {
     <div className="flex w-screen sm:w-full h-full lg:h-screen bg-[#f1f5f9]">
       {loading ? (
         <div className="flex items-center justify-center w-screen h-screen ">
-          <GridLoader color="#007bff" />
+          <GridLoader color="rgb(84, 162, 217)" />
         </div>
       ) : (
         <>

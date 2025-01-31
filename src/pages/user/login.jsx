@@ -73,7 +73,9 @@ const Login = () => {
                 <div className="flex flex-wrap items-center w-full">
                     <div className="hidden w-full xl:block xl:w-1/2">
                         <div className="py-[4.375rem] text-center px-[6.5rem]">
-                            <Link to="/" className='inline-block mb-5' >tailwind</Link>
+                            <Link to="/" className='inline-block mb-5' >
+                                <img src={'https://www.t3bucket.com/f/0-HorizantalLogo.png'} className='w-[150px]' alt="" />
+                            </Link>
                             <p className='2xl:px-20 text-[16px]' >Lorem ipsum dolor sit amet, consectetur adipiscing elit suspendisse.</p>
                             <span className="inline-block mt-16">
                                 <img src="https://www.t3bucket.com/f/0-Group15.png" className='w-[350px] h-[350px]' alt="" />

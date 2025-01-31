@@ -4,7 +4,7 @@
 
 @layer components {
   :root {
-    --primary-color: #3c50e0;
+    --primary-color: rgb(84, 162, 217);
     --primary-light-color: rgba(60, 80, 224, 0.2);
     --secondury-color: #4b5563;
     --border-color: rgb(226, 232, 240);

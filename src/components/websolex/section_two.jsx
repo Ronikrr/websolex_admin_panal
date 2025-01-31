@@ -65,7 +65,7 @@ const ChartComponent = () => {
                                 style={{
                                     margin: '0 5px',
                                     padding: '10px 15px',
-                                    backgroundColor: currentView === view ? '#007bff' : '#f0f0f0',
+                                    backgroundColor: currentView === view ? 'var(--primary-color)' : '#f0f0f0',
                                     color: currentView === view ? '#fff' : '#000',
                                     border: 'none',
                                     borderRadius: '4px',
@@ -131,7 +131,7 @@ const ChartComponent = () => {
                                     <YAxis />
                                     <Tooltip />
                                     <Legend />
-                                    <Bar dataKey="Sales" fill="#3b82f6" barSize={25} />
+                                    <Bar dataKey="Sales" fill="var(--primary-color)" barSize={25} />
                                     <Bar dataKey="Revenue" fill="#93c5fd" barSize={25} />
                                 </BarChart>
                             </ResponsiveContainer>

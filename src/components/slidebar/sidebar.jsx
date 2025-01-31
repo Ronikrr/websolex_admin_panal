@@ -103,10 +103,7 @@ function Sidebar({ isopensidebar, closeslidebar }) {
         <div className="relative">
             <div className={`flex-col hidden overflow-y-scroll box_container md:flex md:w-[289.9px] main_class h-full text-white bg-[#1C2434] transition-all duration-500 ease-in-out`}>
                 <div className="flex items-center p-6 space-x-2 text-2xl font-bold">
-                    <div className="flex items-center justify-center w-8 h-8 bg-blue-500 rounded-full">
-                        <span className="text-lg font-bold text-white">T</span>
-                    </div>
-                    <span>TailAdmin</span>
+                    <img src="https://www.t3bucket.com/f/0-Asset6@4x.png" className="w-full h-[60px] aspect-video object-contain " alt="" />
                 </div>
 
                 <nav className="flex-1 px-4 py-6 space-y-4">
