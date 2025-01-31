@@ -125,9 +125,9 @@ const Login = () => {
                                         label={'Submit'}
                                     />
                                 </div>
-                                <div className="mt-6 text-center">
+                                {/* <div className="mt-6 text-center">
                                     <p>Don’t have any account? <Link to='/register' className='text-[var(--primary-color)] hover:underline' >Sign Up</Link> </p>
-                                </div>
+                                </div> */}
                             </form>
                         </div>
                     </div>
