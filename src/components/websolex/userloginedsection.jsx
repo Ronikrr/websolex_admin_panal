@@ -55,61 +55,6 @@ const Userloginedsection = () => {
 
         fetchData();
     }, []);
-    // const onsubmit = async (e) => {
-    //     e.preventDefault();
-    //     if (
-    //         !formdata.name ||
-    //         !formdata.email ||
-    //         !formdata.password ||
-    //         !formdata.confirmPassword
-    //     ) {
-    //         setFeedback({
-    //             message: `All fields are required!`,
-    //             type: 'error',
-    //         });
-    //         return;
-    //     }
-
-    //     if (formdata.password !== formdata.confirmPassword) {
-    //         setFeedback({
-    //             message: `Passwords do not match!`,
-    //             type: 'error',
-    //         });
-    //         return;
-    //     }
-
-    //     try {
-    //         const res = await fetch("https://websolex-admin.vercel.app/users", {
-    //             method: "POST",
-    //             body: JSON.stringify(formdata),
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //             },
-    //         });
-
-    //         if (!res.ok) {
-    //             setFeedback({
-    //                 message: `An error occurred while submitting the form.:${res.message}`,
-    //                 type: 'error',
-    //             });
-    //         }
-    //         else {
-    //             setIsOpenAddModel(false)
-    //             setFeedback({
-    //                 message: `user added succesfully`,
-    //                 type: 'success',
-    //             });
-    //         }
-    //     } catch (error) {
-    //         setFeedback({
-    //             message: `An error occurred while submitting the form :${error.message}`,
-    //             type: 'error',
-    //         });
-    //     }
-    // };
-
-
-
     const onsubmit = async (e) => {
         e.preventDefault();
 
@@ -145,7 +90,6 @@ const Userloginedsection = () => {
                 },
             });
 
-            // Check if the API request was successful
             if (!res.ok) {
                 setFeedback({
                     message: `An error occurred while submitting the form: ${res.message}`,
@@ -154,12 +98,11 @@ const Userloginedsection = () => {
             } else {
                 setIsOpenAddModel(false);
 
-                // 2. Send an email via EmailJS if the API request was successful
                 const emailResponse = await emailjs.sendForm(
-                    'service_szoqqsl',  // Replace with your EmailJS service ID
-                    'template_3vvce77',  // Replace with your EmailJS template ID
-                    e.target,            // Pass the form element
-                    'OoU53v3GRHWpMFiXL'       // Replace with your EmailJS user ID
+                    'service_szoqqsl',
+                    'template_3vvce77',
+                    e.target,
+                    'OoU53v3GRHWpMFiXL'   
                 );
 
                 if (emailResponse.status === 200) {
