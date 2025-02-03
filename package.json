@@ -16,6 +16,7 @@
     "crypto": "^1.0.1",
     "devenv": "^1.0.1",
     "dotenv": "^16.4.7",
+    "emailjs-com": "^3.2.0",
     "express": "^4.21.2",
     "express-rate-limit": "^7.5.0",
     "firebase": "^11.2.0",
