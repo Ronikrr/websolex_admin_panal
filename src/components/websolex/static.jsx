@@ -1,158 +1,94 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Seconduray from "../ui/seconduray";
 import Primary from "../ui/primary";
 import Input from "../ui/input";
 import FeedbackMessage from '../ui/feedback';
+import { useDispatch, useSelector } from "react-redux";
+import { fetchStatics, updateStatics } from "../../Redux/slice/staticSlice";
+
 const Static = () => {
-    const [statics, setstatic] = useState({
-        successfulproject: 0,
-        joiningcomparies: 0,
-        registeredcustomers: 0,
-    });
-
-    const [id, setid] = useState(null);
-
-    const [feedback, setFeedback] = useState({ message: '', type: '' });
-
+    const dispatch = useDispatch();
+    const staticsDetails = useSelector((state) => state.statics.statics);  // Corrected: 'statics' instead of 'data'
+    const staticsFeedback = useSelector((state) => state.statics.feedback);
+const [feedback, setFeedback] = useState({ message: '', type: '' });
+    // Fetch the statics data when component mounts
+    useEffect(() => {
+        dispatch(fetchStatics());
+    }, [dispatch]);
     const handleClear = () => {
         setFeedback({ message: "", type: "" });
     };
-    useEffect(() => {
-        const fetchdata = async () => {
-            try {
-                const res = await fetch("https://websolex-admin.vercel.app/api/setstatic", {
-                    method: "GET",
-                });
-                const data = await res.json();
-                if (data && data.length > 0) {
-                    setstatic(data[0]);
-                    setid(data[0]._id);
-                }
-            } catch (error) {
-                setFeedback({
-                    message: `Error fetching team members:${error}`,
-                    type: 'error',
-                });
-            }
-        };
-        fetchdata();
-    });
 
-    const handleChange = (e) => {
+    // Handle form input changes
+    const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setstatic({
-            ...statics,
-            [name]: value,
-        });
+        // Only update the local state
+        const updatedStatics = { ...staticsDetails, [name]: value };
+        dispatch(updateStatics(updatedStatics)); // Consider dispatching this only on form submission, not on each change.
     };
-    const handlesubmit = async (e) => {
-        e.preventDefault();
-        if (id) {
-            try {
-                const res = await fetch("https://websolex-admin.vercel.app/api/setstatic", {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        id,
-                        ...statics
-                    }),
-                });
-                if (!res.ok) {
-                    setFeedback({
-                        message: `Error fetching team members:${res.message}`,
-                        type: 'error',
-                    });
-                }
-            } catch (error) {
-                setFeedback({
-                    message: `Error fetching team members:${error}`,
-                    type: 'error',
-                });
-            }
-        } else {
-            try {
-                const res = await fetch("https://websolex-admin.vercel.app/api/setstatic", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(statics),
-                });
-                if (!res.ok) {
-                    setFeedback({
-                        message: `Error fetching team members:${res.message}`,
-                        type: 'error',
-                    });
-                }
-                const data = await res.json();
-                setFeedback({
-                    message: `data is added`,
-                    type: 'success',
-                });
-                setid(data.member._id);
 
-            } catch (error) {
-                setFeedback({
-                    message: `Error fetching team members:${error}`,
-                    type: 'error',
-                });
-            }
-        }
+    // Handle form submission
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        dispatch(updateStatics(staticsDetails));  // Dispatch when submitting the form
     };
+
     return (
-        <form onSubmit={handlesubmit} >
-            {feedback.message && (
-                <FeedbackMessage message={feedback.message} type={feedback.type} onClear={handleClear} />
+        <form onSubmit={handleSubmit}>
+            {staticsFeedback.message && (
+                <FeedbackMessage message={staticsFeedback.message || feedback.message} type={staticsFeedback.type || feedback.type} onClear={handleClear} />
             )}
+
             <div className="flex flex-col gap-5 mb-5 sm:flex-row">
                 <div className="w-full">
                     <label
-                        htmlFor="totalClients"
+                        htmlFor="successfulproject"
                         className="block mb-3 text-sm font-medium text-black capitalize"
                     >
                         Successful Project
                     </label>
                     <Input
-                        type={'text'}
-                        name={'successfulproject'}
-                        placeholder={"Successful Project"}
-                        value={statics.successfulproject}
-                        onChange={handleChange}
+                        type="text"
+                        name="successfulproject"
+                        placeholder="Successful Project"
+                        value={staticsDetails?.successfulproject || ""}
+                        onChange={handleInputChange}
                     />
                 </div>
             </div>
+
             <div className="mb-5">
                 <label
-                    htmlFor="completedProjects"
+                    htmlFor="joiningcomparies"
                     className="block mb-3 text-sm font-medium text-black capitalize"
                 >
-                    Joining Comparies
+                    Joining Companies
                 </label>
                 <Input
-                    type={"text"}
-                    name={"joiningcomparies"}
-                    placeholder={"Joining Comparies"}
-                    value={statics.joiningcomparies}
-                    onChange={handleChange}
+                    type="text"
+                    name="joiningcomparies"
+                    placeholder="Joining Companies"
+                    value={staticsDetails?.joiningcomparies || ""}
+                    onChange={handleInputChange}
                 />
             </div>
+
             <div className="mb-5">
                 <label
-                    htmlFor="completedProjects"
+                    htmlFor="registeredcustomers"
                     className="block mb-3 text-sm font-medium text-black capitalize"
                 >
                     Registered Customers
                 </label>
                 <Input
-                    type={"text"}
-                    name={"registeredcustomers"}
-                    placeholder={"Registered Customers"}
-                    value={statics.registeredcustomers}
-                    onChange={handleChange}
+                    type="text"
+                    name="registeredcustomers"
+                    placeholder="Registered Customers"
+                    value={staticsDetails?.registeredcustomers || ""}
+                    onChange={handleInputChange}
                 />
             </div>
+
             <div className="flex justify-end gap-4">
                 <Seconduray label="Cancel" />
                 <Primary label="Save" type="submit" />

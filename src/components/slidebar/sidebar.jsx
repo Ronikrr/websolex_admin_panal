@@ -54,24 +54,7 @@ function Sidebar({ isopensidebar, closeslidebar }) {
             ],
         },
     ];
-
-    // useEffect(() => {
-    //     menuItems.forEach(menu => {
-    //         menu.subMenu.forEach(subMenu => {
-    //             if (location.pathname.startsWith(subMenu.subsubmenu[0].link)) {
-    //                 setActiveMenu(menu.id);
-    //                 setActiveSubMenu(subMenu.id);
-    //             }
-    //             subMenu.subsubmenu.forEach(subsubmenu => {
-    //                 if (location.pathname === subsubmenu.link) {
-    //                     setActiveMenu(menu.id);
-    //                     setActiveSubMenu(subMenu.id);
-    //                     setActiveSubSubMenu(subsubmenu.id);
-    //                 }
-    //             });
-    //         });
-    //     });
-    // }, [location.pathname, menuItems]);
+ 
 
     const handleMenuClick = (menuId) => {
         if (menuId === activeMenu) {
@@ -154,21 +137,20 @@ function Sidebar({ isopensidebar, closeslidebar }) {
                     ))}
                 </nav>
             </div>
-            <div className={`flex-col absolute z-20 h-full flex md:hidden md:w-[289.9px] text-white h-full bg-[#1C2434] transition-all duration-500 ease-in-out ${isopensidebar ? 'block' : 'hidden'}`}>
-                <div className="flex items-center px-6 py-4 space-x-2 text-2xl font-bold">
-                    <div className="flex items-center justify-center w-8 h-8 bg-blue-500 rounded-full">
-                        <span className="text-lg font-bold text-white">T</span>
+            <div className={`flex-col absolute z-20 h-full flex md:hidden w-[200px] md:w-[289.9px] text-white h-full bg-[#1C2434] transition-all duration-500 ease-in-out ${isopensidebar ? 'block' : 'hidden'}`}>
+               
+                <div className="flex items-center w-full px-6 py-4 space-x-2 text-2xl font-bold">
+                    <img src="https://www.t3bucket.com/f/0-Asset6@4x.png" className="w-11/12 h-[60px] aspect-video object-contain " alt="" />
+                    <div className="flex justify-end w-1.5/12 ">
+                        <IoMdClose onClick={closeslidebar} />
                     </div>
-                    <span>TailAdmin</span>
-                    <IoMdClose onClick={closeslidebar} />
                 </div>
 
                 <nav className="flex-1 px-4 py-6 space-y-4 ">
                     {menuItems.map((menu) => (
                         <div key={menu.id}>
                             <div
-                                className={`flex items-center p-3 justify-between rounded cursor-pointer ${activeMenu === menu.id ? "bg-gray-900" : "bg-gray-800"
-                                 } `}
+                                className={`flex items-center p-3 justify-between rounded cursor-pointer `}
                                 onClick={() => handleMenuClick(menu.id)}
                             >
                                 <div className="flex items-center space-x-3">

@@ -37,8 +37,8 @@ const Userallchats = () => {
     };
 
     useEffect(() => {
-        const adminToken = localStorage.getItem('adminToken');
-        if (!adminToken) {
+        const Admintoken_websolex = localStorage.getItem('Admintoken_websolex');
+        if (!Admintoken_websolex) {
             navigate('/');
             return;
         }

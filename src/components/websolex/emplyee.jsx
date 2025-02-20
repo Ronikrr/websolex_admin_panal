@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { FaRegEdit } from 'react-icons/fa';
 
@@ -7,153 +8,87 @@ import Input from '../ui/input'
 import Primary from '../ui/primary'
 import Seconduray from '../ui/seconduray';
 import Breadcrumb from '../ui/breadcrumb';
-import axios from 'axios';
 import FeedbackMessage from '../ui/feedback';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchEmployee, addEmployee, deleteEmployee, patchEmployee, updateEmployee } from '../../Redux/slice/employyeslice';
+const initialState = {
+    name: "",
+    designation: "",
+    department: "",
+    email: "",
+    phone: "",
+    salary: "",
+    join_date: "",
+    status: "",
+};
 const Blogpagesection = () => {
+    const dispatch = useDispatch();
+    const { employees, feedback: feedbackdata } = useSelector((state) => state.employees)
     const [isOpenModel, setIsOpenModel] = useState(false);
     const [isOpenAddModel, setIsOpenAddModel] = useState(false);
-    const [leads, setLeads] = useState([]);
-    const [selectedLead, setSelectedLead] = useState(null);
     const [errors, setErrors] = useState({});
     const [feedback, setFeedback] = useState({ message: '', type: '' });
-   
     const handleClear = () => {
         setFeedback({ message: "", type: "" });
     };
-    // Status options
+    const [formData, setFormData] = useState(initialState);
     const statusOptions = [
         "Active",
         "Inactive",
-        "Probation",
-        "Resigned",
-        "Terminated",
-        "Retired",
-        "On Leave",
-        "Deceased"
     ];
-
-    // Fetch employees
-    const fetchLeads = async () => {
-        try {
-            const res = await fetch("https://websolex-admin.vercel.app/api/employee", {
-                method: "GET", // Specify the HTTP method
-                headers: {
-                    "Content-Type": "application/json", // Specify the content type
-                },
-            });
-
-            if (!res.ok) {
-                setFeedback({
-                    message: `Error fetching emplyees :${res.message}`,
-                    type: 'error',
-                });
-            }
-
-            const data = await res.json();
-            setLeads(data);
-        } catch (error) {
-            setFeedback({
-                message: `Error fetching emplyees :${error}`,
-                type: 'error',
-            });
-        }
-    };
-
-    const recentLead = leads[leads.length - 1];
-
+    const recentLead = employees[employees.length - 1];
     useEffect(() => {
-        fetchLeads();
-    }, []);
-
-    const validateForm = (data) => {
+        if (feedbackdata) {
+            setFeedback(feedbackdata)
+        }
+    }, [feedbackdata])
+    useEffect(() => {
+        dispatch(fetchEmployee());
+    }, [dispatch]);
+    const validateForm = (fromdata) => {
         const newErrors = {};
-        if (!data.name || data.name.trim() === "") newErrors.name = "Name is required";
-        if (!data.designation || data.designation.trim() === "") newErrors.designation = "Designation is required";
-        if (!data.department || data.department.trim() === "") newErrors.department = "Department is required";
-        if (!data.email || data.email.trim() === "") newErrors.email = "Email is required";
-        if (!data.phone || data.phone.trim() === "") newErrors.phone = "Phone is required";
-        if (!data.salary || isNaN(data.salary)) newErrors.salary = "Valid salary is required";
-        if (!data.join_date || data.join_date.trim() === "") newErrors.join_date = "Join date is required";
-        if (!data.status || data.status.trim() === "") newErrors.status = "Status is required";
+        if (!fromdata.name || fromdata.name.trim() === "") newErrors.name = "Name is required";
+        if (!fromdata.designation || fromdata.designation.trim() === "") newErrors.designation = "Designation is required";
+        if (!fromdata.department || fromdata.department.trim() === "") newErrors.department = "Department is required";
+        if (!fromdata.email || fromdata.email.trim() === "") newErrors.email = "Email is required";
+        if (!fromdata.phone || fromdata.phone.trim() === "") newErrors.phone = "Phone is required";
+        if (!fromdata.salary || isNaN(fromdata.salary)) newErrors.salary = "Valid salary is required";
+        if (!fromdata.join_date || fromdata.join_date.trim() === "") newErrors.join_date = "Join date is required";
+        if (!fromdata.status || fromdata.status.trim() === "") newErrors.status = "Status is required";
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
-    
+
     const handleAddSave = async (e) => {
         e.preventDefault();
-
-        // Collect form data
         const formData = new FormData(e.target);
         const formValues = Object.fromEntries(formData.entries());
-
-
-        // Validate form
         if (!validateForm(formValues)) {
             console.error("Validation failed:", errors);
             return;
         }
-
         try {
-            // Send form data using fetch
-            const response = await fetch("https://websolex-admin.vercel.app/api/employee", {
-                method: "POST",
-                body: JSON.stringify(formValues),  // Convert form values to JSON
-                headers: {
-                    "Content-Type": "application/json",  // Set header to indicate JSON data
-                },
-            });
-
-            // Check if the request was successful
-            if (response.ok) {
-                const data = await response.json();
+            const response =  await dispatch(addEmployee(formValues)).unwrap();
+            if (response) {
+                resetFormFields();
                 setIsOpenModel(false);
-
-                setFeedback({
-                    message: `Employee added successfully!.`,
-                    type: 'success',
-                });
-                setLeads([...leads, data]);  // Assuming response data contains the newly added employee
-                e.target.reset();
-            } 
+            }
         } catch (error) {
             setFeedback({
-                message: `Failed to add lead. Please try again.${error.response ? error.response.data : error.message}`,
+                message: `Failed to add employee. ${error.response ? error.response.data : error.message}`,
                 type: 'error',
             });
         }
     };
-
-
-
-
-
-
-
-    // Handle editing an employee
-    const handleEditSave = async (e) => {
-        e.preventDefault();
-        const updatedLead = { ...selectedLead };
-        if (!validateForm(updatedLead)) return;
+    const handleEditSave = async (id) => {
+        if (!validateForm(formData)) return;
 
         try {
-            const response = await fetch(`https://websolex-admin.vercel.app/api/employee/${selectedLead._id}`, 
-                {
-                    method: 'PUT',
-                    headers:{
-                    'Content-Type': 'application/json', 
-                    },
-                    body: JSON.stringify(updatedLead), 
-                }
-            );
-         
-            if (response.ok) {
+            const response = await dispatch(updateEmployee({ id, formData })).unwrap()
+
+            if (response) {
                 setIsOpenModel(false);
-                setFeedback({
-                    message: `employee updated successfully!`,
-                    type: 'success',
-                });
-                setLeads(leads.map((lead) => (lead._id === selectedLead._id ? updatedLead : lead)));
+                resetFormFields()
             }
         } catch (error) {
             setFeedback({
@@ -162,61 +97,48 @@ const Blogpagesection = () => {
             });
         }
     };
-
-    // Handle delete
     const handleDelete = async (id) => {
-        try {
-            await axios.delete(`https://websolex-admin.vercel.app/api/employee/${id}`);
-            setLeads(leads.filter((lead) => lead._id !== id));
-            setFeedback({
-                message: `employee deleted successfully!`,
-                type: 'success',
-            });
-        } catch (error) {
-            setFeedback({
-                message: `Failed to add lead. Please try again.${error.response ? error.response.data : error.message}`,
-                type: 'error',
-            });
+        if (window.confirm("Are you sure you want to delete this blog?")) {
+            dispatch(deleteEmployee(id));
         }
     };
     const handleEditClick = (lead) => {
-        setSelectedLead(lead); 
-        setIsOpenModel(true); 
+        setFormData({
+            name: lead.name,
+            designation: lead.designation,
+            department: lead.department,
+            email: lead.email,
+            phone: lead.phone,
+            salary: lead.salary,
+            join_date: lead.join_date,
+            status: lead.status
+        })
+        setIsOpenModel(true);
+    };
+    const resetFormFields = () => {
+        setFormData(initialState);
+        setErrors({});
     };
 
     const handleStatusUpdate = async (employeeId, newStatus) => {
-        try {
-            const response = await fetch(`https://websolex-admin.vercel.app/api/employee/${employeeId}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ status: newStatus }), 
-            });
-            if (response.ok) {
-                // const updatedEmployee = await response.json();
- 
-                setLeads(leads.map((lead) =>
-                    lead._id === employeeId ? { ...lead, status: newStatus } : lead
-                ));
-                setFeedback({
-                    message: `Employee status updated successfully!!`,
-                    type: 'success',
-                });
-            }
-        } catch (error) {
-            setFeedback({
-                message: `Failed to add lead. Please try again.${error.response ? error.response.data : error.message}`,
-                type: 'error',
-            });
-        }
+        dispatch(patchEmployee(employeeId, newStatus))
     };
     const handleChangeStatus = (employeeId, newStatus) => {
         handleStatusUpdate(employeeId, newStatus);
     };
 
-
-
+    const handleinputchange = (e) => {
+        const { name, value } = e.target
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value
+        }))
+    }
+    const handleOpenAddModal = () => {
+        resetFormFields();
+        setIsOpenAddModel(true);
+        setIsOpenModel(false);
+    }
 
     return (
         <div className="w-full bg-gray-100 ">
@@ -228,7 +150,7 @@ const Blogpagesection = () => {
                 <Breadcrumb />
             </div>
 
-            {/* Most Recent Lead */}
+            {/* Most Recent Lead
             <div className="w-full p-5 bg-white rounded-md shadow-md mb-7">
 
                 <div className="flex items-center justify-between w-full">
@@ -237,7 +159,7 @@ const Blogpagesection = () => {
                     </div>
                     <div className="flex items-center">
                         <div className="relative cursor-pointer ">
-                            <button className='flex items-center gap-3 rounded-lg px-6 py-2 shadow-md border text-[var(--primary-color)] border-[var(--primary-color)] uppercase hover:bg-[var(--primary-color)] hover:text-white duration-1000' title='add' onClick={() => setIsOpenAddModel(true)} >
+                            <button className='flex items-center gap-3 rounded-lg px-6 py-2 shadow-md border text-[var(--primary-color)] border-[var(--primary-color)] uppercase hover:bg-[var(--primary-color)] hover:text-white duration-1000' title='add' onClick={handleOpenAddModal} >
                                 <IoMdAdd /> add
                             </button>
                         </div>
@@ -260,13 +182,13 @@ const Blogpagesection = () => {
                                 <select
                                     value={recentLead?.status}
                                     onChange={(e) => handleChangeStatus(recentLead?._id, e.target.value)}
-                            >
-                                {statusOptions.map((status, index) => (
-                                    <option key={index} value={status}>
-                                        {status}
-                                    </option>
-                                ))}
-                            </select>
+                                >
+                                    {statusOptions.map((status, index) => (
+                                        <option key={index} value={status}>
+                                            {status}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                             <div className="flex items-center flex-1 gap-2">
                                 <button className="text-gray-600 hover:text-black" onClick={() => handleEditClick(recentLead)}>
@@ -285,7 +207,7 @@ const Blogpagesection = () => {
                 </div>
             </div>
 
-            {/* All Leads */}
+            All Leads
             <div className="w-full p-5 bg-white rounded-md shadow-md">
                 <h1 className='capitalize text-[26px] py-6 font-semibold'>All added</h1>
                 <div className="text-gray-600 text-[10px] md:text-[16px] uppercase leading-[1.5] bg-gray-100 flex w-full">
@@ -296,8 +218,8 @@ const Blogpagesection = () => {
                     <div className="p-2.5 xl:p-5 flex-1">Action</div>
                 </div>
                 <div className="flex flex-col w-full">
-                    {leads.length > 0 ? (
-                        leads.map((lead, index) => (
+                    {employees.length > 0 ? (
+                        employees.map((lead, index) => (
                             <div key={index} className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200">
                                 <div className="p-2.5 xl:p-5 flex-1">{index + 1}</div>
                                 <div className="p-2.5 xl:p-5 flex-1">
@@ -333,7 +255,119 @@ const Blogpagesection = () => {
                         </div>
                     )}
                 </div>
+            </div> */}
+            <div className="w-full">
+                {/* Most Recent Lead */}
+                <div className="w-full p-5 bg-white rounded-md shadow-md mb-7">
+                    <div className="flex items-center justify-between w-full">
+                        <div className="py-6">
+                            <h1 className="capitalize text-[26px] font-semibold">Most Recent Added</h1>
+                        </div>
+                        <div className="flex items-center">
+                            <button
+                                className="flex items-center gap-3 rounded-lg px-6 py-2 shadow-md border text-[var(--primary-color)] border-[var(--primary-color)] uppercase hover:bg-[var(--primary-color)] hover:text-white duration-1000"
+                                title="add"
+                                onClick={handleOpenAddModal}
+                            >
+                                <IoMdAdd /> Add
+                            </button>
+                        </div>
+                    </div>
+
+                    <table className="w-full border border-collapse border-gray-200">
+                        <thead className="bg-gray-100 text-gray-600 text-[10px] md:text-[16px] uppercase leading-[1.5]">
+                            <tr>
+                                <th className="p-2.5 xl:p-5 border border-gray-200">ID</th>
+                                <th className="p-2.5 xl:p-5 border border-gray-200">Email</th>
+                                <th className="p-2.5 xl:p-5 border border-gray-200">Name</th>
+                                <th className="p-2.5 xl:p-5 border border-gray-200">Status</th>
+                                <th className="p-2.5 xl:p-5 border border-gray-200">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {recentLead ? (
+                                <tr className="border-b border-gray-200">
+                                    <td className="p-2.5 xl:p-5 border border-gray-200 text-center ">1</td>
+                                    <td className="p-2.5 xl:p-5 border border-gray-200 text-center ">{recentLead?.email}</td>
+                                    <td className="p-2.5 xl:p-5 border border-gray-200 text-center ">{recentLead?.name}</td>
+                                    <td className="p-2.5 xl:p-5 border border-gray-200 text-center ">
+                                        <select
+                                            value={recentLead?.status}
+                                            onChange={(e) => handleChangeStatus(recentLead?._id, e.target.value)}
+                                        >
+                                            {statusOptions.map((status, index) => (
+                                                <option key={index} value={status}>{status}</option>
+                                            ))}
+                                        </select>
+                                    </td>
+                                    <td className="p-2.5 xl:p-5 flex justify-center gap-2">
+                                        <button className="text-gray-600 hover:text-black" onClick={() => handleEditClick(recentLead)}>
+                                            <FaRegEdit />
+                                        </button>
+                                        <button className="text-red-500 hover:text-black" onClick={() => handleDelete(recentLead?._id)}>
+                                            <RiDeleteBin6Line />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ) : (
+                                <tr>
+                                    <td colSpan="5" className="p-4 text-center border border-gray-200">No recent lead added yet.</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+
+                {/* All Leads */}
+                <div className="w-full p-5 bg-white rounded-md shadow-md">
+                    <h1 className="capitalize text-[26px] py-6 font-semibold">All Added</h1>
+                    <table className="w-full border border-collapse border-gray-200">
+                        <thead className="bg-gray-100 text-gray-600 text-[10px] md:text-[16px] uppercase leading-[1.5]">
+                            <tr>
+                                <th className="p-2.5 xl:p-5 border border-gray-200">ID</th>
+                                <th className="p-2.5 xl:p-5 border border-gray-200">Email</th>
+                                <th className="p-2.5 xl:p-5 border border-gray-200">Name</th>
+                                <th className="p-2.5 xl:p-5 border border-gray-200">Status</th>
+                                <th className="p-2.5 xl:p-5 border border-gray-200">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {employees.length > 0 ? (
+                                employees.map((lead, index) => (
+                                    <tr key={index} className="border-b border-gray-200">
+                                        <td className="p-2.5 xl:p-5 border border-gray-200 text-center ">{index + 1}</td>
+                                        <td className="p-2.5 xl:p-5 border border-gray-200 text-center ">{lead?.email}</td>
+                                        <td className="p-2.5 xl:p-5 border border-gray-200 text-center ">{lead?.name}</td>
+                                        <td className="p-2.5 xl:p-5 border border-gray-200 text-center ">
+                                            <select
+                                                value={lead?.status}
+                                                onChange={(e) => handleChangeStatus(lead?._id, e.target.value)}
+                                            >
+                                                {statusOptions.map((status, index) => (
+                                                    <option key={index} value={status}>{status}</option>
+                                                ))}
+                                            </select>
+                                        </td>
+                                        <td className="p-2.5 xl:p-5 justify-center  flex gap-2">
+                                            <button className="text-gray-600 hover:text-black" onClick={() => handleEditClick(lead)}>
+                                                <FaRegEdit />
+                                            </button>
+                                            <button className="text-red-500 hover:text-black" onClick={() => handleDelete(lead?._id)}>
+                                                <RiDeleteBin6Line />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="5" className="p-4 text-center border border-gray-200">No leads found.</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
 
             {(isOpenAddModel || isOpenModel) && (
                 <div className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full capitalize bg-black bg-opacity-50">
@@ -346,7 +380,8 @@ const Blogpagesection = () => {
                                 <Input
                                     type="text"
                                     name="name"
-                                    defaultValue={isOpenModel ? selectedLead?.name : ''}
+                                    value={formData?.name}
+                                    onChange={handleinputchange}
                                     placeholder="Enter name"
                                 />
                                 {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
@@ -357,7 +392,8 @@ const Blogpagesection = () => {
                                     <Input
                                         type="text"
                                         name="designation"
-                                        defaultValue={isOpenModel ? selectedLead?.designation : ''}
+                                        value={formData?.designation}
+                                        onChange={handleinputchange}
                                         placeholder="Enter designation"
                                     />
                                     {errors.designation && <p className="text-sm text-red-500">{errors.designation}</p>}
@@ -366,7 +402,8 @@ const Blogpagesection = () => {
                                     <Input
                                         type="text"
                                         name="department"
-                                        defaultValue={isOpenModel ? selectedLead?.department : ''}
+                                        value={formData?.department}
+                                        onChange={handleinputchange}
                                         placeholder="Enter department"
                                     />
                                     {errors.department && <p className="text-sm text-red-500">{errors.department}</p>}
@@ -378,8 +415,8 @@ const Blogpagesection = () => {
                                     <Input
                                         type="email"
                                         name="email"
-                                        defaultValue={isOpenModel ? selectedLead?.email : ''}
-
+                                        value={formData?.email}
+                                        onChange={handleinputchange}
                                         placeholder="Enter email"
                                     />
                                     {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
@@ -388,7 +425,8 @@ const Blogpagesection = () => {
                                     <Input
                                         type="tel"
                                         name="phone"
-                                        defaultValue={isOpenModel ? selectedLead?.phone : ''}
+                                        value={formData?.phone}
+                                        onChange={handleinputchange}
 
                                         placeholder="Enter phone"
                                     />
@@ -401,7 +439,8 @@ const Blogpagesection = () => {
                                     <Input
                                         type="number"
                                         name="salary"
-                                        defaultValue={isOpenModel ? selectedLead?.salary : ''}
+                                        value={formData?.salary}
+                                        onChange={handleinputchange}
 
                                         placeholder="Enter salary"
                                     />
@@ -412,14 +451,15 @@ const Blogpagesection = () => {
                                     <Input
                                         type="date"
                                         name="join_date"
-                                        defaultValue={isOpenModel ? selectedLead?.join_date : ''}
+                                        value={formData?.join_date}
+                                        onChange={handleinputchange}
 
                                         placeholder="Enter join date"
                                     />
                                     {errors.join_date && <p className="text-sm text-red-500">{errors.join_date}</p>}
                                 </div>
                             </div>
-                           
+
                             <div className="flex flex-row items-center gap-4">
                                 <div className="flex flex-col w-full">
                                     <label htmlFor="status">Employee Status:</label>
@@ -427,8 +467,9 @@ const Blogpagesection = () => {
                                         className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 px-4 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
                                         id="status"
                                         name="status"
-                                        defaultValue={isOpenModel ? selectedLead?.status : ''}
-                                        
+                                        value={formData?.status}
+                                        onChange={handleinputchange}
+
                                     >
                                         {statusOptions.map((statusOption) => (
                                             <option key={statusOption} value={statusOption}>
@@ -441,9 +482,9 @@ const Blogpagesection = () => {
                             </div>
 
                             <div className="flex justify-between mt-4">
-                                <Primary type="submit" label={isOpenAddModel ? 'Save' : 'Update'} className="btn btn-primary"/>
-                                    
-                               
+                                <Primary type="submit" label={isOpenAddModel ? 'Save' : 'Update'} className="btn btn-primary" />
+
+
                                 <Seconduray
                                     type="button"
                                     label={"Cancel"}

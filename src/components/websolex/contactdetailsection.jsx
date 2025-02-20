@@ -7,192 +7,53 @@ import { FaFacebook, FaInstagram, FaLinkedin, FaPhoneAlt, FaWhatsapp } from 'rea
 import { MdOutlineMailOutline } from 'react-icons/md';
 import { BiCurrentLocation } from 'react-icons/bi';
 import FeedbackMessage from '../ui/feedback';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchContactDetails, updateContactDetails } from '../../Redux/slice/contactslice';
+import { fetchSocialDetails, updateSocialDetails } from '../../Redux/slice/socialslice';
 const Contactdetailsection = () => {
-    const [contactDetails, setContactDetails] = useState({
-        address: '',
-        phoneno: '',
-        avaliablity: '',
-        email: ''
-    });
-    const [socialdetails, setsocial] = useState({
-        facebook: '',
-        whatsapp: '',
-        instagram: '',
-        linkedin: '',
-    });
+    const dispatch = useDispatch();
+    const contactDetails = useSelector((state) => state.contact.data)
+    const socialDetails = useSelector((state) => state.social.data)
+    const contactFeedback = useSelector((state) => state.contact.feedback)
+    const socialFeedback = useSelector((state) => state.social.feedback)
 
-    const [soid, setsoId] = useState(null);
-    const [id, setId] = useState(null);
     const [feedback, setFeedback] = useState({ message: '', type: '' });
 
     const handleClear = () => {
         setFeedback({ message: "", type: "" });
     };
     useEffect(() => {
-        const fetchContactDetails = async () => {
-            try {
-                const res = await fetch('https://websolex-admin.vercel.app/api/contactdetails', {
-                    method: 'GET',
-                });
+        dispatch(fetchContactDetails());
+        dispatch(fetchSocialDetails())
+    }, [dispatch]);
+    useEffect(() => {
+        if (contactFeedback) {
+            setFeedback(contactFeedback)
+        }
+        if (socialFeedback) {
+            setFeedback(socialFeedback)
 
-                const data = await res.json();
-                if (data && data.length > 0) {
-                    setContactDetails(data[0]);
-                    setId(data[0]._id);
-                }
-            } catch (error) {
-                setFeedback({
-                    message: `Error fetching contact :${error}`,
-                    type: 'error',
-                });
-            }
-        };
-        const fetchsocialDetails = async () => {
-            try {
-                const res = await fetch('https://websolex-admin.vercel.app/api/socialdetails', {
-                    method: 'GET',
-                });
+        }
+    }, [contactFeedback, socialFeedback]);
 
-                const data = await res.json();
-                if (data && data.length > 0) {
-                    setsocial(data[0]);
-                    setsoId(data[0]._id);
-                }
-            } catch (error) {
-                setFeedback({
-                    message: `Error fetching social details:${error}`,
-                    type: 'error',
-                });
-            }
-        };
-        fetchsocialDetails();
-        fetchContactDetails();
-    }, []);
-
-    const handleChange = (e) => {
+    const handleInputChange = (e, type) => {
         const { name, value } = e.target;
-        setContactDetails({
-            ...contactDetails,
-            [name]: value
-        });
-    };
-    const handlesocialChange = (e) => {
-        const { name, value } = e.target;
-        setsocial({
-            ...socialdetails,
-            [name]: value
-        });
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        if (id) {
-            try {
-                const res = await fetch('https://websolex-admin.vercel.app/api/contactdetails', {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        id,
-                        ...contactDetails
-                    }),
-                });
-                if (!res.ok) {
-                    const errorData = await res.json();
-                    setFeedback({
-                        message: `Error fetching contact details:${errorData}`,
-                        type: 'error',
-                    });
-                }
-            } catch (error) {
-                setFeedback({
-                    message: `Error fetching contact details:${error}`,
-                    type: 'error',
-                });
-            }
+        if (type === 'contact') {
+            dispatch(updateContactDetails({ ...contactDetails, [name]: value }));
         } else {
-            try {
-                const res = await fetch('https://websolex-admin.vercel.app/api/contactdetails', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(contactDetails),
-                });
-                const data = await res.json();
-                setId(data.member._id);
-            } catch (error) {
-                setFeedback({
-                    message: `Error fetching contact details:${error}`,
-                    type: 'error',
-                });
-            }
+            dispatch(updateSocialDetails({ ...socialDetails, [name]: value }));
         }
     };
-    
-    const handlesocialSubmit = async (e) => {
+
+    const handleSubmit = (e) => {
         e.preventDefault();
-
-        if (soid) {
-            try {
-                const res = await fetch('https://websolex-admin.vercel.app/api/socialdetails', {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        id: soid, // Ensure you are sending the correct ID
-                        ...socialdetails
-                    }),
-                });
-
-                if (!res.ok) {
-                    const errorData = await res.json();
-                    setFeedback({
-                        message: `Error: ${errorData.message || 'Failed to update social details'}`,
-                        type: 'error',
-                    });
-                }
-
-              
-            
-            } catch (error) {
-                setFeedback({
-                    message: `Error fetching social details:${error}`,
-                    type: 'error',
-                });
-            }
-        } else {
-            try {
-                const res = await fetch('https://websolex-admin.vercel.app/api/socialdetails', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(socialdetails),
-                });
-
-                if (!res.ok) {
-                    const errorData = await res.json();
-                    setFeedback({
-                        message: `Error: ${errorData.message || 'Failed to update social details'}`,
-                        type: 'error',
-                    });
-                }
-
-                const data = await res.json();
-                
-                setsocial({ ...socialdetails, _id: data.member._id }); // Update state with new ID
-            } catch (error) {
-                setFeedback({
-                    message: `Error: ${error.message || 'Failed to update social details'}`,
-                    type: 'error',
-                });
-            }
-        }
-    };
+        dispatch(updateContactDetails(contactDetails))
+    }
+   
+    const handlesocialSubmit = (e) => {
+        e.preventDefault();
+        dispatch(updateSocialDetails(socialDetails))
+    }
     return (
         <div className=''>
             {feedback.message && (
@@ -218,7 +79,7 @@ const Contactdetailsection = () => {
                                                 <input
                                                     name={'address'}
                                                     value={contactDetails?.address}
-                                                    onChange={handleChange}
+                                                    onChange={(e) => handleInputChange(e, 'contact')}
                                                     placeholder={"contact address"}
                                                     className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 pl-4 pr-10 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
                                                 />
@@ -233,7 +94,7 @@ const Contactdetailsection = () => {
                                                 <input
                                                     name={'phoneno'}
                                                     value={contactDetails?.phoneno}
-                                                    onChange={handleChange}
+                                                    onChange={(e) => handleInputChange(e, 'contact')}
                                                     placeholder={"enter phone number"}
                                                     className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 pl-4 pr-10 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
                                                 />
@@ -250,7 +111,7 @@ const Contactdetailsection = () => {
                                                 <input
                                                     name={'avaliablity'}
                                                     value={contactDetails?.avaliablity}
-                                                    onChange={handleChange}
+                                                    onChange={(e) => handleInputChange(e, 'contact')}
                                                     placeholder={"enter avaliablity"}
                                                     className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 pl-4 pr-10 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
                                                 />
@@ -264,7 +125,7 @@ const Contactdetailsection = () => {
                                                 <input
                                                     name={'email'}
                                                     value={contactDetails?.email}
-                                                    onChange={handleChange}
+                                                    onChange={(e) => handleInputChange(e, 'contact')}
                                                     placeholder={"enter email"}
                                                     className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 pl-4 pr-10 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
                                                 />
@@ -297,8 +158,8 @@ const Contactdetailsection = () => {
                                             <div className="relative">
                                                 <input
                                                     name={'facebook'}
-                                                    onChange={handlesocialChange}
-                                                    value={socialdetails?.facebook}
+                                                    onChange={(e) => handleInputChange(e, 'social')}
+                                                    value={socialDetails?.facebook}
                                                     placeholder={"enter facebook link"}
                                                     className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 pl-4 pr-10 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
                                                 />
@@ -312,8 +173,8 @@ const Contactdetailsection = () => {
                                             <div className="relative">
                                                 <input
                                                     name={'whatsapp'}
-                                                    onChange={handlesocialChange}
-                                                    value={socialdetails?.whatsapp}
+                                                    onChange={(e) => handleInputChange(e, 'social')}
+                                                    value={socialDetails?.whatsapp}
                                                     placeholder={"enter whatsapp link"}
                                                     className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 pl-4 pr-10 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
                                                 />
@@ -329,8 +190,8 @@ const Contactdetailsection = () => {
                                             <div className="relative">
                                                 <input
                                                     name={'instagram'}
-                                                    onChange={handlesocialChange}
-                                                    value={socialdetails?.instagram}
+                                                    onChange={(e) => handleInputChange(e, 'social')}
+                                                    value={socialDetails?.instagram}
                                                     placeholder={"enter instagram link"}
                                                     className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 pl-4 pr-10 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
                                                 />
@@ -346,8 +207,8 @@ const Contactdetailsection = () => {
                                             <div className="relative">
                                                 <input
                                                     name={'linkedin'}
-                                                    onChange={handlesocialChange}
-                                                    value={socialdetails?.linkedin}
+                                                    onChange={(e) => handleInputChange(e, 'social')}
+                                                    value={socialDetails?.linkedin}
                                                     placeholder={"enter linkedin link"}
                                                     className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 pl-4 pr-10 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
                                                 />

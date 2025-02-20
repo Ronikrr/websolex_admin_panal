@@ -102,7 +102,7 @@ const Userloginedsection = () => {
                     'service_szoqqsl',
                     'template_3vvce77',
                     e.target,
-                    'OoU53v3GRHWpMFiXL'   
+                    'OoU53v3GRHWpMFiXL'
                 );
 
                 if (emailResponse.status === 200) {
@@ -186,7 +186,7 @@ const Userloginedsection = () => {
                     <h1 className='capitalize text-[26px] font-semibold  '>our users</h1>
                     <Breadcrumb />
                 </div>
-                <div className="flex items-center gap-7">
+                {/* <div className="flex items-center gap-7">
                     <div className="w-full ">
                         <div className="w-full p-5 bg-white rounded-md shadow-md mb-7">
                             <div className="flex items-center justify-between w-full">
@@ -249,22 +249,22 @@ const Userloginedsection = () => {
 
                                                     <p>{user.status}</p>
                                                     {user.status === 'rejected' && user._id ? (
-                                                            <>
-                                                                <button className='px-4 py-2 my-1 text-white capitalize duration-1000 bg-green-500 border border-green-500 rounded-xl hover:shadow-lg hover:border hover:bg-transparent hover:text-green-500 hover:border-green-500' onClick={() => handleStatusChange(user._id, 'Approved')} >
-                                                                    approve
-                                                                </button>
-                                                                <button className='text-red-500' onClick={() => handleDelete(user._id)}  > <RiDeleteBinLine /> </button>
+                                                        <>
+                                                            <button className='px-4 py-2 my-1 text-white capitalize duration-1000 bg-green-500 border border-green-500 rounded-xl hover:shadow-lg hover:border hover:bg-transparent hover:text-green-500 hover:border-green-500' onClick={() => handleStatusChange(user._id, 'Approved')} >
+                                                                approve
+                                                            </button>
+                                                            <button className='text-red-500' onClick={() => handleDelete(user._id)}  > <RiDeleteBinLine /> </button>
                                                         </>
                                                     ) :
                                                         ""
                                                     }
                                                     {user.status === 'Approved' && user._id ? (
-                                                            <>
-                                                                <button className='px-4 py-2 my-1 text-white capitalize duration-1000 bg-red-500 border border-red-500 rounded-xl hover:shadow-lg hover:border hover:bg-transparent hover:text-red-500 hover:border-red-500' onClick={() => handleStatusChange(user._id, 'rejected')} >
-                                                                    reject
-                                                                </button>
-                                                                <button className='text-red-500' onClick={() => handleDelete(user._id)}  > <RiDeleteBinLine /> </button>
-                                                            </>
+                                                        <>
+                                                            <button className='px-4 py-2 my-1 text-white capitalize duration-1000 bg-red-500 border border-red-500 rounded-xl hover:shadow-lg hover:border hover:bg-transparent hover:text-red-500 hover:border-red-500' onClick={() => handleStatusChange(user._id, 'rejected')} >
+                                                                reject
+                                                            </button>
+                                                            <button className='text-red-500' onClick={() => handleDelete(user._id)}  > <RiDeleteBinLine /> </button>
+                                                        </>
                                                     ) : ""}
                                                 </div>
                                             )}
@@ -276,7 +276,116 @@ const Userloginedsection = () => {
                             </div>
                         </div>
                     </div>
+                </div> */}
+                <div className="w-full">
+                    <div className="w-full p-5 bg-white rounded-md shadow-md mb-7">
+                        <div className="flex items-center justify-between w-full">
+                            <div className="py-6">
+                                <h1 className="capitalize text-[26px] font-semibold">Most Recent Added</h1>
+                            </div>
+                            <div className="flex items-center">
+                                <button
+                                    className="flex items-center gap-3 rounded-lg px-6 py-2 shadow-md border text-[var(--primary-color)] border-[var(--primary-color)] uppercase hover:bg-[var(--primary-color)] hover:text-white duration-1000"
+                                    title="Add"
+                                    onClick={() => setIsOpenAddModel(true)}
+                                >
+                                    <IoMdAdd /> Add
+                                </button>
+                            </div>
+                        </div>
+
+                        <table className="w-full border border-collapse border-gray-200">
+                            <thead className="bg-gray-100 text-gray-600 text-[10px] md:text-[16px] uppercase leading-[1.5]">
+                                <tr>
+                                    <th className="p-2.5 xl:p-4 border border-gray-200">Name</th>
+                                    <th className="p-2.5 xl:p-4 border border-gray-200 hidden lg:table-cell">Image</th>
+                                    <th className="p-2.5 xl:p-4 border border-gray-200 hidden lg:table-cell">Username</th>
+                                    <th className="p-2.5 xl:p-4 border border-gray-200">Email</th>
+                                    <th className="p-2.5 xl:p-4 border border-gray-200 hidden lg:table-cell">Phone</th>
+                                    <th className="p-2.5 xl:p-4 border border-gray-200">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {Users.length > 0 ? (
+                                    Users.map((user) => (
+                                        <tr key={user._id} className="border-b border-gray-200">
+                                            <td className="p-2.5 xl:p-4 border border-gray-200 text-center ">{user?.name}</td>
+                                            <td className="p-2.5 xl:p-4 border border-gray-200 hidden lg:table-cell">
+                                                <div className="flex justify-center rounded-full">
+                                                    {user?.profileImage ? (
+                                                        <img src={user?.profileImage} className="object-cover w-12 h-12 rounded-full" alt="Profile" />
+                                                    ) : (
+                                                        <img src="https://www.t3bucket.com/f/0-user.svg" alt="Profile" className="object-cover w-12 h-12 rounded-full" />
+                                                    )}
+                                                </div>
+                                            </td>
+                                            <td className="p-2.5 xl:p-4 border border-gray-200 hidden lg:table-cell text-center">{user?.username}</td>
+                                            <td className="p-2.5 xl:p-4 border border-gray-200 text-center">{user?.email}</td>
+                                            <td className="p-2.5 xl:p-4 border border-gray-200 hidden lg:table-cell text-center">{user?.phoneNo}</td>
+                                            <td className="p-2.5 xl:p-4 border border-gray-200">
+                                                <div className="flex items-center justify-center gap-2">
+                                                    <p>{user.status}</p>
+                                                    {user.status === 'pending' && user._id && (
+                                                        <>
+                                                            <button
+                                                                className="px-4 py-2 text-white duration-1000 bg-green-500 border border-green-500 rounded-xl hover:bg-transparent hover:text-green-500"
+                                                                onClick={() => handleStatusChange(user._id, 'Approved')}
+                                                            >
+                                                                Approve
+                                                            </button>
+                                                            <button
+                                                                className="px-4 py-2 text-white duration-1000 bg-red-500 border border-red-500 rounded-xl hover:bg-transparent hover:text-red-500"
+                                                                onClick={() => handleStatusChange(user._id, 'rejected')}
+                                                            >
+                                                                Reject
+                                                            </button>
+                                                            <button className="text-red-500" onClick={() => handleDelete(user._id)}>
+                                                                <RiDeleteBinLine />
+                                                            </button>
+                                                        </>
+                                                    )}
+                                                    {user.status === 'rejected' && user._id && (
+                                                        <>
+                                                            <button
+                                                                className="px-4 py-2 text-white duration-1000 bg-green-500 border border-green-500 rounded-xl hover:bg-transparent hover:text-green-500"
+                                                                onClick={() => handleStatusChange(user._id, 'Approved')}
+                                                            >
+                                                                Approve
+                                                            </button>
+                                                            <button className="text-red-500" onClick={() => handleDelete(user._id)}>
+                                                                <RiDeleteBinLine />
+                                                            </button>
+                                                        </>
+                                                    )}
+                                                    {user.status === 'Approved' && user._id && (
+                                                        <>
+                                                            <button
+                                                                className="px-4 py-2 text-white duration-1000 bg-red-500 border border-red-500 rounded-xl hover:bg-transparent hover:text-red-500"
+                                                                onClick={() => handleStatusChange(user._id, 'rejected')}
+                                                            >
+                                                                Reject
+                                                            </button>
+                                                            <button className="text-red-500" onClick={() => handleDelete(user._id)}>
+                                                                <RiDeleteBinLine />
+                                                            </button>
+                                                        </>
+                                                    )}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="6" className="p-4 text-center border border-gray-200">
+                                            No users found.
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+
             </div>
             {(isOpenAddModel) && (
                 <div className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full capitalize bg-black bg-opacity-50">

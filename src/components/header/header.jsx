@@ -6,9 +6,10 @@ import { CiUser } from "react-icons/ci";
 import { RiMessage2Line } from "react-icons/ri";
 import { FaBars } from "react-icons/fa6";
 import { TbLogin2 } from 'react-icons/tb';
-
-
+import { useDispatch } from 'react-redux';
+import { logoutUser } from '../../Redux/authSlice';
 const Header = ({ toogleslidebar }) => {
+    const dispatch = useDispatch()
     const [user, setUser] = useState({});
     const [showError, setShowError] = useState('');
     const [error, setError] = useState(null);
@@ -17,11 +18,27 @@ const Header = ({ toogleslidebar }) => {
     const [ismessageopen, setismessageopen] = useState(false);
     const [isactive, setisactive] = useState(null)
     const navigate = useNavigate();
-   
+    const [searchQuery, setSearchQuery] = useState("");
+
+    // Example list of items (replace with your actual list)
+    const items = [
+        "Dashboard",
+        "Users",
+        "Settings",
+        "Notifications",
+        "Messages",
+        "Reports",
+    ];
+
+    // Filtered list based on search query
+    const filteredItems = items.filter(item =>
+        item.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     useEffect(() => {
         const fetchData = async () => {
-            const adminToken = localStorage.getItem('adminToken');
-            if (!adminToken) {
+            const Admintoken_websolex = localStorage.getItem('Admintoken_websolex');
+            if (!Admintoken_websolex) {
                 navigate('/'); // Redirect to login
                 setisactive('offline');
                 return;
@@ -32,18 +49,17 @@ const Header = ({ toogleslidebar }) => {
                 const res = await fetch(`https://websolex-admin.vercel.app/profile`, {
                     method: 'GET',
                     headers: {
-                        Authorization: `Bearer ${adminToken}`,
+                        Authorization: `Bearer ${Admintoken_websolex}`,
                         'Content-Type': 'application/json',
                     },
                 });
                 if (res.status === 401) {
-                    localStorage.removeItem('adminToken');
-                    navigate('/'); 
+                    localStorage.removeItem('Admintoken_websolex');
+                    navigate('/');
                     return;
                 }
 
                 if (!res.ok) {
-                    // Log or handle HTTP error
                     throw new Error(`HTTP error! status: ${res.status}`);
                 }
 
@@ -58,14 +74,11 @@ const Header = ({ toogleslidebar }) => {
         };
 
         fetchData();
-    }, [navigate]); 
+    }, [navigate]);
 
     const logout = () => {
-        const token = localStorage.getItem('adminToken');
-        if (token) {
-            localStorage.removeItem('adminToken'); 
-        }
-        navigate("/"); 
+        dispatch(logoutUser());
+        navigate("/");
     };
 
 
@@ -76,14 +89,20 @@ const Header = ({ toogleslidebar }) => {
     };
 
     const togglemessagedropdown = () => {
-        setismessageopen(!ismessageopen); // Toggle the message dropdown
-        setisopen(false); // Ensure the notification dropdown is closed
+        setismessageopen(!ismessageopen);
+        setisopen(false); 
         setisuseropen(false)
     };
     const isuseropen = () => {
         setisuseropen(!isuser)
         setisopen(false);
         setismessageopen(false);
+    }
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();  // Prevents page refresh
+        if (searchQuery.trim() !== "") {
+            navigate(`/search?query=${searchQuery}`);  // Navigate to search results page
+        }
     }
 
     useEffect(() => {
@@ -94,13 +113,8 @@ const Header = ({ toogleslidebar }) => {
         }, 5000);
 
     })
- 
-
-
-
-
     return (
-        <div className='h-[80px] w-screen md:w-full flex px-11 py-4  items-center justify-center bg-[#fff] '>
+        <div className='h-[80px] w-screen md:w-full flex px-5 lg:px-11 py-4  items-center justify-center bg-[#fff] '>
             {error && (
                 <div
                     className={`fixed top-4 left-0 transform -translate-x-1/2 bg-red-500 text-white px-10 py-6 rounded shadow-lg transition-transform duration-500 ${showError ? "translate-x-0  opacity-100" : "-translate-x-[500px] opacity-0"
@@ -109,15 +123,34 @@ const Header = ({ toogleslidebar }) => {
                     {error}
                 </div>
             )}
-            <div className="flex items-center justify-center w-full lg:justify-between">
+            <div className="flex items-center justify-between w-full lg:justify-between">
                 <div className="main_bars xl:hidden ">
                     <FaBars className='cursor-pointer ' onClick={toogleslidebar} />
                 </div>
                 <div className="flex items-center space-x-3 search">
-                    <div className="">
-                        <IoIosSearch className='text-[20px]' />
+                    <div className="relative flex items-center gap-2">
+                        <IoIosSearch onClick={handleSearchSubmit} className='text-[20px] cursor-pointer' />
+                        <input
+                            type="text"
+                            className='py-2 px-3 rounded-lg bg-[#f1f5f9] '
+                            placeholder='Search ...'
+                            value={searchQuery}
+                            onChange={(e)=>setSearchQuery(e.target.value)}
+                        />
+                    {searchQuery && (
+                        <ul className="absolute left-0 w-full mt-2 bg-white border rounded-lg shadow-md top-full">
+                            {filteredItems.length > 0 ? (
+                                filteredItems.map((item, index) => (
+                                    <li key={index} className="p-2 cursor-pointer hover:bg-gray-200">
+                                        {item}
+                                    </li>
+                                ))
+                            ) : (
+                                <li className="p-2 text-gray-500">No results found</li>
+                            )}
+                        </ul>
+                    )}
                     </div>
-                    <input type="text" className='py-2 px-3 rounded-lg bg-[#f1f5f9] ' placeholder='Search ...' />
                 </div>
                 <div className="flex items-center gap-4">
                     <ul className="flex items-center gap-4">
@@ -209,7 +242,7 @@ const Header = ({ toogleslidebar }) => {
                                             <TiContacts className='text-[22px]' /> my contact
                                         </Link>
                                     </li> */}
-                                    <li className='w-full'  onClick={logout} >
+                                    <li className='w-full' onClick={logout} >
                                         <Link className='flex items-center w-full gap-3 text-sm font-medium capitalize duration-300 ease-in-out hover:text-blue-400 lg:text-base'  >
                                             <TbLogin2 className='text-[22px]' />  logout
                                         </Link>

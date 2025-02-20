@@ -25,6 +25,8 @@ import { UserProvider } from "./pages/user/userrolecontext";
 import Emmangement from "./pages/websolex/emmangement";
 import Userchat from "./pages/user/userchat";
 import Pagetitle from "./components/pagetitle";
+import SearchResults from "./components/websolex/SearchResults";
+import ScrollToTop from "./components/scrolltotop";
 
 const Layout = ({ children }) => {
   const [isopensidebar, setisopensidebar] = useState(false);
@@ -72,6 +74,7 @@ function App() {
     <UserProvider>
       <div className="bg-[#f1f5f9] w-full ">
         <Router>
+          <ScrollToTop/>
           <Routes>
             <Route
               path="/websolex"
@@ -79,6 +82,15 @@ function App() {
                 <Layout>
                   <Pagetitle title={"Home"} />
                   <Websolexadmin />
+                </Layout>
+              }
+            />
+            <Route
+              path="/search"
+              element={
+                <Layout>
+                  <Pagetitle title={"Search"} />
+                  <SearchResults />
                 </Layout>
               }
             />

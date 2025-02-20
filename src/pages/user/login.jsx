@@ -5,7 +5,12 @@ import { Link, useNavigate } from 'react-router-dom'
 import Input from '../../components/ui/input'
 import Submit from '../../components/ui/submit'
 import FeedbackMessage from '../../components/ui/feedback';
+import { loginuser } from '../../Redux/authSlice'
+import { useDispatch, useSelector } from 'react-redux'
+
 const Login = () => {
+    const dispatch = useDispatch();
+    const {  error } = useSelector((state) => state.auth)
     const [ishowpss, setishowpss] = useState(false);
     const [formdata, setFormData] = useState({
         email: '',
@@ -24,7 +29,13 @@ const Login = () => {
             [name]: value,
         }));
     };
-
+    
+    if (error) {
+        setFeedback({
+            message: `Error :${error}`,
+            type: 'error',
+        });
+    }
     const onSubmit = async (e) => {
         e.preventDefault();
 
@@ -37,26 +48,15 @@ const Login = () => {
         }
 
         try {
-            const res = await fetch('https://websolex-admin.vercel.app/login', {
-                method: 'POST',
-                body: JSON.stringify(formdata),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            const data = await res.json();
-
-            if (res.ok) {
-
-                localStorage.setItem('adminToken', data.token);
-                navigate('/websolex');
-            } else {
+            const res = await dispatch(loginuser(formdata)).unwrap()
+            if (!res.ok) {
                 setFeedback({
-                    message: `Login failed. Please try again: ${data.message}`,
+                    message: `network connection error :${res.message}`,
                     type: 'error',
                 });
             }
+            navigate('/websolex');
+
         } catch (error) {
             setFeedback({
                 message: `network connection error :${error}`,
@@ -64,6 +64,7 @@ const Login = () => {
             });
         }
     };
+
     return (
         <div className='flex items-center justify-center w-screen h-screen' >
             {feedback.message && (
@@ -98,7 +99,7 @@ const Login = () => {
                                             onChange={handleChange}
                                             placeholder={'enter your email'}
                                         />
-                                        <span className='absolute right-4 top-4' ><HiOutlineMail className='text-[22px] text-[var(--icon-color)] ' />  </span>
+                                        <span className='absolute right-4 top-3 lg:top-4' ><HiOutlineMail className='text-[15px] lg:text-[22px] text-[var(--icon-color)] ' />  </span>
                                     </div>
                                 </div>
                                 <div className="mb-6">
@@ -112,10 +113,10 @@ const Login = () => {
                                             onChange={handleChange}
                                             placeholder={'enter your password'}
                                         />
-                                        <span className='absolute cursor-pointer right-4 top-4 ' onClick={() => setishowpss((prev) => !prev)}  >
+                                        <span className='absolute cursor-pointer right-4 top-3 lg:top-4 ' onClick={() => setishowpss((prev) => !prev)}  >
                                             {ishowpss ?
-                                                (<ImEye className='text-[22px] text-[var(--icon-color)] ' />) :
-                                                (<ImEyeBlocked className='text-[22px] text-[var(--icon-color)] ' />)
+                                                (<ImEye className='text-[15px] lg:text-[22px] text-[var(--icon-color)] ' />) :
+                                                (<ImEyeBlocked className='text-[15px] lg:text-[22px] text-[var(--icon-color)] ' />)
                                             }
                                         </span>
                                     </div>
@@ -125,9 +126,6 @@ const Login = () => {
                                         label={'Submit'}
                                     />
                                 </div>
-                                {/* <div className="mt-6 text-center">
-                                    <p>Don’t have any account? <Link to='/register' className='text-[var(--primary-color)] hover:underline' >Sign Up</Link> </p>
-                                </div> */}
                             </form>
                         </div>
                     </div>

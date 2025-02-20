@@ -10,49 +10,46 @@ import Textarea from '../ui/textarea';
 import ProjectForm from './projectform'
 import FeedbackMessage from '../ui/feedback';
 import Static from './static';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchourwork, addOurWork, updateOurwork, deleteOurwork } from '../../Redux/slice/lastworkslice';
+import { Link } from 'react-router-dom';
+const initialState = {
+    name: '',
+    description: '',
+    category: '',
+    work: '',
+    image: null,
+    imagePreview: null
+}
 const Latestworkaddsection = () => {
+    const dispatch = useDispatch();
+    const { ourwork, feedback: feedbackdata } = useSelector((state) => state.ourwork)
     const [isOpenModel, setIsOpenModel] = useState(false);
     const [isOpenAddModel, setIsOpenAddModel] = useState(false);
-    const [imageFile, setImageFile] = useState(null);
-    const [leads, setLeads] = useState([]);
-    const [selectedLead, setSelectedLead] = useState(null);
-    const [imagePreview, setImagePreview] = useState(selectedLead?.image || '');
     const [errors, setErrors] = useState({});
     const [isOpenLastAll, setIsOpenLastAll] = useState(false);
     const [feedback, setFeedback] = useState({ message: '', type: '' });
-    const API_URL = "https://websolex-admin.vercel.app/api/lastworkadd";
-
-    const fetchleads = async () => {
-        try {
-            const res = await fetch(API_URL);
-            const data = await res.json();
-            setLeads(data);
-
-        } catch (error) {
-            setFeedback({
-                message: `Error fetching team members:${error}`,
-                type: 'error',
-            });
-        }
-    };
-
+    const [formData, setformData] = useState(initialState);
     useEffect(() => {
-        fetchleads();
-    }, []);
-
+        dispatch(fetchourwork());
+    }, [dispatch]);
+    useEffect(() => {
+        if (feedbackdata) {
+            setFeedback(feedbackdata)
+        }
+    }, [feedbackdata])
     useEffect(() => {
         setTimeout(() => {
             setIsOpenLastAll(false);
         }, 3000);
     }, [isOpenLastAll]);
 
-    const validateForm = (data) => {
+    const validateForm = (formData) => {
         const newErrors = {};
-        if (!data.name || data.name.trim() === '') newErrors.name = 'Name is required';
-        if (!data.description || data.description.trim() === '') newErrors.description = 'Description is required';
-        if (!data.work || data.work.trim() === '') newErrors.work = 'work details are required';
-
-        if (!imageFile) newErrors.image = 'Image is required';
+        if (!formData.name || formData.name.trim() === '') newErrors.name = 'Name is required';
+        if (!formData.description || formData.description.trim() === '') newErrors.description = 'Description is required';
+        if (!formData.work || formData.work.trim() === '') newErrors.work = 'work details are required';
+        if (!formData.image) newErrors.image = 'Image is required';
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -60,105 +57,53 @@ const Latestworkaddsection = () => {
     const handleAddSave = async (e) => {
         e.preventDefault();
 
-        const name = e.target.name.value;
-        const description = e.target.description.value;
-        const work = e.target.work.value;
-        const category = e.target.category.value;
-        const formData = new FormData();
-        formData.append("name", name);
-        formData.append("description", description);
-        formData.append("category", category);
-        formData.append("work", work);
-        if (imageFile) formData.append("image_work", imageFile);
+        const newFormData = new FormData();
+        newFormData.append("name", formData.name);
+        newFormData.append("description", formData.description);
+        newFormData.append("category", formData.category);
+        newFormData.append("work", formData.work);
+        if (formData.image) newFormData.append("image_work", formData.image);
 
-        // Validate form
-        if (!validateForm({ name, description, category, work, image_work: imageFile })) return;
+        if (!validateForm(formData)) return;
 
         try {
-            const response = await fetch('https://websolex-admin.vercel.app/api/lastworkadd', {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (response.status === 200) {
-
-                setIsOpenAddModel(false);
-
-                const result = await response.json();
-                setLeads([...leads, result.data]);
-
-                setFeedback({
-                    message: `Our work was added successfully!!`,
-                    type: 'success',
-                });
-
-                resetFormFields();
-            }
+            await dispatch(addOurWork(newFormData)).unwrap();
+            resetFormFields();
+            setIsOpenAddModel(false);
         } catch (error) {
             setFeedback({
-                message: `Failed to add lead. Please try again.${error.response ? error.response.data : error.message}`,
+                message: `Failed to add work. Please try again. ${error?.response?.data || error.message}`,
                 type: 'error',
             });
         }
     };
 
-
-
-    const handleEditSave = async (e) => {
-        e.preventDefault();
-        const name = e.target.name.value;
-        const description = e.target.description.value;
-        const work = e.target.work.value;
-        const category = e.target.category.value;
-
-        const formData = new FormData();
-        formData.append("name", name);
-        formData.append("description", description);
-        formData.append("category", category);
-        formData.append("work", work);
-        if (imageFile) formData.append("image_work", imageFile);
-
-        if (!validateForm({ name, category, description, work, image: imageFile })) return;
-
+    const handleEditSave = async (id) => {
+        const newFormData = new FormData();
+        newFormData.append("name", formData.name);
+        newFormData.append("description", formData.description);
+        newFormData.append("category", formData.category);
+        newFormData.append("work", formData.work);
+        if (formData.image) newFormData.append("image_work", formData.image);
+        if (!validateForm(formData)) return;
         try {
-            const response = await fetch(`https://websolex-admin.vercel.app/api/lastworkadd/${selectedLead._id}`, {
-                method: 'PUT',
-                body: formData,
-            });
-            const result = await response.json();
-            if (response.status === 200) {
-                setIsOpenModel(false);
-                setLeads(leads.map((lead) => (lead._id === selectedLead._id ? result.member : lead)));
-                setFeedback({
-                    message: `Our work has been updated successfully!!`,
-                    type: 'success',
-                });
-
-                resetFormFields(e);
-            }
+            await dispatch(updateOurwork({ id, formData: newFormData })).unwrap();
+            resetFormFields();
+            setIsOpenModel(false);
         } catch (error) {
             setFeedback({
-                message: `Error updating work: ${error}`,
+                message: `Error updating work: ${error?.message}`,
                 type: 'error',
             });
         }
     };
 
-    const resetFormFields = (e) => {
-        if (e && e.target) {
-            e.target.reset();
-        }
-        setImageFile(null);
-        setImagePreview(null);
+    const resetFormFields = () => {
+        setformData(initialState)
         setErrors({});
     };
 
     const handleFileChange = (e) => {
-        // const file = e.target.files[0];
-        // if (file) {
-        //     setImageFile(file);
-        //     setImagePreview(URL.createObjectURL(file));
-        // }
         const file = e.target.files[0];
         if (!file) return;
 
@@ -172,51 +117,55 @@ const Latestworkaddsection = () => {
         img.onload = () => {
             if (img.width === img.height) {
 
-                setImageFile(file);
-                setImagePreview(URL.createObjectURL(file));
+                setformData((prev) => ({
+                    ...prev,
+                    image: file,
+                    imagePreview: URL.createObjectURL(file)
+                }))
             } else {
                 setFeedback({
                     message: `Only square images are allowed.`,
                     type: 'error',
                 });
-                setImageFile(null);
-                setImagePreview(null);
             }
         };
 
         reader.readAsDataURL(file);
     };
-    const recentLead = leads[leads.length - 1];
+    const recentLead = ourwork[ourwork.length - 1];
 
     const handleEditClick = (lead) => {
-        setSelectedLead(lead);
-        setImageFile(lead.image);
-        setImagePreview(lead.image)
+        setformData({
+            name: lead.name,
+            description: lead.description,
+            category: lead.category,
+            work: lead.work,
+            image: lead.image,
+            imagePreview: lead.image
+        })
         setIsOpenModel(true);
     };
+    const handleInputChange = (e) => {
+        const { name, value } = e.target
+        setformData((prev) => ({
+            ...prev,
+            [name]: value
+        }))
+    }
 
     const handleDelete = async (id) => {
-        try {
-            await fetch(`https://websolex-admin.vercel.app/api/lastworkadd/${id}`, {
-                method: 'DELETE',
-            });
-            setLeads(leads.filter((lead) => lead._id !== id));
-            setFeedback({
-                message: `our work deleted successfully!`,
-                type: 'success',
-            });
-        } catch (error) {
-            setFeedback({
-                message: `Failed to add lead. Please try again.${error.response ? error.response.data : error.message}`,
-                type: 'error',
-            });
+        if (window.confirm("Are you sure you want to delete this blog?")) {
+            dispatch(deleteOurwork(id));
         }
     };
     const handleClear = () => {
         setFeedback({ message: "", type: "" });
     };
-
-
+    const handleOpenAddModal = () => {
+        resetFormFields();
+        setIsOpenAddModel(true);
+        setIsOpenModel(false);
+    }
 
     return (
         <div className="w-full bg-gray-100 ">
@@ -224,106 +173,158 @@ const Latestworkaddsection = () => {
             {feedback.message && (
                 <FeedbackMessage message={feedback.message} type={feedback.type} onClear={handleClear} />
             )}
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-col items-center justify-between mt-4 mb-4 lg:flex-row lg:mt-0">
                 <h1 className='capitalize text-[26px] font-semibold  '>our work</h1>
                 <Breadcrumb />
             </div>
-            <div className="flex items-start gap-7 ">
+            <div className="flex flex-col items-start lg:flex-row gap-7 ">
                 <div className="w-full md:w-7/12">
                     {/* Most Recent Lead */}
                     <div className="w-full p-5 bg-white rounded-md shadow-md mb-7">
-
                         <div className="flex items-center justify-between w-full">
                             <div className="py-6">
-                                <h1 className='capitalize text-[26px] font-semibold '>Most Recent added</h1>
+                                <h1 className="capitalize lg:text-[26px] font-semibold ">Most Recent added</h1>
                             </div>
                             <div className="flex items-center">
                                 <div className="relative cursor-pointer ">
-                                    <button className='flex items-center gap-3 rounded-lg px-6 py-2 shadow-md border text-[var(--primary-color)] border-[var(--primary-color)] uppercase hover:bg-[var(--primary-color)] hover:text-white duration-1000' title='add' onClick={() => setIsOpenAddModel(true)} >
+                                    <button
+                                        className="flex items-center gap-3 rounded-lg px-4 py-1 lg:px-6 lg:py-2 shadow-md border text-[var(--primary-color)] border-[var(--primary-color)] uppercase hover:bg-[var(--primary-color)] hover:text-white duration-1000"
+                                        title="add"
+                                        onClick={handleOpenAddModal}
+                                    >
                                         <IoMdAdd /> add
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        <div className="text-gray-600 text-[10px] md:text-[16px] uppercase leading-[1.5] bg-gray-100 flex w-full">
-                            <div className="p-2.5 xl:p-5 flex-1">ID</div>
-                            <div className="p-2.5 xl:p-5 flex-1">Image</div>
-                            <div className="p-2.5 xl:p-5 flex-1">Name</div>
-                            <div className="p-2.5 xl:p-5 flex-1">category</div>
-                            <div className="p-2.5 xl:p-5 flex-1">Action</div>
-                        </div>
-                        <div className="flex flex-col w-full">
-                            {recentLead ? (
-                                <div className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200">
-                                    <div className="flex-1">1</div>
-                                    <div className="flex-1">
-                                        <img src={recentLead?.image}
-                                            alt={recentLead?.name} className="object-cover w-16 h-16 aspect-square"
-                                        />
-                                    </div>
-                                    <div className="flex-1">
-                                        {recentLead?.name}
-                                    </div>
-                                    <div className="flex-1">
-                                        {recentLead?.category}
-                                    </div>
-                                    <div className="flex items-center flex-1 gap-2">
-                                        <button className="text-gray-600 hover:text-black" onClick={() => handleEditClick(recentLead)}>
-                                            <FaRegEdit />
-                                        </button>
-                                        <button className="text-red-500 hover:text-black" onClick={() => handleDelete(recentLead?._id)}>
-                                            <RiDeleteBin6Line />
-                                        </button>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="p-4 text-center">
-                                    <p>No recent lead added yet.</p>
-                                </div>
-                            )}
+
+                        <div className="overflow-x-auto">
+                            <table className="w-full border border-collapse border-gray-200">
+                                {/* Table Header */}
+                                <thead className="bg-gray-100 text-gray-600 text-[10px] md:text-[16px] uppercase">
+                                    <tr>
+                                        <th className="p-2.5 xl:p-5 border border-gray-200 w-[75px]">ID</th>
+                                        <th className="p-2.5 xl:p-5 border border-gray-200 text-center">Image</th>
+                                        <th className="p-2.5 xl:p-5 border border-gray-200 text-center hidden lg:table-cell">Name</th>
+                                        <th className="p-2.5 xl:p-5 border border-gray-200 text-center hidden lg:table-cell">category</th>
+                                        <th className="p-2.5 xl:p-5 border border-gray-200 text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                {/* Table Body */}
+                                <tbody>
+                                    {recentLead ? (
+                                        <tr key={recentLead?.id} className="text-center border-b border-gray-200">
+                                            <td className="p-2.5 xl:p-3 border border-gray-200">1</td>
+                                            <td className="p-2.5 xl:p-3 border border-gray-200">
+                                                <Link to={recentLead?.image} className='cursor-pointer' target='_blank' >
+
+                                                    <img
+                                                        src={recentLead?.image}
+                                                        alt={recentLead?.name || 'Lead Image'}
+                                                        className="object-cover w-8 h-8 mx-auto lg:w-16 lg:h-16 aspect-square"
+                                                    />
+                                                </Link>
+                                            </td>
+                                            <td
+                                                className="p-2.5 xl:p-3 border border-gray-200 hidden lg:table-cell capitalize overflow-hidden whitespace-nowrap text-ellipsis max-w-[150px] cursor-pointer"
+                                                title={recentLead?.name}
+                                            >
+                                                {recentLead?.name}
+                                            </td>
+                                            <td
+                                                className="p-2.5 xl:p-3 border border-gray-200 hidden lg:table-cell capitalize overflow-hidden whitespace-nowrap text-ellipsis max-w-[150px] cursor-pointer"
+                                                title={recentLead?.category}
+                                            >
+                                                {recentLead?.category}
+                                            </td>
+                                            <td className="px-2.5 py-5 xl:px-3 xl:py-10 flex justify-center gap-2">
+                                                <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(recentLead)}>
+                                                    <FaRegEdit />
+                                                </button>
+                                                <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(recentLead._id)}>
+                                                    <RiDeleteBin6Line />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="4" className="p-4 text-center">No leads found.</td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
-                    {/* All Leads */}
-                    <div className="w-full p-5 bg-white rounded-md shadow-md ">
-                        <h1 className='capitalize text-[26px] py-6 font-semibold'>All added</h1>
-                        <div className="text-gray-600 text-[10px] md:text-[16px] uppercase leading-[1.5] bg-gray-100 flex w-full">
-                            <div className="p-2.5 xl:p-5 flex-1">ID</div>
-                            <div className="p-2.5 xl:p-5 flex-1">Image</div>
-                            <div className="p-2.5 xl:p-5 flex-1">Name</div>
-                            <div className="p-2.5 xl:p-5 flex-1">category</div>
-                            <div className="p-2.5 xl:p-5 flex-1">Action</div>
-                        </div>
-                        <div className="flex flex-col w-full">
-                            {leads.length > 0 ? (
-                                leads.map((lead, index) => (
-                                    <div key={index} className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200">
-                                        <div className="flex-1">{index + 1}</div>
-                                        <div className="flex-1">
-                                            <img src={lead?.image} alt={lead?.name || 'Lead Image'} className="object-cover w-16 h-16 aspect-w-1 aspect-h-1" />
-                                        </div>
-                                        <div className="flex-1">{lead?.name}</div>
-                                        <div className="flex-1">{lead?.category}</div>
-                                        <div className="flex items-center flex-1 gap-2">
-                                            <button className="text-gray-600 hover:text-black" onClick={() => handleEditClick(lead)}>
-                                                <FaRegEdit />
-                                            </button>
-                                            <button className="text-red-500 hover:text-black" onClick={() => handleDelete(lead?._id)}>
-                                                <RiDeleteBin6Line />
-                                            </button>
-                                        </div>
-                                    </div>
-                                ))
-                            ) : (
-                                <div className="p-4 text-center">
-                                    <p>No leads found.</p>
-                                </div>
-                            )}
+                    <div className="w-full p-5 bg-white rounded-md shadow-md">
+                        <h1 className="capitalize text-[15px] lg:text-[26px] py-6 font-semibold">All added</h1>
+
+                        <div className="overflow-x-auto ">
+                            <table className="w-full border border-collapse border-gray-200 rounded-md">
+                                {/* Table Header */}
+                                <thead className="bg-gray-100 text-gray-600 text-[10px] md:text-[16px] uppercase">
+                                    <tr>
+                                        <th className="p-2.5 xl:p-5 border border-gray-200 w-[75px]">ID</th>
+                                        <th className="p-2.5 xl:p-5 border border-gray-200 text-center">Image</th>
+                                        <th className="p-2.5 xl:p-5 border border-gray-200 text-center hidden lg:table-cell">Name</th>
+                                        <th className="p-2.5 xl:p-5 border border-gray-200 text-center hidden lg:table-cell">category</th>
+                                        <th className="p-2.5 xl:p-5 border border-gray-200 text-center">Action</th>
+                                    </tr>
+                                </thead>
+
+                                {/* Table Body */}
+                                <tbody>
+                                    {ourwork?.length > 0 ? (
+                                        ourwork?.map((lead, index) => (
+                                            <tr key={lead.id || index} className="text-center border-b border-gray-200">
+                                                <td className="p-2.5 xl:p-3 border border-gray-200">{lead?.id || index + 1}</td>
+                                                <td className="p-2.5 xl:p-3 border border-gray-200">
+                                                    <Link
+                                                        to={lead?.image} className='cursor-pointer' target='_blank
+                                                        ' >
+
+                                                    <img
+                                                        src={lead?.image}
+                                                        alt={lead?.name || 'Lead Image'}
+                                                        className="object-cover w-8 h-8 mx-auto lg:w-16 lg:h-16 aspect-square"
+                                                    />
+                                                    </Link>
+                                                </td>
+                                                <td
+                                                    className="p-2.5 xl:p-3 border border-gray-200 hidden lg:table-cell capitalize overflow-hidden whitespace-nowrap text-ellipsis max-w-[150px] cursor-pointer"
+                                                    title={lead?.name}
+                                                >
+                                                    {lead?.name}
+                                                </td>
+                                                <td
+                                                    className="p-2.5 xl:p-3 border border-gray-200 hidden lg:table-cell capitalize overflow-hidden whitespace-nowrap text-ellipsis max-w-[150px] cursor-pointer"
+                                                    title={lead?.category}
+                                                >
+                                                    {lead?.category}
+                                                </td>
+
+                                                <td className="px-2.5 py-5 xl:px-3 xl:py-10 flex justify-center gap-2">
+                                                    <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(lead)}>
+                                                        <FaRegEdit />
+                                                    </button>
+                                                    <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(lead?._id)}>
+                                                        <RiDeleteBin6Line />
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="4" className="p-4 text-center">No leads found.</td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
                 <div className="w-full xl:w-5/12">
-                    <div className="bg-white border rounded-sm border-[var(--border-color)] shadow-default ">
+                    <div className="bg-white mb-7 lg:mb-0 border rounded-sm border-[var(--border-color)] shadow-default ">
                         <div className="py-4 border-b border-[var(--border-color)] capitalize  px-7 ">
                             client & completed project
                         </div>
@@ -355,7 +356,8 @@ const Latestworkaddsection = () => {
                                     <Input
                                         type="text"
                                         name="name"
-                                        defaultValue={isOpenModel ? selectedLead?.name : ''}
+                                        value={formData?.name}
+                                        onChange={handleInputChange}
                                         placeholder="Enter name"
                                     />
                                     {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
@@ -365,7 +367,8 @@ const Latestworkaddsection = () => {
                                     <Input
                                         type="text"
                                         name="work"
-                                        defaultValue={isOpenModel ? selectedLead?.work : ''}
+                                        value={formData?.work}
+                                        onChange={handleInputChange}
                                         placeholder="Enter work"
                                     />
                                     {errors.work && <p className="text-sm text-red-500">{errors.work}</p>}
@@ -378,7 +381,8 @@ const Latestworkaddsection = () => {
                                     <Textarea
                                         name="description"
                                         className="p-2.5 xl:p-3 border border-gray-200 rounded-md"
-                                        defaultValue={isOpenModel ? selectedLead?.description : ''}
+                                        value={formData?.description}
+                                        onChange={handleInputChange}
                                         placeholder="Enter description"
                                     />
                                     {errors.description && <p className="text-sm text-red-500">{errors.description}</p>}
@@ -388,7 +392,8 @@ const Latestworkaddsection = () => {
                                     <select
                                         name="category"
                                         className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 px-4 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
-                                        defaultValue={isOpenModel ? selectedLead?.category : ''}
+                                        value={formData?.category}
+                                        onChange={handleInputChange}
                                     >
                                         <option value="">Select category</option>
                                         <option value="web design">web design</option>
@@ -412,9 +417,9 @@ const Latestworkaddsection = () => {
                                     />
                                     {errors.image && <p className="text-sm text-red-500">{errors.image}</p>}
                                 </div>
-                                {imagePreview && (
+                                {formData.imagePreview && (
                                     <div className="flex justify-center mt-2">
-                                        <img src={isOpenModel ? imagePreview : imagePreview} alt="Preview" className="w-16 h-16" />
+                                        <img src={formData.imagePreview} alt="Preview" className="w-16 h-16" />
                                     </div>
                                 )}
                             </div>
