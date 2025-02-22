@@ -44,24 +44,9 @@ const UploadForm = () => {
               </label>
 
               {/* Drag & Drop Area */}
-              <div className="max-w-md mx-auto overflow-hidden rounded-lg md:max-w-xl">
-                <div className="md:flex">
-                  <div className="w-full p-3">
-                    <div className="relative flex items-center justify-center h-48 transition-shadow duration-300 ease-in-out border-2 border-blue-500 rounded-lg shadow-lg bg-gray-50 hover:shadow-xl">
-                      <div className="absolute flex flex-col items-center">
-                        <img
-                          alt="File Icon"
-                          className="mb-3"
-                          src="https://img.icons8.com/dusk/64/000000/file.png"
-                        />
-                        <span className="block font-semibold text-gray-500">Drag & drop your files here</span>
-                        <span className="block mt-1 font-normal text-gray-400">or click to upload</span>
-                      </div>
-                      <input type="file" onChange={(e) => handleFileChange(e, type)} className="w-full h-full opacity-0 cursor-pointer" />
-                    </div>
-                  </div>
-                </div>
-              </div>
+
+              <input type="file" onChange={(e) => handleFileChange(e, type)} className="w-full cursor-pointer" />
+
 
               {/* Image Preview */}
               {previews[type] && (

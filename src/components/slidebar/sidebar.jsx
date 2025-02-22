@@ -37,7 +37,7 @@ function Sidebar({ isopensidebar, closeslidebar }) {
                         { id: 10, icon: <FaUsers />, label: "logined users", link: "/userlogined" },
                         { id: 11, icon: <FaUserNinja />, label: "emplyee", link: "/websolex/emmangement" },
                         // { id: 12, icon: <FaUserNinja />, label: "users chat", link: "/websolex/userschat" },
-                        { id: 12, icon: <FaPaperclip />, label: "website logos", link: "/websitelogos" },
+                        // { id: 12, icon: <FaPaperclip />, label: "website logos", link: "/websitelogos" },
                     ],
                 },
                 {
