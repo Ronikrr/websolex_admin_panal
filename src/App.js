@@ -27,6 +27,7 @@ import Userchat from "./pages/user/userchat";
 import Pagetitle from "./components/pagetitle";
 import SearchResults from "./components/websolex/SearchResults";
 import ScrollToTop from "./components/scrolltotop";
+import Weblogos from "./pages/websolex/weblogos";
 
 const Layout = ({ children }) => {
   const [isopensidebar, setisopensidebar] = useState(false);
@@ -252,6 +253,15 @@ function App() {
                 <Layout>
                   <Pagetitle title={"Userallchats"} />
                   <Userchat />
+                </Layout>
+              }
+            />
+            <Route
+              path="/websitelogos"
+              element={
+                <Layout>
+                  <Pagetitle title={"Website logos"} />
+                  <Weblogos />
                 </Layout>
               }
             />

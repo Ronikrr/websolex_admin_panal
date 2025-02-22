@@ -8,7 +8,7 @@ import { MdOutlineWorkspacePremium } from "react-icons/md";
 import { RiContactsFill } from "react-icons/ri";
 import { MdContactPage } from "react-icons/md";
 import { FaUserNinja } from "react-icons/fa6";
-
+import { FaPaperclip } from "react-icons/fa";
 function Sidebar({ isopensidebar, closeslidebar }) {
     const [activeMenu, setActiveMenu] = useState(null);
     const [activeSubMenu, setActiveSubMenu] = useState(null);
@@ -37,6 +37,7 @@ function Sidebar({ isopensidebar, closeslidebar }) {
                         { id: 10, icon: <FaUsers />, label: "logined users", link: "/userlogined" },
                         { id: 11, icon: <FaUserNinja />, label: "emplyee", link: "/websolex/emmangement" },
                         // { id: 12, icon: <FaUserNinja />, label: "users chat", link: "/websolex/userschat" },
+                        { id: 12, icon: <FaPaperclip />, label: "website logos", link: "/websitelogos" },
                     ],
                 },
                 {

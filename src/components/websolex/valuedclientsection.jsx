@@ -39,88 +39,123 @@ const Valuedclientsection = () => {
             setFeedback({ message: feedbacks.message, type: feedbacks.type })
         }
     }, [feedbacks])
-    const validateForm = (fromdata) => {
+    const validateForm = (formDataObj) => {
         const newErrors = {};
-        if (!fromdata.name || fromdata.name.trim() === '') newErrors.name = 'Name is required';
-        if (!fromdata.image) newErrors.image = 'Image is required';
+
+        const name = formDataObj.get("name");
+        const image = formDataObj.get("images");
+
+        if (!name || name.trim() === "") newErrors.name = "Name is required";
+        if (!image) newErrors.image = "Image is required";
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
+
     const handleAddSave = async (e) => {
         e.preventDefault();
 
-
         const newformData = new FormData();
+        console.log(newformData)
         newformData.append("name", fromdata.name)
-        newformData.append("images", fromdata.imageFile);
+        if (fromdata.image) newformData.append("images", fromdata.image); // Fix
 
         if (!validateForm(newformData)) return;
 
         try {
             const res = await dispatch(addvaluedClient(newformData)).unwrap();
-            if (res.status === 200) {
+            if (!res.ok) {
                 setIsOpenAddModel(false);
                 resetFormFields();
+                console.log(res.message)
+                setFeedback({
+                    message: `${res.message}`,
+                    type: 'success',
+                });
+
+            }
+            if (res.status === 200) {
+                
             }
         }
         catch (error) {
-            console.log(error.message)
             setFeedback({
                 message: `Failed to add lead. Please try again.${error.message}`,
                 type: 'error',
             });
         }
     };
-    const handleEditSave = async (id) => {
-
+    const handleEditSave = async (e, id) => {
+        e.preventDefault();
 
         const newformData = new FormData();
         newformData.append("name", fromdata.name);
 
-        if (fromdata.imageFile) newformData.append("images", fromdata.imageFile);
+        if (fromdata.image) newformData.append("images", fromdata.image);
 
-        if (!validateForm(newformData)) return;
+        if (!validateForm(fromdata)) return;
 
         try {
-            const response = await dispatch(updateValuedClient({ id, fromdata: newformData }))
-            if (response.status === 200) {
+            const response = await dispatch(updateValuedClient({ id, formdata: newformData })).unwrap();
+            console.log("Update Response:", response);
+
+            if (response && response._id) {
                 setIsOpenModel(false);
                 resetFormFields();
+            } else {
+                throw new Error("Invalid response from server");
             }
         } catch (error) {
+            console.error("Update Error:", error);
             setFeedback({
-                message: `Error updating team member:: ${error}`,
+                message: `Error updating team member: ${error.message}`,
                 type: 'error',
             });
         }
     };
+    useEffect(() => {
+        if (!isOpenAddModel && !isOpenModel) {
+            resetFormFields();
+        }
+    }, [isOpenAddModel, isOpenModel]);
 
-    const resetFormFields = (e) => {
-        setfromdata(initialState)
-        setErrors({});
+
+
+    const resetFormFields = () => {
+        setfromdata(initialState); // Resets form data
+        setErrors({}); // Clears errors
     };
+
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
             setfromdata((prev) => ({
                 ...prev,
-                image: file,
+                image: file, // Correct key
                 imagePreview: URL.createObjectURL(file)
-            }))
+            }));
         }
     };
-    const recentLead = valuedclient[valuedclient?.length - 1];
 
+    const recentLead = valuedclient[valuedclient?.length - 1];
     const handleEditClick = (lead) => {
+        if (!lead) {
+            console.error("Lead is undefined");
+            return;
+        }
+        console.log("Lead object:", lead);
+
         setfromdata({
+            id: lead._id,
             name: lead.name,
             image: lead.image,
             imagePreview: lead.image
-        })
+        });
         setIsOpenModel(true);
     };
+
 
     const handleInputChange = (e) => {
         const { name, value } = e.target
@@ -135,16 +170,6 @@ const Valuedclientsection = () => {
             dispatch(deleteValuedClient(id));
         }
     };
-
-    const handleOpenAddModal = () => {
-        resetFormFields();
-        setIsOpenAddModel(true);
-        setIsOpenModel(false);
-    }
-    const closeModal = () => {
-        setIsOpenAddModel(false);
-        setIsOpenModel(false);
-    }
     return (
         <div className="w-full bg-gray-100 ">
             {feedback.message && (
@@ -164,7 +189,9 @@ const Valuedclientsection = () => {
                     </div>
                     <div className="flex items-center">
                         <div className="relative cursor-pointer ">
-                            <button className='flex items-center gap-3 rounded-lg px-4 py-1 lg:px-6 lg:py-2 shadow-md border text-[var(--primary-color)] border-[var(--primary-color)] uppercase hover:bg-[var(--primary-color)] hover:text-white duration-1000' title='add' onClick={handleOpenAddModal} >
+                            <button className='flex items-center gap-3 rounded-lg px-4 py-1 lg:px-6 lg:py-2 shadow-md border text-[var(--primary-color)] border-[var(--primary-color)] uppercase hover:bg-[var(--primary-color)] hover:text-white duration-1000' title='add' 
+                            onClick={()=>setIsOpenAddModel(true)} 
+                            >
                                 <IoMdAdd /> add
                             </button>
                         </div>
@@ -190,7 +217,7 @@ const Valuedclientsection = () => {
                                         <img
                                             src={recentLead.image}
                                             alt={recentLead.name || 'Lead Image'}
-                                            className="object-cover w-16 h-8 mx-auto lg:w-64 lg:h-16 aspect-square"
+                                            className="object-contain w-16 h-8 mx-auto lg:w-64 lg:h-16 aspect-square"
                                         />
                                     </td>
                                     <td className="p-2.5 xl:p-3 border border-gray-200 hidden lg:table-cell capitalize ">{recentLead.name}</td>
@@ -198,7 +225,7 @@ const Valuedclientsection = () => {
                                         <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(recentLead)}>
                                             <FaRegEdit />
                                         </button>
-                                        <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(recentLead._id)}>
+                                        <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(recentLead?._id)}>
                                             <RiDeleteBin6Line />
                                         </button>
                                     </td>
@@ -240,7 +267,7 @@ const Valuedclientsection = () => {
                                             <img
                                                 src={lead.image}
                                                 alt={lead.name || 'Lead Image'}
-                                                className="object-cover w-16 h-8 mx-auto lg:w-64 lg:h-16 aspect-square"
+                                                className="object-contain w-16 h-8 mx-auto lg:w-64 lg:h-16 aspect-square"
                                             />
                                         </td>
                                         <td className="p-2.5 xl:p-3 border border-gray-200 hidden lg:table-cell capitalize text-wrap">{lead.name}</td>
@@ -266,8 +293,8 @@ const Valuedclientsection = () => {
 
 
             {(isOpenAddModel || isOpenModel) && (
-                <div className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full capitalize bg-black bg-opacity-50 " onClick={closeModal}>
-                    <div className="w-full p-5 bg-white rounded-md shadow-md md:p-8 md:w-2/3 2xl:w-1/3">
+                <div className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full capitalize bg-black bg-opacity-50 ">
+                    <div className="w-full p-5 bg-white rounded-md shadow-md md:p-8 md:w-2/3 2xl:w-1/3" >
                         <h1 className="capitalize text-[15px] lg:text-[26px] font-semibold mb-4 ">{isOpenAddModel ? 'Add New Lead' : 'Edit Lead'}</h1>
                         <form className="flex flex-col gap-4" onSubmit={isOpenAddModel ? handleAddSave : handleEditSave}>
 
@@ -327,5 +354,4 @@ const Valuedclientsection = () => {
 };
 
 export default Valuedclientsection;
-
 

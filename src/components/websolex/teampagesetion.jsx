@@ -55,9 +55,11 @@ const Servicepagesection = () => {
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
-
     const handleAddSave = async (e) => {
         e.preventDefault();
+
+        // Validate form
+        if (!validateForm(formData)) return;
 
         const newFormdata = new FormData();
         newFormdata.append("name", formData.name);
@@ -67,24 +69,24 @@ const Servicepagesection = () => {
         newFormdata.append("facebook", formData.facebook);
         if (formData.image) newFormdata.append("image", formData.image);
 
-        // Validate form
-        if (!validateForm(formData)) return;
-
         try {
-            await dispatch(addteamMember(newFormdata)).unwrap()
+            await dispatch(addteamMember(newFormdata)).unwrap();
             setIsOpenModel(false);
-            resetFormFields();
+            resetFormFields();  // ✅ Reset fields only after successful execution
         } catch (error) {
             setFeedback({
-                message: `Failed to add lead:${error.response ? error.response.data : error.message}`,
+                message: `Failed to add lead: ${error.response ? error.response.data : error.message}`,
                 type: 'error',
             });
         }
     };
+
 
 
 
     const handleEditSave = async (id) => {
+        if (!validateForm(formData)) return;
+
         const newFormdata = new FormData();
         newFormdata.append("name", formData.name);
         newFormdata.append("post", formData.post);
@@ -93,21 +95,18 @@ const Servicepagesection = () => {
         newFormdata.append("facebook", formData.facebook);
         if (formData.image) newFormdata.append("image", formData.image);
 
-        // Validate form
-        if (!validateForm(formData)) return;
         try {
-            await dispatch(updateTeamMember({ id, formData: newFormdata })).unwrap()
-            resetFormFields();
+            await dispatch(updateTeamMember({ id, formData: newFormdata })).unwrap();
+            resetFormFields(); // ✅ Reset fields only after successful execution
             setIsOpenModel(false);
-
-
         } catch (error) {
             setFeedback({
-                message: `Error updating team member:: ${error}`,
+                message: `Error updating team member: ${error}`,
                 type: 'error',
             });
         }
     };
+
 
     const resetFormFields = () => {
         setformData(initialState)
@@ -181,16 +180,19 @@ const Servicepagesection = () => {
             });
         }
     };
-    const handleOpenAddModal = () => {
-        resetFormFields();
-        setIsOpenAddModel(true);
-        setIsOpenModel(false);
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (isOpenAddModel) {
+            handleAddSave(e);
+        } else {
+            handleEditSave(formData.id);  // Ensure `formData.id` exists for edit mode
+        }
+    };
+    const handleaddlead = () => {
+        resetFormFields()
+        setIsOpenAddModel(true)
     }
-    const handleSubmit = isOpenAddModel ? handleAddSave : handleEditSave;
-    const closemodel = () => {
-        setIsOpenAddModel(false);
-        setIsOpenModel(false)
-    }
+
     return (
         <div className="w-full h-screen bg-gray-100 ">
             {feedback.message && (
@@ -212,7 +214,7 @@ const Servicepagesection = () => {
                             <button
                                 className="flex items-center gap-3 rounded-lg px-4 py-1 lg:px-6 lg:py-2 shadow-md border text-[var(--primary-color)] border-[var(--primary-color)] uppercase hover:bg-[var(--primary-color)] hover:text-white duration-1000"
                                 title="add"
-                                onClick={handleOpenAddModal}
+                                onClick={handleaddlead}
                             >
                                 <IoMdAdd /> add
                             </button>
@@ -327,7 +329,7 @@ const Servicepagesection = () => {
             </div>
 
             {(isOpenAddModel || isOpenModel) && (
-                <div className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full capitalize bg-black bg-opacity-50" onClick={closemodel} >
+                <div className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full capitalize bg-black bg-opacity-50"  >
 
                     <div className="w-full p-5 bg-white rounded-md shadow-md md:p-8 md:w-2/3 2xl:w-1/3">
                         <h1 className="capitalize text-[26px] font-semibold mb-4 ">

@@ -175,15 +175,11 @@ const Clienttestadd = () => {
 
         return stars;
     };
-    const closemodel = () => {
-        setIsOpenAddModel(false);
-        setIsOpenModel(false)
+    const handleaddlead = () => {
+        resetFormFields()
+        setIsOpenAddModel(true)
     }
-    const handleOpenAddModal = () => {
-        resetFormFields();
-        setIsOpenAddModel(true);
-        setIsOpenModel(false);
-    }
+   
     return (
         <div className="w-full bg-gray-100 ">
             {feedback.message && (
@@ -205,7 +201,7 @@ const Clienttestadd = () => {
                             <button
                                 className="flex items-center gap-3 rounded-lg px-4 py-1 lg:px-6 lg:py-2 shadow-md border text-[var(--primary-color)] border-[var(--primary-color)] uppercase hover:bg-[var(--primary-color)] hover:text-white duration-1000"
                                 title="add"
-                                onClick={handleOpenAddModal}
+                                onClick={handleaddlead}
                             >
                                 <IoMdAdd /> add
                             </button>
@@ -339,7 +335,7 @@ const Clienttestadd = () => {
            
 
             {(isOpenAddModel || isOpenModel) && (
-                <div className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-50" onClick={closemodel}>
+                <div className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-50">
                     <div className="w-full p-5 bg-white rounded-md shadow-md md:p-8 md:w-2/3 2xl:w-1.5/3">
                         <h1 className="capitalize text-[26px] font-semibold mb-4 ">{isOpenAddModel ? 'Add New Lead' : 'Edit Lead'}</h1>
                         <form className="flex flex-col gap-4" onSubmit={isOpenAddModel ? handleAddSave : handleEditSave}>

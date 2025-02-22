@@ -164,7 +164,6 @@ const Latestworkaddsection = () => {
     const handleOpenAddModal = () => {
         resetFormFields();
         setIsOpenAddModel(true);
-        setIsOpenModel(false);
     }
 
     return (

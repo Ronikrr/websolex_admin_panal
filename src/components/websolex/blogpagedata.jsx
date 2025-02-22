@@ -165,10 +165,6 @@ const Blogpagesection = () => {
         }
     };
 
-    const closemodel = () => {
-        setIsOpenAddModel(false);
-        setIsOpenModel(false)
-    }
     return (
         <div className="w-full bg-gray-100 ">
             {feedback.message && <FeedbackMessage message={feedback.message || feedbacks.message} type={feedback.type || feedbacks.type} />}
@@ -302,7 +298,7 @@ const Blogpagesection = () => {
 
 
             {(isOpenAddModel || isOpenModel) && (
-                <div className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full capitalize bg-black bg-opacity-50" onClick={closemodel} >
+                <div className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full capitalize bg-black bg-opacity-50" >
                     <div className="w-full p-5 bg-white rounded-md shadow-md md:p-8 md:w-2/3">
                         <h1 className="capitalize text-[26px] font-semibold mb-4 ">
                             {isOpenAddModel ? "Add New Blog" : "Edit Blog"}
