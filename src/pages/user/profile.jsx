@@ -17,7 +17,6 @@ const Profile = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { user, error } = useSelector((state) => state.auth);
-
     const [formData, setFormData] = useState({
         name: '',
         phoneNo: '',

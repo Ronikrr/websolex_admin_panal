@@ -17,7 +17,7 @@ const Userloginedsection = () => {
     const [ishowpss, setishowpss] = useState(false);
     const [ishowrepss, setishowrepss] = useState(false);
     const [feedback, setFeedback] = useState({ message: '', type: '' });
-
+    const API = "https://websolex-admin.vercel.app"
     const handleClear = () => {
         setFeedback({ message: "", type: "" });
     };
@@ -31,7 +31,7 @@ const Userloginedsection = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetch('https://websolex-admin.vercel.app/users', {
+                const res = await fetch(`${API}/users`, {
                     method: 'GET',
                 });
 
@@ -82,7 +82,7 @@ const Userloginedsection = () => {
 
         try {
             // 1. Send form data to your API
-            const res = await fetch("https://websolex-admin.vercel.app/users", {
+            const res = await fetch(`${API}/users`, {
                 method: "POST",
                 body: JSON.stringify(formdata),
                 headers: {
@@ -128,7 +128,7 @@ const Userloginedsection = () => {
 
     const handleStatusChange = async (id, newStatus) => {
         try {
-            const res = await fetch(`https://websolex-admin.vercel.app/users/${id}`, {
+            const res = await fetch(`${API}/users/${id}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status: newStatus }),
@@ -156,8 +156,39 @@ const Userloginedsection = () => {
             });
 
         }
-    };
 
+    };
+    const handleroleChange = async (id, newrole) => {
+        try {
+            const res = await fetch(`${API}/usersrole/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ role: newrole }),
+            });
+            if (!res.ok) {
+                setFeedback({
+                    message: `An error occurred while submitting the form :${res.message}`,
+                    type: 'error',
+                });
+            } else {
+                setFeedback({
+                    message: `Role changed Successfully!`,
+                    type: 'success',
+                });
+                setUser((prevUsers) =>
+                    prevUsers.map((user) =>
+                        user._id === id ? { ...user, role: newrole } : user
+                    )
+                );
+            }
+        } catch (error) {
+            setFeedback({
+                message: `Error updating status :${error.message}`,
+                type: 'error',
+            });
+
+        }
+    };
     const handleDelete = async (id) => {
         try {
             await fetch(`https://websolex-admin.vercel.app/users/${id}`, {
@@ -174,6 +205,10 @@ const Userloginedsection = () => {
             });
         }
     };
+    const statusOptions = [
+        "admin",
+        "user",
+    ]
 
     return (
         <>
@@ -186,97 +221,6 @@ const Userloginedsection = () => {
                     <h1 className='capitalize text-[26px] font-semibold  '>our users</h1>
                     <Breadcrumb />
                 </div>
-                {/* <div className="flex items-center gap-7">
-                    <div className="w-full ">
-                        <div className="w-full p-5 bg-white rounded-md shadow-md mb-7">
-                            <div className="flex items-center justify-between w-full">
-                                <div className="py-6">
-                                    <h1 className='capitalize text-[26px] font-semibold '>Most Recent added</h1>
-                                </div>
-                                <div className="flex items-center">
-                                    <div className="relative cursor-pointer ">
-                                        <button className='flex items-center gap-3 rounded-lg px-6 py-2 shadow-md border text-[var(--primary-color)] border-[var(--primary-color)] uppercase hover:bg-[var(--primary-color)] hover:text-white duration-1000' title='add' onClick={() => setIsOpenAddModel(true)} >
-                                            <IoMdAdd /> add
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="text-gray-600 text-[10px] md:text-[16px] uppercase leading-[1.5] bg-gray-100 flex w-full">
-
-                                <div className="p-2.5 xl:p-4 flex-1">name</div>
-                                <div className="p-2.5 xl:p-4 flex-1 hidden lg:block">image</div>
-                                <div className="p-2.5 xl:p-4 flex-1 hidden lg:block">username</div>
-                                <div className="p-2.5 xl:p-4 flex-1">email</div>
-                                <div className="p-2.5 xl:p-4 flex-1 hidden lg:block">phone</div>
-                                <div className="p-2.5 xl:p-4 flex-1">actions</div>
-
-                            </div>
-                            <div className="flex flex-col w-full">
-                                {Users.map((user, _id) => {
-                                    return (
-                                        <div className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200" key={user._id} >
-
-                                            <div className="flex-1 p-2.5 xl:p-4">{user?.name}</div>
-                                            <div className="flex-1 p-2.5 xl:p-4 hidden lg:block">
-                                                {
-                                                    user?.profileImage ? (
-
-                                                        <img src={user?.profileImage} className='object-cover w-12 h-12 ' alt="" />
-                                                    ) : (
-                                                        <img src='https://www.t3bucket.com/f/0-user.svg' alt="Profile" className="object-cover w-12 h-12 rounded-full" />
-                                                    )
-                                                }
-                                            </div>
-
-                                            <div className="flex-1 p-2.5 xl:p-4 hidden lg:block">{user?.username}</div>
-                                            <div className="flex-1 p-2.5 xl:p-4">{user?.email}</div>
-                                            <div className="p-2.5 xl:p-4 flex-1 hidden lg:block">{user?.phoneNo}</div>
-
-                                            {user.status === 'pending' && user?._id ? (
-                                                <>
-                                                    <div className="flex-1 p-2.5 xl:p-7 ">
-                                                        <button className='px-4 py-2 my-1 text-white capitalize duration-1000 bg-green-500 border border-green-500 rounded-xl hover:shadow-lg hover:border hover:bg-transparent hover:text-green-500 hover:border-green-500' onClick={() => handleStatusChange(user._id, 'Approved')} >
-                                                            approve
-                                                        </button>
-                                                        <button className='px-4 py-2 my-1 text-white capitalize duration-1000 bg-red-500 border border-red-500 rounded-xl hover:shadow-lg hover:border hover:bg-transparent hover:text-red-500 hover:border-red-500' onClick={() => handleStatusChange(user._id, 'rejected')} >
-                                                            reject
-                                                        </button>
-                                                        <button className='text-red-500' onClick={() => handleDelete(user._id)} > <RiDeleteBinLine /> </button>
-                                                    </div>
-                                                </>
-                                            ) : (
-                                                <div className="flex-1 flex gap-2 items-center p-2.5 xl:9-7">
-
-                                                    <p>{user.status}</p>
-                                                    {user.status === 'rejected' && user._id ? (
-                                                        <>
-                                                            <button className='px-4 py-2 my-1 text-white capitalize duration-1000 bg-green-500 border border-green-500 rounded-xl hover:shadow-lg hover:border hover:bg-transparent hover:text-green-500 hover:border-green-500' onClick={() => handleStatusChange(user._id, 'Approved')} >
-                                                                approve
-                                                            </button>
-                                                            <button className='text-red-500' onClick={() => handleDelete(user._id)}  > <RiDeleteBinLine /> </button>
-                                                        </>
-                                                    ) :
-                                                        ""
-                                                    }
-                                                    {user.status === 'Approved' && user._id ? (
-                                                        <>
-                                                            <button className='px-4 py-2 my-1 text-white capitalize duration-1000 bg-red-500 border border-red-500 rounded-xl hover:shadow-lg hover:border hover:bg-transparent hover:text-red-500 hover:border-red-500' onClick={() => handleStatusChange(user._id, 'rejected')} >
-                                                                reject
-                                                            </button>
-                                                            <button className='text-red-500' onClick={() => handleDelete(user._id)}  > <RiDeleteBinLine /> </button>
-                                                        </>
-                                                    ) : ""}
-                                                </div>
-                                            )}
-
-
-                                        </div>
-                                    )
-                                })}
-                            </div>
-                        </div>
-                    </div>
-                </div> */}
                 <div className="w-full">
                     <div className="w-full p-5 bg-white rounded-md shadow-md mb-7">
                         <div className="flex items-center justify-between w-full">
@@ -299,7 +243,8 @@ const Userloginedsection = () => {
                                 <tr>
                                     <th className="p-2.5 xl:p-4 border border-gray-200">Name</th>
                                     <th className="p-2.5 xl:p-4 border border-gray-200 hidden lg:table-cell">Image</th>
-                                    <th className="p-2.5 xl:p-4 border border-gray-200 hidden lg:table-cell">Username</th>
+                                    <th className="p-2.5 xl:p-4 border border-gray-200 ">role</th>
+                                    {/* <th className="p-2.5 xl:p-4 border border-gray-200 hidden lg:table-cell">Username</th> */}
                                     <th className="p-2.5 xl:p-4 border border-gray-200">Email</th>
                                     <th className="p-2.5 xl:p-4 border border-gray-200 hidden lg:table-cell">Phone</th>
                                     <th className="p-2.5 xl:p-4 border border-gray-200">Actions</th>
@@ -309,7 +254,7 @@ const Userloginedsection = () => {
                                 {Users.length > 0 ? (
                                     Users.map((user) => (
                                         <tr key={user._id} className="border-b border-gray-200">
-                                            <td className="p-2.5 xl:p-4 border border-gray-200 text-center ">{user?.name}</td>
+                                            <td className="p-2.5 xl:p-4 border border-gray-200 text-center capitalize ">{user?.name}</td>
                                             <td className="p-2.5 xl:p-4 border border-gray-200 hidden lg:table-cell">
                                                 <div className="flex justify-center rounded-full">
                                                     {user?.profileImage ? (
@@ -319,7 +264,18 @@ const Userloginedsection = () => {
                                                     )}
                                                 </div>
                                             </td>
-                                            <td className="p-2.5 xl:p-4 border border-gray-200 hidden lg:table-cell text-center">{user?.username}</td>
+                                            <td className="p-2.5 xl:p-5 border border-gray-200 text-center ">
+                                                <select
+                                                    value={user?.role}
+                                                    onChange={(e) => handleroleChange(user?._id, e.target.value)}
+                                                    className='capitalize'
+                                                >
+                                                    {statusOptions.map((status, index) => (
+                                                        <option key={index} value={status}>{status}</option>
+                                                    ))}
+                                                </select>
+                                            </td>
+                                            {/* <td className="p-2.5 xl:p-4 border border-gray-200 hidden lg:table-cell text-center">{user?.username}</td> */}
                                             <td className="p-2.5 xl:p-4 border border-gray-200 text-center">{user?.email}</td>
                                             <td className="p-2.5 xl:p-4 border border-gray-200 hidden lg:table-cell text-center">{user?.phoneNo}</td>
                                             <td className="p-2.5 xl:p-4 border border-gray-200">

@@ -14,7 +14,7 @@ import Login from "./pages/user/login";
 import Register from "./pages/user/register";
 import Profile from "./pages/user/profile";
 import Servicepage from "./pages/websolex/servicepage";
-
+import ProtectedRoute from "./pages/user/protectusers";
 import Teampage from "./pages/websolex/teampage";
 import Blogpage from "./pages/websolex/blogpage";
 import Contactdetails from "./pages/websolex/contactdetails";
@@ -47,7 +47,7 @@ const Layout = ({ children }) => {
   }, []);
 
   return (
-    <div className="flex w-screen sm:w-full h-full lg:h-screen bg-[#f1f5f9]">
+    <div className="flex w-screen sm:w-full h-screen bg-[#f1f5f9]">
       {loading ? (
         <div className="flex items-center justify-center w-screen h-screen ">
           <GridLoader color="rgb(84, 162, 217)" />
@@ -75,23 +75,57 @@ function App() {
     <UserProvider>
       <div className="bg-[#f1f5f9] w-full ">
         <Router>
-          <ScrollToTop/>
+          <ScrollToTop />
           <Routes>
+
+            <Route
+              path="/websolex/emmangement"
+              element={
+                <Layout>
+                  <Pagetitle title={"employe"} />
+                  <Emmangement />
+                </Layout>
+              }
+            />
+
+            <Route
+              path="/userlogined"
+              element={
+                <Layout>
+                  <Pagetitle title={"userlogined"} />
+                  <Userlogied />
+                </Layout>
+              }
+            />
+
+            <Route
+              path="/crm"
+              element={
+                <Layout>
+                  <Pagetitle title={"crm"} />
+                  <Crm />
+                </Layout>
+              }
+            />
+
+            <Route
+              path="/marketing"
+              element={
+                <Layout>
+                  <Pagetitle title={"marketing"} />
+                  <Markating />
+                </Layout>
+              }
+            />
+
+
+
             <Route
               path="/websolex"
               element={
                 <Layout>
                   <Pagetitle title={"Home"} />
                   <Websolexadmin />
-                </Layout>
-              }
-            />
-            <Route
-              path="/search"
-              element={
-                <Layout>
-                  <Pagetitle title={"Search"} />
-                  <SearchResults />
                 </Layout>
               }
             />
@@ -167,42 +201,14 @@ function App() {
                 </Layout>
               }
             />
-            <Route
-              path="/websolex/emmangement"
-              element={
-                <Layout>
-                  <Pagetitle title={"employe"} />
-                  <Emmangement />
-                </Layout>
-              }
-            />
+
 
             <Route
-              path="/userlogined"
+              path="/search"
               element={
                 <Layout>
-                  <Pagetitle title={"userlogined"} />
-                  <Userlogied />
-                </Layout>
-              }
-            />
-
-            <Route
-              path="/crm"
-              element={
-                <Layout>
-                  <Pagetitle title={"crm"} />
-                  <Crm />
-                </Layout>
-              }
-            />
-
-            <Route
-              path="/marketing"
-              element={
-                <Layout>
-                  <Pagetitle title={"marketing"} />
-                  <Markating />
+                  <Pagetitle title={"Search"} />
+                  <SearchResults />
                 </Layout>
               }
             />
@@ -244,24 +250,6 @@ function App() {
                 <Layout>
                   <Pagetitle title={"profile"} />
                   <Profile />
-                </Layout>
-              }
-            />
-            <Route
-              path="/websolex/userschat"
-              element={
-                <Layout>
-                  <Pagetitle title={"Userallchats"} />
-                  <Userchat />
-                </Layout>
-              }
-            />
-            <Route
-              path="/websitelogos"
-              element={
-                <Layout>
-                  <Pagetitle title={"Website logos"} />
-                  <Weblogos />
                 </Layout>
               }
             />

@@ -77,8 +77,10 @@ const Header = ({ toogleslidebar }) => {
     }, [navigate]);
 
     const logout = () => {
-        dispatch(logoutUser());
-        navigate("/");
+        const getuserprofile = localStorage.removeItem("Admintoken_websolex")
+        if (!getuserprofile) {
+            navigate('/')
+        }
     };
 
 
