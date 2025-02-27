@@ -16,7 +16,6 @@ const Contactdetailsection = () => {
     const socialDetails = useSelector((state) => state.social.data)
     const contactFeedback = useSelector((state) => state.contact.feedback)
     const socialFeedback = useSelector((state) => state.social.feedback)
-
     const [feedback, setFeedback] = useState({ message: '', type: '' });
 
     const handleClear = () => {
@@ -151,7 +150,7 @@ const Contactdetailsection = () => {
                                 social media
                             </div>
                             <div className="p-7">
-                                <form onSubmit={handlesocialSubmit}>
+                                <form >
                                     <div className="flex flex-col gap-5 mb-5 sm:flex-row">
                                         <div className="w-full sm:w-1/2 ">
                                             <label htmlFor="" className='block mb-3 text-sm font-medium text-black capitalize' >facebook</label>
@@ -220,7 +219,7 @@ const Contactdetailsection = () => {
                                     </div>
                                     <div className="flex justify-end gap-4">
                                         <Seconduray label={"Cancel"} />
-                                        <Primary label={"Save"} />
+                                        <Primary onClick={handlesocialSubmit} label={"Save"} />
                                     </div>
                                 </form>
                             </div>

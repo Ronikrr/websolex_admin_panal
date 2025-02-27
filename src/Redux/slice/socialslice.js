@@ -1,56 +1,71 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API = "https://websolex-admin.vercel.app/api/socialdetails";
+const API = "http://localhost:8000/api/socialdetails";
 
+// Fetch social details
 export const fetchSocialDetails = createAsyncThunk(
-    "socialdetails/fetch",
-    async (_, { rejectWithvalue }) => {
+    "social/fetchDetails",
+    async (_, { rejectWithValue }) => {
         try {
-            const res = await axios.get(API);
-            return res.data;
+            const response = await axios.get(API);
+            return response.data;
         } catch (error) {
-            return rejectWithvalue(
-                error.res?.data || "Faild to fetch social Details"
+            return rejectWithValue(
+                error.response?.data || "Failed to fetch social details"
             );
         }
     }
 );
 
+// Update or Create social details
 export const updateSocialDetails = createAsyncThunk(
-    "social/update",
-    async (socialDetails) => {
-        const response = await fetch(API, {
-            method: socialDetails.id ? "PUT" : "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(socialDetails),
-        });
+    "social/updateDetails",
+    async (socialDetails, { rejectWithValue }) => {
+        const { _id, ...payload } = socialDetails; // Separate _id from body data
 
-        const data = await response.json();
-        return data;
+        const apiUrl = _id ? `${API}/${_id}` : API; // Use _id for updates
+        const method = _id ? "PUT" : "POST";
+
+        try {
+            const response = await fetch(apiUrl, {
+                method,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),  // Send only actual payload data
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Failed to update social details");
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            return rejectWithValue(error.message || "An error occurred");
+        }
     }
 );
 
-const socialslice = createSlice({
+
+
+// Slice
+const socialSlice = createSlice({
     name: "social",
     initialState: {
-        data: {
-            facebook: "",
-            whatsapp: "",
-            instagram: "",
-            linkedin: "",
-        },
-        status: "idle",
+        data: { facebook: "", whatsapp: "", instagram: "", linkedin: "", },
+        status: "idle",  // loading, succeeded, failed
         error: null,
-        feedback: null,
+        feedback: { message: "", type: "" }, // To show success/error messages
     },
     reducers: {
         clearFeedback: (state) => {
-            state.feedback = null;
+            state.feedback = { message: "", type: "" };
         },
     },
     extraReducers: (builder) => {
         builder
+            // Fetch details cases
             .addCase(fetchSocialDetails.pending, (state) => {
                 state.status = "loading";
             })
@@ -62,20 +77,23 @@ const socialslice = createSlice({
                 state.status = "failed";
                 state.error = action.error.message;
             })
+
+            // Update details cases
             .addCase(updateSocialDetails.fulfilled, (state, action) => {
                 state.data = action.payload;
                 state.feedback = {
-                    message: "Client rate updated successfully!",
+                    message: "Social details updated successfully!",
                     type: "success",
                 };
             })
             .addCase(updateSocialDetails.rejected, (state, action) => {
                 state.feedback = {
-                    message: `Error: ${action.error.message}`,
+                    message: `Error: ${action.payload}`,
                     type: "error",
                 };
             });
     },
 });
-export const { clearFeedback } = socialslice.actions;
-export default socialslice.reducer;
+
+export const { clearFeedback } = socialSlice.actions;
+export default socialSlice.reducer;

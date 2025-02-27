@@ -114,7 +114,7 @@ const Header = ({ toogleslidebar }) => {
             setisuseropen(false)
         }, 5000);
 
-    })
+    }, [])
     return (
         <div className='h-[80px] w-screen md:w-full flex px-5 lg:px-11 py-4  items-center justify-center bg-[#fff] '>
             {error && (
