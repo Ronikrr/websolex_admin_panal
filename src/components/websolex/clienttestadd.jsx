@@ -42,7 +42,7 @@ const Clienttestadd = () => {
         const errors = {}
         if (!formData.name.trim()) errors.name = "Name is required"
         if (!formData.description.trim()) errors.description = "description is required"
-        if (!formData.business.trim()) errors.business = "business is required"
+        // if (!formData.business.trim()) errors.business = "business is required"
         if (!formData.rate.trim()) errors.rate = "rate is required"
         if (!formData.image) errors.image = "Image is required"
 
