@@ -70,6 +70,7 @@ const Clienttestadd = () => {
         try {
             const result = await dispatch(addclientrate(formDataToSend)).unwrap(); // Unwrap to handle errors properly
             if (result) {
+                setIsOpenAddModel(false);
                 resetFormFields(); // Reset form only if successful
                 setFormData({
                     name: "",
@@ -80,7 +81,6 @@ const Clienttestadd = () => {
                     imagePreview: null,
                 })
                 setErrors({})
-                setIsOpenAddModel(false);
             }
         } catch (error) {
             console.error("Error adding blog:", error);
@@ -109,6 +109,7 @@ const Clienttestadd = () => {
         try {
             const result = await dispatch(updateclientrate({ id, formData: formDataToSend })).unwrap(); // Unwrap to handle errors properly
             if (result) {
+                setIsOpenModel(false);
                 setFormData({
                     name: "",
                     description: "",
@@ -119,7 +120,6 @@ const Clienttestadd = () => {
                 })
                 setErrors({})
                 resetFormFields(); // Reset form only if successful
-                setIsOpenModel(false);
             }
         } catch (error) {
 
