@@ -71,6 +71,15 @@ const Clienttestadd = () => {
             const result = await dispatch(addclientrate(formDataToSend)).unwrap(); // Unwrap to handle errors properly
             if (result) {
                 resetFormFields(); // Reset form only if successful
+                setFormData({
+                    name: "",
+                    description: "",
+                    business: '',
+                    rate: '',
+                    image: null,
+                    imagePreview: null,
+                })
+                setErrors({})
                 setIsOpenAddModel(false);
             }
         } catch (error) {
@@ -100,6 +109,15 @@ const Clienttestadd = () => {
         try {
             const result = await dispatch(updateclientrate({ id, formData: formDataToSend })).unwrap(); // Unwrap to handle errors properly
             if (result) {
+                setFormData({
+                    name: "",
+                    description: "",
+                    business: '',
+                    rate: '',
+                    image: null,
+                    imagePreview: null,
+                })
+                setErrors({})
                 resetFormFields(); // Reset form only if successful
                 setIsOpenModel(false);
             }
