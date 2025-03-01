@@ -1,31 +1,43 @@
 import React, { useEffect, useState } from "react";
 import Breadcrumb from "../ui/breadcrumb";
 import FeedbackMessage from "../ui/feedback";
-import {
-    fetchcontactform,
-    fetchsubcribe,
-} from "../../Redux/slice/contactDetailAction";
-import { useDispatch, useSelector } from "react-redux";
-const Contactformsection = () => {
-    const dispatch = useDispatch();
-    const { contactData, subscribeData, error } = useSelector(
-        (state) => state.contactfrom
-    );
 
+const Contactformsection = () => {
+    const [contactData, setContactData] = useState([]);
+    const [subscribeData, setSubscribeData] = useState([]);
     const [feedback, setFeedback] = useState({ message: "", type: "" });
 
     const handleClear = () => {
         setFeedback({ message: "", type: "" });
     };
-    useEffect(() => {
-        dispatch(fetchcontactform());
-        dispatch(fetchsubcribe());
-    }, [dispatch]);
-    useEffect(() => {
-        if (error) {
-            setFeedback(error);
+
+    const fetchContactForm = async () => {
+        try {
+            const response = await fetch("http://localhost:8000/view_contactform"); // Replace with your actual API endpoint
+            if (!response.ok) throw new Error("Failed to fetch contact data.");
+            const data = await response.json();
+            setContactData(data);
+        } catch (error) {
+            setFeedback({ message: error.message, type: "error" });
         }
-    }, [error]);
+    };
+
+    const fetchSubscribe = async () => {
+        try {
+            const response = await fetch("http://localhost:8000/subscribe"); // Replace with your actual API endpoint
+            if (!response.ok) throw new Error("Failed to fetch subscriber data.");
+            const data = await response.json();
+            setSubscribeData(data);
+        } catch (error) {
+            setFeedback({ message: error.message, type: "error" });
+        }
+    };
+
+    useEffect(() => {
+        fetchContactForm();
+        fetchSubscribe();
+    }, []);
+
     return (
         <div className="w-full">
             {feedback.message && (
@@ -36,11 +48,13 @@ const Contactformsection = () => {
                 />
             )}
             <div className="flex flex-col items-center justify-between mb-4 lg:flex-row">
-                <h1 className="capitalize text-[26px] font-semibold  ">contact form</h1>
+                <h1 className="capitalize text-[26px] font-semibold">contact form</h1>
                 <Breadcrumb />
             </div>
-            <div className="flex flex-col items-start lg:flex-row gap-7 ">
-                <div className="w-full md:w-8/12">
+
+            <div className="flex flex-col items-start gap-7">
+                {/* Contact Form Table */}
+                <div className="w-full ">
                     <div className="w-full p-5 bg-white rounded-md shadow-md mb-7">
                         <table className="w-full border border-collapse border-gray-200">
                             <thead className="bg-gray-100 text-gray-600 text-[10px] md:text-[16px] uppercase leading-[1.5]">
@@ -85,75 +99,8 @@ const Contactformsection = () => {
                     </div>
                 </div>
 
-                {/* <div className="w-full md:w-8/12">
-                    <div className="w-full p-5 bg-white rounded-md shadow-md mb-7">
-                        <div className="text-gray-600 text-[10px] md:text-[16px] uppercase leading-[1.5] bg-gray-100 flex w-full">
-                            <div className="p-2.5 xl:p-4 ">ID</div>
-                            <div className="p-2.5 xl:p-4 flex-1 hidden lg:block">name</div>
-                            <div className="p-2.5 xl:p-4 flex-1">email</div>
-                            <div className="p-2.5 xl:p-4 flex-1 hidden lg:block">phone</div>
-                            <div className="p-2.5 xl:p-4 flex-1 hidden lg:block">subject</div>
-                            <div className="p-2.5 xl:p-4 flex-1 hidden lg:block">message</div>
-                        </div>
-                        <div className="flex flex-col w-full">
-                            {contactData.length > 0 ? (
-                                contactData.map((contact, index) => (
-                                    <div
-                                        className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200"
-                                        key={index}
-                                    >
-                                        <div className=" p-2.5 xl:p-4">{index + 1}</div>
-                                        <div className="flex-1 p-2.5 xl:p-4 hidden lg:block">
-                                            {contact?.name}
-                                        </div>
-                                        <div className="flex-1 p-2.5 xl:p-4 overflow-hidden">
-                                            {contact?.email}
-                                        </div>
-                                        <div className="p-2.5 xl:p-4 flex-1 hidden lg:block">
-                                            {contact?.contactnumber}
-                                        </div>
-                                        <div className="p-2.5 xl:p-4 flex-1 hidden lg:block">
-                                            {contact?.subject}
-                                        </div>
-                                        <div className="p-2.5 xl:p-4 flex-1 hidden lg:block">
-                                            {contact?.message}
-                                        </div>
-                                    </div>
-                                ))
-                            ) : (
-                                <div className="p-4 text-center">
-                                    <p>No contact Data found.</p>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div> */}
-                {/* <div className="w-full md:w-4/12">
-                    <div className="w-full p-5 bg-white rounded-md shadow-md mb-7">
-                        <div className="text-gray-600 text-[10px] md:text-[16px] uppercase leading-[1.5] bg-gray-100 flex w-full">
-                            <div className="p-2.5 xl:p-4 flex-1">ID</div>
-                            <div className="p-2.5 xl:p-4 flex-1">email</div>
-                        </div>
-                        <div className="flex flex-col w-full">
-                            {subscribeData.length > 0 ? (
-                                subscribeData.map((data, index) => (
-                                    <div
-                                        className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200"
-                                        key={index}
-                                    >
-                                        <div className="flex-1 p-2.5 xl:p-4"> {index + 1} </div>
-                                        <div className="flex-1 p-2.5 xl:p-4"> {data?.email} </div>
-                                    </div>
-                                ))
-                            ) : (
-                                <div className="p-4 text-center">
-                                    <p>No subscriber found.</p>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div> */}
-                <div className="w-full md:w-4/12">
+                {/* Subscription Table */}
+                <div className="w-full ">
                     <div className="w-full p-5 bg-white rounded-md shadow-md mb-7">
                         <table className="w-full border border-collapse border-gray-200">
                             <thead className="bg-gray-100 text-gray-600 text-[10px] md:text-[16px] uppercase leading-[1.5]">
@@ -181,7 +128,6 @@ const Contactformsection = () => {
                         </table>
                     </div>
                 </div>
-
             </div>
         </div>
     );
