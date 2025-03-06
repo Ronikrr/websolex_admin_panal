@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Sidebar from "./components/slidebar/sidebar";
 import Websolexadmin from "./pages/websolexadmin";
@@ -14,7 +14,6 @@ import Login from "./pages/user/login";
 import Register from "./pages/user/register";
 import Profile from "./pages/user/profile";
 import Servicepage from "./pages/websolex/servicepage";
-import ProtectedRoute from "./pages/user/protectusers";
 import Teampage from "./pages/websolex/teampage";
 import Blogpage from "./pages/websolex/blogpage";
 import Contactdetails from "./pages/websolex/contactdetails";
@@ -23,15 +22,25 @@ import UnauthorizedPage from "./pages/websolex/unauthorizedPage";
 import Userlogied from "./pages/user/userlogied";
 import { UserProvider } from "./pages/user/userrolecontext";
 import Emmangement from "./pages/websolex/emmangement";
-import Userchat from "./pages/user/userchat";
 import Pagetitle from "./components/pagetitle";
 import SearchResults from "./components/websolex/SearchResults";
 import ScrollToTop from "./components/scrolltotop";
-import Weblogos from "./pages/websolex/weblogos";
+import { useSelector, useDispatch } from 'react-redux';
+import { getuserprofile } from './Redux/authSlice';
+import Allworkadd from "./pages/user/allworkadd";
+import Workadd from "./pages/user/workadd";
 
 const Layout = ({ children }) => {
+  const dispatch = useDispatch();
+  const token = useSelector(state => state.auth.token);
   const [isopensidebar, setisopensidebar] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (token) {
+      dispatch(getuserprofile());
+    }
+  }, [token, dispatch]);
 
   const toogleslidebar = () => {
     setisopensidebar(!isopensidebar);
@@ -101,6 +110,7 @@ function App() {
             <Route
               path="/crm"
               element={
+
                 <Layout>
                   <Pagetitle title={"crm"} />
                   <Crm />
@@ -117,9 +127,6 @@ function App() {
                 </Layout>
               }
             />
-
-
-
             <Route
               path="/websolex"
               element={
@@ -212,7 +219,24 @@ function App() {
                 </Layout>
               }
             />
-
+            <Route
+              path="/allworkadd"
+              element={
+                <Layout>
+                  <Pagetitle title={"all work add "} />
+                  <Allworkadd />
+                </Layout>
+              }
+            />
+            <Route
+              path="/workadd"
+              element={
+                <Layout>
+                  <Pagetitle title={"work add "} />
+                  <Workadd />
+                </Layout>
+              }
+            />
             <Route
               path="*"
               element={

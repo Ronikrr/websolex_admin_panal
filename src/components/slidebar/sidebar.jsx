@@ -214,6 +214,7 @@ import { FaUserNinja } from "react-icons/fa6";
 import { FaPaperclip } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { getuserprofile, updateuserprofile, logoutUser } from '../../Redux/authSlice';
+import { BiTask } from "react-icons/bi";
 function Sidebar({ isopensidebar, closeslidebar }) {
     const [activeMenu, setActiveMenu] = useState(null);
     const [activeSubMenu, setActiveSubMenu] = useState(null);
@@ -240,14 +241,12 @@ function Sidebar({ isopensidebar, closeslidebar }) {
                         { id: 3, icon: <FaHandshake />, label: "Trusted Bond", link: "/websolex/valuedclient" },
                         { id: 4, icon: <MdOutlineWorkspacePremium />, label: "Our work", link: "/websolex/latestworkadd" },
                         { id: 5, icon: <FaUserCheck />, label: "client rate", link: "/websolex/clientrate" },
-                        // { id: 6, icon: <RiCustomerService2Fill />, label: "service page", link: "/websolex/servicepage" },
                         { id: 7, icon: <FaPen />, label: "blog page", link: "/websolex/blogpage" },
                         { id: 8, icon: <MdContactPage />, label: "contact details", link: "/websolex/contactdetails" },
                         { id: 9, icon: <RiContactsFill />, label: "contact & subscribe", link: "/websolex/contactform" },
                         { id: 10, icon: <FaUsers />, label: "logined users", link: "/userlogined" },
                         { id: 11, icon: <FaUserNinja />, label: "emplyee", link: "/websolex/emmangement" },
-                        // { id: 12, icon: <FaUserNinja />, label: "users chat", link: "/websolex/userschat" },
-                        // { id: 12, icon: <FaPaperclip />, label: "website logos", link: "/websitelogos" },
+                        { id: 12, icon: <BiTask />, label: "daily work", link: "/allworkadd" },
                     ],
                 },
                 {
@@ -286,7 +285,7 @@ function Sidebar({ isopensidebar, closeslidebar }) {
                         { id: 7, icon: <FaPen />, label: "blog page", link: "/websolex/blogpage" },
                         { id: 8, icon: <MdContactPage />, label: "contact details", link: "/websolex/contactdetails" },
                         { id: 9, icon: <RiContactsFill />, label: "contact & subscribe", link: "/websolex/contactform" },
-
+                        { id: 10, icon: <BiTask />, label: "daily work", link: "/workadd" },
                     ],
                 },
             ],

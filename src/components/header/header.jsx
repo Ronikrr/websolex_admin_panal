@@ -6,10 +6,7 @@ import { CiUser } from "react-icons/ci";
 import { RiMessage2Line } from "react-icons/ri";
 import { FaBars } from "react-icons/fa6";
 import { TbLogin2 } from 'react-icons/tb';
-import { useDispatch } from 'react-redux';
-import { logoutUser } from '../../Redux/authSlice';
 const Header = ({ toogleslidebar }) => {
-    const dispatch = useDispatch()
     const [user, setUser] = useState({});
     const [showError, setShowError] = useState('');
     const [error, setError] = useState(null);

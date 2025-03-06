@@ -11,6 +11,7 @@ import staticreducer from './slice/staticSlice'
 import projectreducer from './slice/projectSlice'
 import teammemberreducer from "./slice/teamslice"
 import ValuedClientreducer from './slice/valuedclientslice'
+import Workaddreducer from "./slice/workadd";
 const store = configureStore({
     reducer: {
         auth: authReducer,
@@ -25,6 +26,7 @@ const store = configureStore({
         project: projectreducer,
         teamMember: teammemberreducer,
         valuedclient: ValuedClientreducer,
+        workLog: Workaddreducer,
     }
 })
 export default store
