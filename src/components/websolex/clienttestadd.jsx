@@ -1,5 +1,3 @@
-
-
 import React, { useEffect, useState } from 'react';
 import { FaRegEdit, FaRegStar, FaStar } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
