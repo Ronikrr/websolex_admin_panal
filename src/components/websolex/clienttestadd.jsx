@@ -11,7 +11,7 @@ import Breadcrumb from '../ui/breadcrumb';
 import Textarea from '../ui/textarea';
 import FeedbackMessage from '../ui/feedback';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchclientrate, addclientrate, clearFeedback, deleteclientrate, updateclientrate } from '../../Redux/slice/testimonalapiSlice';
+import { fetchclientrate, addclientrate, deleteclientrate, updateclientrate } from '../../Redux/slice/testimonalapiSlice';
 
 const Clienttestadd = () => {
     const dispatch = useDispatch();
