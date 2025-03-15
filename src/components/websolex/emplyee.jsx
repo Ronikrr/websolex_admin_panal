@@ -9,7 +9,7 @@ const Blogpagesection = () => {
     const dispatch = useDispatch();
     const employees = useSelector((state) => state?.employees);
     const feedbacks = useSelector((state) => state?.employees);
-    console.log(employees.employees)
+
 
     const [feedback, setFeedback] = useState({ message: '', type: '' });
     const handleClear = () => {

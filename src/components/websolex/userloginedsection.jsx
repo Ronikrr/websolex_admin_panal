@@ -18,8 +18,8 @@ const Userloginedsection = () => {
     const [showRepeatPassword, setShowRepeatPassword] = useState(false);
     const [feedback, setFeedback] = useState({ message: "", type: "" });
 
-    const API = "http://localhost:8000";
-    // const API = "https://websolex-admin.vercel.app";
+    // const API = "http://localhost:8000";
+    const API = "https://websolex-admin.vercel.app";
 
     // Clear Feedback
     const handleClear = () => setFeedback({ message: "", type: "" });
