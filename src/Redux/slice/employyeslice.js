@@ -9,12 +9,14 @@ export const fetchEmployee = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         try {
             const res = await axios.get(API);
-            return res.data;
+            const data = res.data; // Fixed here
+            return data.employees;
         } catch (error) {
             return rejectWithValue(error.response?.data || "Failed to fetch employees");
         }
     }
 );
+
 
 const employeeSlice = createSlice({
     name: "employees",

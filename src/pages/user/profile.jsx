@@ -26,21 +26,12 @@ const Profile = () => {
         password: '',
         username: '',
         profileImage: '',
-        workInCompany: "",
     });
     const [isModelOpen, setisModelOpen] = useState(false)
     const [newProfileImage, setNewProfileImage] = useState(null);
     const [isShowPass, setIsShowPass] = useState(false);
     const [feedback, setFeedback] = useState({ message: '', type: '' });
-    const seleyourwork = [
-        "Select one",
-        'Digital Marketing',
-        'React.js Developer',
-        'Node.js Developer',
-        'Full Stack Developer',
-        'Shopify Developer',
-        'WordPress Developer',
-    ]
+
 
     useEffect(() => {
         dispatch(getuserprofile());
@@ -58,7 +49,6 @@ const Profile = () => {
                 password: user?.user?.password || '',
                 username: user?.user?.username || '',
                 profileImage: user?.user?.profileImage || '',
-
             });
         }
         else if (error) {
@@ -99,7 +89,6 @@ const Profile = () => {
         if (newProfileImage) {
             updatedData.append("profileImage", newProfileImage);
         }
-        updatedData.append("workInCompany", formData.workInCompany);
 
         dispatch(updateuserprofile(updatedData));
     };
