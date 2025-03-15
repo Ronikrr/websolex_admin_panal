@@ -32,12 +32,11 @@ const Latestworkaddsection = () => {
     const [formData, setformData] = useState(initialState);
     useEffect(() => {
         dispatch(fetchourwork());
-    }, [dispatch]);
-    useEffect(() => {
+
         if (feedbackdata) {
             setFeedback(feedbackdata)
         }
-    }, [feedbackdata])
+    }, [feedbackdata, dispatch])
     useEffect(() => {
         setTimeout(() => {
             setIsOpenLastAll(false);

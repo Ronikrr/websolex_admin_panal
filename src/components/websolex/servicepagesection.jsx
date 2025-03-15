@@ -30,6 +30,7 @@ const Servicepagesection = () => {
     }, [isOpenLastAll]);
     const API_URL = "https://websolex-admin.vercel.app/api/service";
 
+    useEffect(() => {
     const fetchleads = async () => {
         try {
             const res = await fetch(API_URL);
@@ -45,9 +46,8 @@ const Servicepagesection = () => {
     };
 
 
-    useEffect(() => {
         fetchleads();
-    }, []);
+    }, [API_URL]);
     const validateForm = (data) => {
         const newErrors = {};
         if (!data.name || data.name.trim() === '') newErrors.name = 'Name is required';

@@ -11,7 +11,8 @@ import { ImEye, ImEyeBlocked } from 'react-icons/im';
 import { useNavigate } from 'react-router-dom';
 import FeedbackMessage from '../../components/ui/feedback';
 import { useSelector, useDispatch } from 'react-redux';
-import { getuserprofile, updateuserprofile , logoutUser } from '../../Redux/authSlice';
+import { getuserprofile, updateuserprofile } from '../../Redux/authSlice';
+import Logoutmodel from '../../components/ui/logoutmodel';
 
 const Profile = () => {
     const dispatch = useDispatch();
@@ -25,7 +26,7 @@ const Profile = () => {
         username: '',
         profileImage: '',
     });
-
+    const [isModelOpen, setisModelOpen] = useState(false)
     const [newProfileImage, setNewProfileImage] = useState(null);
     const [isShowPass, setIsShowPass] = useState(false);
     const [feedback, setFeedback] = useState({ message: '', type: '' });
@@ -34,6 +35,9 @@ const Profile = () => {
         dispatch(getuserprofile());
     }, [dispatch]);
 
+    const handleopenmodel = () => {
+        setisModelOpen(!isModelOpen)
+    }
     useEffect(() => {
         if (user?.user) {
             setFormData({
@@ -89,7 +93,7 @@ const Profile = () => {
         setFeedback({ message: "", type: "" });
     };
     const handlelogout = () => {
-        dispatch(logoutUser());
+        localStorage.removeItem("Admintoken_websolex")
         navigate('/')
     }
 
@@ -98,6 +102,11 @@ const Profile = () => {
             {feedback?.message && (
                 <FeedbackMessage message={feedback?.message} type={feedback?.type} onClear={handleClear} />
             )}
+            <Logoutmodel
+                isOpen={isModelOpen}
+                onClose={() => setisModelOpen(false)}
+                onConfirm={handlelogout}
+            />
             <div className="mx-auto max-w-[67.5rem]">
                 <div className="flex flex-col gap-3 mb-6 sm:flex-row sm:items-center sm:justify-between">
                     <h2 className="font-semibold text-black text-[26px]">Settings</h2>
@@ -224,7 +233,7 @@ const Profile = () => {
                                         <Input name="username" value={formData?.username} onChange={handleChange} placeholder="Enter username" />
                                     </div>
                                     <div className="flex justify-between gap-4">
-                                        <button type="button" className="px-6 py-2 text-white bg-red-500 border border-red-600 rounded-md hover:shadow-md hover:text-red-600 hover:bg-red-100" onClick={handlelogout} >
+                                        <button type="button" className="px-6 py-2 text-white bg-red-500 border border-red-600 rounded-md hover:shadow-md hover:text-red-600 hover:bg-red-100" onClick={handleopenmodel} >
                                             Logout
                                         </button>
                                         <div className="flex items-center gap-4">

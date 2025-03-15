@@ -23,13 +23,9 @@ const Blogpagesection = () => {
         image: null,
         imagePreview: null,
     })
-
-    useEffect(() => {
-        clearFeedback()
-    }, [])
-
     useEffect(() => {
         dispatch(fetchBlogs());
+        clearFeedback()
     }, [dispatch]);
 
 

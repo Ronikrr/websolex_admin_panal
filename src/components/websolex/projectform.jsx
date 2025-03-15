@@ -10,36 +10,48 @@ const FormWithApiData = () => {
     const dispatch = useDispatch();
     const projectDetails = useSelector((state) => state.project.data);
     const projectFeedback = useSelector((state) => state.project.feedback);
+
+    // Local state for form input
+    const [formData, setFormData] = useState({
+        totalClients: "",
+        completedProjects: ""
+    });
+
     const [feedback, setFeedback] = useState({ message: "", type: "" });
 
-    // Clear feedback message
-    const handleClear = () => {
-        setFeedback({ message: "", type: "" });
-    };
-
-    // Fetch the project details on component mount
     useEffect(() => {
         dispatch(fetchProject());
     }, [dispatch]);
 
-    // Sync the feedback from Redux state
+    // Sync local state with Redux data
+    useEffect(() => {
+        if (projectDetails) {
+            setFormData(projectDetails);
+        }
+    }, [projectDetails]);
+
+    // Sync feedback messages
     useEffect(() => {
         if (projectFeedback) {
             setFeedback(projectFeedback);
         }
     }, [projectFeedback]);
 
-    // Handle input change and update project details in Redux store
+    // Update local state on input change
     const handleChange = (e) => {
         const { name, value } = e.target;
-        const updatedProject = { ...projectDetails, [name]: value };
-        dispatch(updateProject(updatedProject));
+        setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    // Handle form submission to update project
+    // Dispatch updated data to Redux only on form submit
     const handleSubmit = (e) => {
         e.preventDefault();
-        dispatch(updateProject(projectDetails)); // Dispatch the updated project to Redux
+        dispatch(updateProject(formData));
+    };
+
+    // Clear feedback message
+    const handleClear = () => {
+        setFeedback({ message: "", type: "" });
     };
 
     return (
@@ -57,7 +69,7 @@ const FormWithApiData = () => {
                         type="text"
                         name="totalClients"
                         placeholder="Total clients"
-                        value={projectDetails?.totalClients || ""}
+                        value={formData.totalClients}
                         onChange={handleChange}
                     />
                 </div>
@@ -71,7 +83,7 @@ const FormWithApiData = () => {
                     type="text"
                     name="completedProjects"
                     placeholder="Completed projects"
-                    value={projectDetails?.completedProjects || ""}
+                    value={formData.completedProjects}
                     onChange={handleChange}
                 />
             </div>

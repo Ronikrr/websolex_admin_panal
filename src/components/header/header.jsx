@@ -6,6 +6,7 @@ import { CiUser } from "react-icons/ci";
 import { RiMessage2Line } from "react-icons/ri";
 import { FaBars } from "react-icons/fa6";
 import { TbLogin2 } from 'react-icons/tb';
+import Logoutmodel from '../ui/logoutmodel';
 const Header = ({ toogleslidebar }) => {
     const [user, setUser] = useState({});
     const [showError, setShowError] = useState('');
@@ -16,6 +17,7 @@ const Header = ({ toogleslidebar }) => {
     const [isactive, setisactive] = useState(null)
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState("");
+    const [isModelOpen, setisModelOpen] = useState(false)
 
     // Example list of items (replace with your actual list)
     const items = [
@@ -26,6 +28,9 @@ const Header = ({ toogleslidebar }) => {
         "Messages",
         "Reports",
     ];
+    const handleOnClickOpenModel = () => {
+        setisModelOpen(!isModelOpen)
+    }
 
     // Filtered list based on search query
     const filteredItems = items.filter(item =>
@@ -112,6 +117,10 @@ const Header = ({ toogleslidebar }) => {
         }, 5000);
 
     }, [])
+    const closemenu = () => {
+        setisuseropen(false)
+    }
+
     return (
         <div className='h-[80px] w-screen md:w-full flex px-5 lg:px-11 py-4  items-center justify-center bg-[#fff] '>
             {error && (
@@ -122,6 +131,12 @@ const Header = ({ toogleslidebar }) => {
                     {error}
                 </div>
             )}
+            <Logoutmodel
+                isOpen={isModelOpen}
+                onClose={() => setisModelOpen(false)}
+                onConfirm={logout}
+            />
+
             <div className="flex items-center justify-between w-full lg:justify-between">
                 <div className="main_bars xl:hidden ">
                     <FaBars className='cursor-pointer ' onClick={toogleslidebar} />
@@ -241,7 +256,10 @@ const Header = ({ toogleslidebar }) => {
                                             <TiContacts className='text-[22px]' /> my contact
                                         </Link>
                                     </li> */}
-                                    <li className='w-full' onClick={logout} >
+                                    <li className='w-full' onClick={{
+                                        handleOnClickOpenModel,
+                                        closemenu
+                                    }} >
                                         <Link className='flex items-center w-full gap-3 text-sm font-medium capitalize duration-300 ease-in-out hover:text-blue-400 lg:text-base'  >
                                             <TbLogin2 className='text-[22px]' />  logout
                                         </Link>

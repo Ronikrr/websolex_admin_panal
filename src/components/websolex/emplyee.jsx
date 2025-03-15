@@ -41,10 +41,8 @@ const Blogpagesection = () => {
         if (feedbackdata) {
             setFeedback(feedbackdata)
         }
-    }, [feedbackdata])
-    useEffect(() => {
         dispatch(fetchEmployee());
-    }, [dispatch]);
+    }, [dispatch, feedbackdata]);
     const validateForm = (fromdata) => {
         const newErrors = {};
         if (!fromdata.name || fromdata.name.trim() === "") newErrors.name = "Name is required";

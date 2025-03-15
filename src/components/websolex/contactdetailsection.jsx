@@ -24,8 +24,7 @@ const Contactdetailsection = () => {
     useEffect(() => {
         dispatch(fetchContactDetails());
         dispatch(fetchSocialDetails())
-    }, [dispatch]);
-    useEffect(() => {
+
         if (contactFeedback) {
             setFeedback(contactFeedback)
         }
@@ -33,7 +32,7 @@ const Contactdetailsection = () => {
             setFeedback(socialFeedback)
 
         }
-    }, [contactFeedback, socialFeedback]);
+    }, [contactFeedback, socialFeedback, dispatch]);
 
     const handleInputChange = (e, type) => {
         const { name, value } = e.target;

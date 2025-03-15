@@ -29,6 +29,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getuserprofile } from './Redux/authSlice';
 import Allworkadd from "./pages/user/allworkadd";
 import Workadd from "./pages/user/workadd";
+import Logoutmodel from "./components/ui/logoutmodel";
 
 const Layout = ({ children }) => {
   const dispatch = useDispatch();
@@ -81,206 +82,208 @@ const Layout = ({ children }) => {
 
 function App() {
   return (
-    <UserProvider>
-      <div className="bg-[#f1f5f9] w-full ">
-        <Router>
-          <ScrollToTop />
-          <Routes>
+    <>
+      <UserProvider>
+        <div className="bg-[#f1f5f9] w-full ">
+          <Router>
+            <ScrollToTop />
+            <Routes>
 
-            <Route
-              path="/websolex/emmangement"
-              element={
-                <Layout>
-                  <Pagetitle title={"employe"} />
-                  <Emmangement />
-                </Layout>
-              }
-            />
+              <Route
+                path="/websolex/emmangement"
+                element={
+                  <Layout>
+                    <Pagetitle title={"employe"} />
+                    <Emmangement />
+                  </Layout>
+                }
+              />
 
-            <Route
-              path="/userlogined"
-              element={
-                <Layout>
-                  <Pagetitle title={"userlogined"} />
-                  <Userlogied />
-                </Layout>
-              }
-            />
+              <Route
+                path="/userlogined"
+                element={
+                  <Layout>
+                    <Pagetitle title={"userlogined"} />
+                    <Userlogied />
+                  </Layout>
+                }
+              />
 
-            <Route
-              path="/crm"
-              element={
+              <Route
+                path="/crm"
+                element={
 
-                <Layout>
-                  <Pagetitle title={"crm"} />
-                  <Crm />
-                </Layout>
-              }
-            />
+                  <Layout>
+                    <Pagetitle title={"crm"} />
+                    <Crm />
+                  </Layout>
+                }
+              />
 
-            <Route
-              path="/marketing"
-              element={
-                <Layout>
-                  <Pagetitle title={"marketing"} />
-                  <Markating />
-                </Layout>
-              }
-            />
-            <Route
-              path="/websolex"
-              element={
-                <Layout>
-                  <Pagetitle title={"Home"} />
-                  <Websolexadmin />
-                </Layout>
-              }
-            />
-            <Route
-              path="/websolex/valuedclient"
-              element={
-                <Layout>
-                  <Pagetitle title={"Valuedclient"} />
-                  <Valuedclientadd />
-                </Layout>
-              }
-            />
-            <Route
-              path="/websolex/latestworkadd"
-              element={
-                <Layout>
-                  <Pagetitle title={"latestworkadd"} />
-                  <Latestworkadd />
-                </Layout>
-              }
-            />
-            <Route
-              path="/websolex/clientrate"
-              element={
-                <Layout>
-                  <Pagetitle title={"clientrate"} />
-                  <Clienttest />
-                </Layout>
-              }
-            />
-            <Route
-              path="/websolex/servicepage"
-              element={
-                <Layout>
-                  <Pagetitle title={"servicepage"} />
-                  <Servicepage />
-                </Layout>
-              }
-            />
-            <Route
-              path="/websolex/teampage"
-              element={
-                <Layout>
-                  <Pagetitle title={"teampage"} />
-                  <Teampage />
-                </Layout>
-              }
-            />
-            <Route
-              path="/websolex/blogpage"
-              element={
-                <Layout>
-                  <Pagetitle title={"blogpage"} />
-                  <Blogpage />
-                </Layout>
-              }
-            />
-            <Route
-              path="/websolex/contactdetails"
-              element={
-                <Layout>
-                  <Pagetitle title={"contactdetails"} />
-                  <Contactdetails />
-                </Layout>
-              }
-            />
-            <Route
-              path="/websolex/contactform"
-              element={
-                <Layout>
-                  <Pagetitle title={"contactform"} />
-                  <Contactform />
-                </Layout>
-              }
-            />
+              <Route
+                path="/marketing"
+                element={
+                  <Layout>
+                    <Pagetitle title={"marketing"} />
+                    <Markating />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/websolex"
+                element={
+                  <Layout>
+                    <Pagetitle title={"Home"} />
+                    <Websolexadmin />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/websolex/valuedclient"
+                element={
+                  <Layout>
+                    <Pagetitle title={"Valuedclient"} />
+                    <Valuedclientadd />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/websolex/latestworkadd"
+                element={
+                  <Layout>
+                    <Pagetitle title={"latestworkadd"} />
+                    <Latestworkadd />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/websolex/clientrate"
+                element={
+                  <Layout>
+                    <Pagetitle title={"clientrate"} />
+                    <Clienttest />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/websolex/servicepage"
+                element={
+                  <Layout>
+                    <Pagetitle title={"servicepage"} />
+                    <Servicepage />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/websolex/teampage"
+                element={
+                  <Layout>
+                    <Pagetitle title={"teampage"} />
+                    <Teampage />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/websolex/blogpage"
+                element={
+                  <Layout>
+                    <Pagetitle title={"blogpage"} />
+                    <Blogpage />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/websolex/contactdetails"
+                element={
+                  <Layout>
+                    <Pagetitle title={"contactdetails"} />
+                    <Contactdetails />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/websolex/contactform"
+                element={
+                  <Layout>
+                    <Pagetitle title={"contactform"} />
+                    <Contactform />
+                  </Layout>
+                }
+              />
 
 
-            <Route
-              path="/search"
-              element={
-                <Layout>
-                  <Pagetitle title={"Search"} />
-                  <SearchResults />
-                </Layout>
-              }
-            />
-            <Route
-              path="/allworkadd"
-              element={
-                <Layout>
-                  <Pagetitle title={"all work add "} />
-                  <Allworkadd />
-                </Layout>
-              }
-            />
-            <Route
-              path="/workadd"
-              element={
-                <Layout>
-                  <Pagetitle title={"work add "} />
-                  <Workadd />
-                </Layout>
-              }
-            />
-            <Route
-              path="*"
-              element={
+              <Route
+                path="/search"
+                element={
+                  <Layout>
+                    <Pagetitle title={"Search"} />
+                    <SearchResults />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/allworkadd"
+                element={
+                  <Layout>
+                    <Pagetitle title={"all work add "} />
+                    <Allworkadd />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/workadd"
+                element={
+                  <Layout>
+                    <Pagetitle title={"work add "} />
+                    <Workadd />
+                  </Layout>
+                }
+              />
+              <Route
+                path="*"
+                element={
+                  <>
+                    <Pagetitle title={"marketing"} />
+                    <Notfound />
+                  </>
+                }
+              />
+              <Route
+                path="/unauthorizedPage"
+                element={
+                  <>
+                    <Pagetitle title={"unauthorizedPage"} />
+                    <UnauthorizedPage />
+                  </>
+                }
+              />
+
+              <Route path="/" element={
                 <>
-                  <Pagetitle title={"marketing"} />
-                  <Notfound />
+                  <Pagetitle title={"login"} />
+                  <Login />
                 </>
-              }
-            />
-            <Route
-              path="/unauthorizedPage"
-              element={
+              } />
+              <Route path="/register" element={
                 <>
-                  <Pagetitle title={"unauthorizedPage"} />
-                  <UnauthorizedPage />
+                  <Pagetitle title={"register"} />
+                  <Register />
                 </>
-              }
-            />
-
-            <Route path="/" element={
-              <>
-                <Pagetitle title={"login"} />
-                <Login />
-              </>
-            } />
-            <Route path="/register" element={
-              <>
-                <Pagetitle title={"register"} />
-                <Register />
-              </>
-            } />
-            <Route
-              path="/profile"
-              element={
-                <Layout>
-                  <Pagetitle title={"profile"} />
-                  <Profile />
-                </Layout>
-              }
-            />
-          </Routes>
-        </Router>
-      </div>
-    </UserProvider>
+              } />
+              <Route
+                path="/profile"
+                element={
+                  <Layout>
+                    <Pagetitle title={"profile"} />
+                    <Profile />
+                  </Layout>
+                }
+              />
+            </Routes>
+          </Router>
+        </div>
+      </UserProvider>
+    </>
   );
 }
 

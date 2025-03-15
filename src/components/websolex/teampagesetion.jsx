@@ -22,7 +22,6 @@ const Servicepagesection = () => {
     const dispatch = useDispatch();
     const { teamMember: leads, feedback: feedbackdata } = useSelector(state => state.teamMember);
     const [errors, setErrors] = useState({});
-    const [isViewMode, setIsViewMode] = useState(false);
     const [isOpenModel, setIsOpenModel] = useState(false);
     const [isOpenLastAll, setIsOpenLastAll] = useState(false);
     const [isOpenAddModel, setIsOpenAddModel] = useState(false);
@@ -397,7 +396,7 @@ const Servicepagesection = () => {
                                     value={formData?.facebook}
                                     onChange={handleInputChange}
                                     placeholder="Enter Facebook"
-                                    disabled={isViewMode}
+
                                 />
                                 {errors.facebook && <p className="text-sm text-red-500">{errors.facebook}</p>}
                             </div>
@@ -411,7 +410,7 @@ const Servicepagesection = () => {
                                         name="image"
                                         accept="image/*"
                                         onChange={handleFileChange}
-                                        disabled={isViewMode}
+
                                     />
                                     {errors.image && <p className="text-sm text-red-500">{errors.image}</p>}
                                 </div>
@@ -423,13 +422,12 @@ const Servicepagesection = () => {
                             </div>
 
                             <div className="flex justify-between mt-4">
-                                {!isViewMode && (
-                                    <Primary type="submit" label={isOpenAddModel ? 'Save' : 'Update'} />
-                                )}
+
+                                <Primary type="submit" label={isOpenAddModel ? 'Save' : 'Update'} />
                                 <Seconduray
                                     type="button"
                                     label={"Cancel"}
-                                    onClick={() => (isOpenAddModel ? setIsOpenAddModel(false) : isViewMode ? setIsViewMode(false) : setIsOpenModel(false))}
+                                    onClick={() => (isOpenAddModel ? setIsOpenAddModel(false) : setIsOpenModel(false))}
                                 />
                             </div>
                         </form>
