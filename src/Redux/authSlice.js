@@ -5,12 +5,12 @@ const API_URL = "https://websolex-admin.vercel.app";
 
 export const fetchalluser = createAsyncThunk(
     "users/fetchuser",
-    async (_,{rejectWithValue}) => {
+    async (_, { rejectWithValue }) => {
         try {
             const res = await axios.get(`${API_URL}/users`);
             if (!res.ok) throw new Error("Failed to fetch data");
 
-            const data = await res.json();  
+            const data = await res.json();
             return data
         } catch (error) {
             return rejectWithValue(error.response?.data || "Failed to fetch user");
@@ -32,11 +32,11 @@ export const registerUser = createAsyncThunk(
 // patch User
 export const patchuserstatus = createAsyncThunk(
     "patch/user",
-    async ({ userId, newStatus }, { rejectWithValue }) => { 
+    async ({ userId, newStatus }, { rejectWithValue }) => {
         try {
             const res = await axios.patch(`${API_URL}/approve_user`, {
-                userId, 
-                status: newStatus 
+                userId,
+                status: newStatus
             });
             return res.data;
         } catch (error) {
@@ -96,7 +96,7 @@ export const deleteUser = createAsyncThunk(
     async (userId, { rejectWithValue }) => {
         try {
             await axios.delete(`${API_URL}/users/${userId}`);
-            return  userId ; // Return the userId to remove it from the state
+            return userId; // Return the userId to remove it from the state
         } catch (error) {
             return rejectWithValue(error.response?.data || "Failed to delete user");
         }
@@ -109,8 +109,8 @@ export const logoutUser = createAsyncThunk("auth/logout", async () => {
     return null;
 });
 
-const authSlice = createSlice({
-    name: "auth",
+const apiSlice = createSlice({
+    name: "apislice",
     initialState: {
         users: [],  // Store list of users
         user: null,  // Store the logged-in user
@@ -131,7 +131,7 @@ const authSlice = createSlice({
             .addCase(fetchalluser.fulfilled, (state, action) => {
                 console.log("Fetched Users:", action.payload);
                 state.loading = false;
-                state.users = Array.isArray(action.payload) ? action.payload : [];  
+                state.users = Array.isArray(action.payload) ? action.payload : [];
                 state.feedback = { message: "Users fetched successfully.", type: "success" };
                 console.log("after Users:", action.payload);
             })
@@ -248,5 +248,5 @@ const authSlice = createSlice({
 
 });
 
-export default authSlice.reducer;
+export default apiSlice.reducer;
 
