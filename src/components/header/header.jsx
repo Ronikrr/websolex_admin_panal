@@ -232,7 +232,7 @@ const Header = ({ toogleslidebar }) => {
                                         <img src='https://www.t3bucket.com/f/0-user.svg' alt="Profile" className="object-cover w-12 h-12 rounded-full" />
                                     ) :
                                     (
-                                        <img src={user.profileImage} alt="Profile" className="object-cover w-12 h-12 rounded-full" />
+                                        <img src={user?.profileImage} alt="Profile" className="object-cover w-12 h-12 rounded-full" />
                                     )
 
                                 }
@@ -251,11 +251,6 @@ const Header = ({ toogleslidebar }) => {
                                             <CiUser className='text-[22px]' /> my profile
                                         </Link>
                                     </li>
-                                    {/* <li>
-                                        <Link className='flex items-center w-full gap-3 text-sm font-medium capitalize duration-300 ease-in-out hover:text-blue-400 lg:text-base' >
-                                            <TiContacts className='text-[22px]' /> my contact
-                                        </Link>
-                                    </li> */}
                                     <li className='w-full' onClick={{
                                         handleOnClickOpenModel,
                                         closemenu
