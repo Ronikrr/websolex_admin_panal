@@ -18,6 +18,7 @@ const Profile = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { user, error } = useSelector((state) => state.auth);
+    console.log(user)
     const [formData, setFormData] = useState({
         name: '',
         phoneNo: '',
@@ -25,11 +26,21 @@ const Profile = () => {
         password: '',
         username: '',
         profileImage: '',
+        workInCompany: "",
     });
     const [isModelOpen, setisModelOpen] = useState(false)
     const [newProfileImage, setNewProfileImage] = useState(null);
     const [isShowPass, setIsShowPass] = useState(false);
     const [feedback, setFeedback] = useState({ message: '', type: '' });
+    const seleyourwork = [
+        "Select one",
+        'Digital Marketing',
+        'React.js Developer',
+        'Node.js Developer',
+        'Full Stack Developer',
+        'Shopify Developer',
+        'WordPress Developer',
+    ]
 
     useEffect(() => {
         dispatch(getuserprofile());
@@ -47,11 +58,13 @@ const Profile = () => {
                 password: user?.user?.password || '',
                 username: user?.user?.username || '',
                 profileImage: user?.user?.profileImage || '',
+
             });
         }
-        if (error) {
+        else if (error) {
             setFeedback({ message: `Error :${error}`, type: "error" });
         }
+
     }, [user, error]);
 
     const handleChange = (e) => {
@@ -86,6 +99,7 @@ const Profile = () => {
         if (newProfileImage) {
             updatedData.append("profileImage", newProfileImage);
         }
+        updatedData.append("workInCompany", formData.workInCompany);
 
         dispatch(updateuserprofile(updatedData));
     };
@@ -172,7 +186,7 @@ const Profile = () => {
                                             </div>
 
                                         </div>
-                                        <div className="w-full sm:w-1/2">
+                                        <div className="w-full ">
                                             <label className="block mb-3 text-sm font-medium text-black capitalize">
                                                 Phone Number
                                             </label>
@@ -189,7 +203,8 @@ const Profile = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="mb-5">
+
+                                    <div className="mb-5 ">
                                         <label className="block mb-3 text-sm font-medium text-black capitalize">
                                             Email Address
                                         </label>
@@ -206,6 +221,8 @@ const Profile = () => {
                                             </div>
                                         </div>
                                     </div>
+
+
                                     <div className="mb-5">
                                         <label className="block mb-3 text-sm font-medium text-black capitalize">
                                             Password
@@ -230,7 +247,12 @@ const Profile = () => {
                                         <label className="block mb-3 text-sm font-medium text-black capitalize">
                                             Username
                                         </label>
-                                        <Input name="username" value={formData?.username} onChange={handleChange} placeholder="Enter username" />
+                                        <Input
+                                            name="username"
+                                            value={formData?.username}
+                                            onChange={handleChange}
+                                            placeholder="Enter username"
+                                        />
                                     </div>
                                     <div className="flex justify-between gap-4">
                                         <button type="button" className="px-6 py-2 text-white bg-red-500 border border-red-600 rounded-md hover:shadow-md hover:text-red-600 hover:bg-red-100" onClick={handleopenmodel} >

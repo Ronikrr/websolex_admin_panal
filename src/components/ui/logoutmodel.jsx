@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Logoutmodel = ({isOpen,onClose,onConfirm}) => {
+const Logoutmodel = ({ isOpen, onClose, onConfirm }) => {
     if (!isOpen) return null;
     return (
         <>

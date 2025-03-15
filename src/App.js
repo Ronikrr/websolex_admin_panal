@@ -25,15 +25,15 @@ import Emmangement from "./pages/websolex/emmangement";
 import Pagetitle from "./components/pagetitle";
 import SearchResults from "./components/websolex/SearchResults";
 import ScrollToTop from "./components/scrolltotop";
-import { useSelector, useDispatch } from 'react-redux';
-import { getuserprofile } from './Redux/authSlice';
+import { useSelector, useDispatch } from "react-redux";
+import { getuserprofile } from "./Redux/authSlice";
 import Allworkadd from "./pages/user/allworkadd";
 import Workadd from "./pages/user/workadd";
-import Logoutmodel from "./components/ui/logoutmodel";
+import LoginHistory from "./pages/user/loginhistory";
 
 const Layout = ({ children }) => {
   const dispatch = useDispatch();
-  const token = useSelector(state => state.auth.token);
+  const token = useSelector((state) => state.auth.token);
   const [isopensidebar, setisopensidebar] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -88,7 +88,6 @@ function App() {
           <Router>
             <ScrollToTop />
             <Routes>
-
               <Route
                 path="/websolex/emmangement"
                 element={
@@ -112,7 +111,6 @@ function App() {
               <Route
                 path="/crm"
                 element={
-
                   <Layout>
                     <Pagetitle title={"crm"} />
                     <Crm />
@@ -211,7 +209,6 @@ function App() {
                 }
               />
 
-
               <Route
                 path="/search"
                 element={
@@ -258,18 +255,33 @@ function App() {
                 }
               />
 
-              <Route path="/" element={
-                <>
-                  <Pagetitle title={"login"} />
-                  <Login />
-                </>
-              } />
-              <Route path="/register" element={
-                <>
-                  <Pagetitle title={"register"} />
-                  <Register />
-                </>
-              } />
+              <Route
+                path="/"
+                element={
+                  <>
+                    <Pagetitle title={"login"} />
+                    <Login />
+                  </>
+                }
+              />
+              <Route
+                path="/register"
+                element={
+                  <>
+                    <Pagetitle title={"register"} />
+                    <Register />
+                  </>
+                }
+              />
+              <Route
+                path="/loginhistory"
+                element={
+                  <Layout>
+                    <Pagetitle title={"login history"} />
+                    <LoginHistory />
+                  </Layout>
+                }
+              />
               <Route
                 path="/profile"
                 element={

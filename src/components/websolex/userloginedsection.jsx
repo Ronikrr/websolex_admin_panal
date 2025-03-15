@@ -12,203 +12,182 @@ import emailjs from 'emailjs-com';
 const Userloginedsection = () => {
 
     const [isOpenAddModel, setIsOpenAddModel] = useState(false);
-    const [Users, setUser] = useState([]);
-    const [formdata, setformdata] = useState({});
-    const [ishowpss, setishowpss] = useState(false);
-    const [ishowrepss, setishowrepss] = useState(false);
-    const [feedback, setFeedback] = useState({ message: '', type: '' });
-    const API = "https://websolex-admin.vercel.app"
-    const handleClear = () => {
-        setFeedback({ message: "", type: "" });
-    };
-    const handlechange = (e) => {
+    const [Users, setUsers] = useState([]);
+    const [formData, setFormData] = useState({});
+    const [showPassword, setShowPassword] = useState(false);
+    const [showRepeatPassword, setShowRepeatPassword] = useState(false);
+    const [feedback, setFeedback] = useState({ message: "", type: "" });
+
+    const API = "http://localhost:8000";
+    // const API = "https://websolex-admin.vercel.app";
+
+    // Clear Feedback
+    const handleClear = () => setFeedback({ message: "", type: "" });
+
+    // Handle Form Change
+    const handleChange = (e) => {
         const { name, value } = e.target;
-        setformdata((prev) => ({
+        setFormData((prev) => ({
             ...prev,
             [name]: value,
         }));
     };
+
+    // Fetch Users
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetch(`${API}/users`, {
-                    method: 'GET',
-                });
+                const res = await fetch(`${API}/users`, { method: "GET" });
 
                 if (!res.ok) {
+                    const errorData = await res.json();
                     setFeedback({
-                        message: `An error occurred while submitting the form :${res.message}`,
-                        type: 'error',
+                        message: `An error occurred while fetching data: ${errorData.message}`,
+                        type: "error",
                     });
+                    return;
                 }
 
                 const data = await res.json();
-                setUser(data.users);
-                console.log(data)
+                setUsers(data.users);
             } catch (error) {
                 setFeedback({
-                    message: `Error fetching user data:${error.message}`,
-                    type: 'error',
+                    message: `Error fetching user data: ${error.message}`,
+                    type: "error",
                 });
             }
         };
 
         fetchData();
     }, []);
-    const onsubmit = async (e) => {
+
+    // Submit Form
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Validate the form
-        if (
-            !formdata.name ||
-            !formdata.email ||
-            !formdata.password ||
-            !formdata.confirmPassword
-        ) {
-            setFeedback({
-                message: `All fields are required!`,
-                type: 'error',
-            });
+        if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
+            setFeedback({ message: "All fields are required!", type: "error" });
             return;
         }
 
-        if (formdata.password !== formdata.confirmPassword) {
-            setFeedback({
-                message: `Passwords do not match!`,
-                type: 'error',
-            });
+        if (formData.password !== formData.confirmPassword) {
+            setFeedback({ message: "Passwords do not match!", type: "error" });
             return;
         }
 
         try {
-            // 1. Send form data to your API
             const res = await fetch(`${API}/users`, {
                 method: "POST",
-                body: JSON.stringify(formdata),
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                body: JSON.stringify(formData),
+                headers: { "Content-Type": "application/json" },
             });
 
             if (!res.ok) {
-                setFeedback({
-                    message: `An error occurred while submitting the form: ${res.message}`,
-                    type: 'error',
-                });
+                const errorData = await res.json();
+                setFeedback({ message: `Error: ${errorData.message}`, type: "error" });
+                return;
+            }
+
+            setIsOpenAddModel(false);
+
+            // Send Email (Optional)
+            const emailResponse = await emailjs.sendForm(
+                "service_szoqqsl",
+                "template_3vvce77",
+                e.target,
+                "OoU53v3GRHWpMFiXL"
+            );
+
+            if (emailResponse.status === 200) {
+                setFeedback({ message: "User added successfully, and email sent!", type: "success" });
             } else {
-                setIsOpenAddModel(false);
-
-                const emailResponse = await emailjs.sendForm(
-                    'service_szoqqsl',
-                    'template_3vvce77',
-                    e.target,
-                    'OoU53v3GRHWpMFiXL'
-                );
-
-                if (emailResponse.status === 200) {
-                    setFeedback({
-                        message: `User added successfully, and email sent!`,
-                        type: 'success',
-                    });
-                } else {
-                    setFeedback({
-                        message: `User added successfully, but failed to send email.`,
-                        type: 'error',
-                    });
-                }
+                setFeedback({ message: "User added successfully, but failed to send email.", type: "warning" });
             }
         } catch (error) {
-            setFeedback({
-                message: `An error occurred while submitting the form: ${error.message}`,
-                type: 'error',
-            });
+            setFeedback({ message: `Error submitting form: ${error.message}`, type: "error" });
         }
     };
 
-
+    // Update Status (Active/Inactive)
     const handleStatusChange = async (id, newStatus) => {
         try {
             const res = await fetch(`${API}/users/${id}`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ status: newStatus }),
             });
 
-
             if (!res.ok) {
-                setFeedback({
-                    message: `An error occurred while submitting the form :${res.message}`,
-                    type: 'error',
-                });
+                const errorData = await res.json();
+                setFeedback({ message: `Error: ${errorData.message}`, type: "error" });
+                return;
             }
 
-
-            setUser((prevUsers) =>
+            // Update state
+            setUsers((prevUsers) =>
                 prevUsers.map((user) =>
                     user._id === id ? { ...user, status: newStatus } : user
                 )
             );
+
+            setFeedback({ message: "User status updated successfully!", type: "success" });
         } catch (error) {
-
-            setFeedback({
-                message: `Error updating status :${error.message}`,
-                type: 'error',
-            });
-
+            setFeedback({ message: `Error updating status: ${error.message}`, type: "error" });
         }
-
     };
-    const handleroleChange = async (id, newrole) => {
+
+    // Update Role
+    const handleRoleChange = async (id, newRole) => {
         try {
             const res = await fetch(`${API}/usersrole/${id}`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ role: newrole }),
-            });
-            if (!res.ok) {
-                setFeedback({
-                    message: `An error occurred while submitting the form :${res.message}`,
-                    type: 'error',
-                });
-            } else {
-                setFeedback({
-                    message: `Role changed Successfully!`,
-                    type: 'success',
-                });
-                setUser((prevUsers) =>
-                    prevUsers.map((user) =>
-                        user._id === id ? { ...user, role: newrole } : user
-                    )
-                );
-            }
-        } catch (error) {
-            setFeedback({
-                message: `Error updating status :${error.message}`,
-                type: 'error',
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ role: newRole }),
             });
 
+            if (!res.ok) {
+                const errorData = await res.json();
+                setFeedback({ message: `Error: ${errorData.message}`, type: "error" });
+                return;
+            }
+
+            // Update state
+            setUsers((prevUsers) =>
+                prevUsers.map((user) =>
+                    user._id === id ? { ...user, role: newRole } : user
+                )
+            );
+
+            setFeedback({ message: "Role changed successfully!", type: "success" });
+        } catch (error) {
+            setFeedback({ message: `Error updating role: ${error.message}`, type: "error" });
         }
     };
+
+    // Delete User
     const handleDelete = async (id) => {
         try {
-            await fetch(`https://websolex-admin.vercel.app/users/${id}`, {
-                method: 'DELETE',
+            const res = await fetch(`${API}/users/${id}`, {
+                method: "DELETE",
             });
-            setFeedback({
-                message: `user deleted successfully!`,
-                type: 'success',
-            });
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                setFeedback({ message: `Error: ${errorData.message}`, type: "error" });
+                return;
+            }
+
+            // Update state
+            setUsers((prevUsers) => prevUsers.filter((user) => user._id !== id));
+
+            setFeedback({ message: "User deleted successfully!", type: "success" });
         } catch (error) {
-            setFeedback({
-                message: `Error updating status :${error.message}`,
-                type: 'error',
-            });
+            setFeedback({ message: `Error deleting user: ${error.message}`, type: "error" });
         }
     };
-    const statusOptions = [
-        "admin",
-        "user",
-    ]
+
+    const statusOptions = ["admin", "user", "employee"];
+
 
     return (
         <>
@@ -267,7 +246,7 @@ const Userloginedsection = () => {
                                             <td className="p-2.5 xl:p-5 border border-gray-200 text-center ">
                                                 <select
                                                     value={user?.role}
-                                                    onChange={(e) => handleroleChange(user?._id, e.target.value)}
+                                                    onChange={(e) => handleRoleChange(user?._id, e.target.value)}
                                                     className='capitalize'
                                                 >
                                                     {statusOptions.map((status, index) => (
@@ -347,7 +326,7 @@ const Userloginedsection = () => {
                 <div className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full capitalize bg-black bg-opacity-50">
                     <div className="w-full p-5 bg-white rounded-md shadow-md md:p-8 md:w-2/3 2xl:w-1/3">
                         <h1 className="capitalize text-[26px] font-semibold mb-4 ">add user</h1>
-                        <form action="" onSubmit={onsubmit}>
+                        <form action="" onSubmit={handleSubmit}>
                             <div className="mb-4">
                                 <label htmlFor="" className='mb-2.5 block font-medium text-black capitalize' >name</label>
                                 <div className="relative">
@@ -356,7 +335,7 @@ const Userloginedsection = () => {
                                         type={`text`}
                                         name={`name`}
 
-                                        onChange={handlechange}
+                                        onChange={handleChange}
                                         placeholder='enter your name'
                                     />
                                     <span className='absolute right-4 top-4' >
@@ -372,7 +351,7 @@ const Userloginedsection = () => {
                                         type={`email`}
                                         name={`email`}
 
-                                        onChange={handlechange}
+                                        onChange={handleChange}
                                         placeholder='enter your email'
                                     />
                                     <span className='absolute right-4 top-4' >
@@ -385,14 +364,14 @@ const Userloginedsection = () => {
                                 <div className="relative">
 
                                     <Input
-                                        type={`${ishowpss ? 'text' : 'password'}`}
+                                        type={`${showPassword ? 'text' : 'password'}`}
                                         name="password"
 
-                                        onChange={handlechange}
+                                        onChange={handleChange}
                                         placeholder='enter your password'
                                     />
-                                    <span className='absolute cursor-pointer right-4 top-4 ' onClick={() => setishowpss((prev) => !prev)}  >
-                                        {ishowpss ?
+                                    <span className='absolute cursor-pointer right-4 top-4 ' onClick={() => setShowPassword((prev) => !prev)}  >
+                                        {showPassword ?
                                             (<ImEye className='text-[22px] text-[var(--icon-color)] ' />) :
                                             (<ImEyeBlocked className='text-[22px] text-[var(--icon-color)] ' />)
                                         }
@@ -404,14 +383,14 @@ const Userloginedsection = () => {
                                 <div className="relative">
 
                                     <Input
-                                        type={`${ishowrepss ? 'text' : 'password'}`}
+                                        type={`${showRepeatPassword ? 'text' : 'password'}`}
                                         name="confirmPassword"
 
-                                        onChange={handlechange}
+                                        onChange={handleChange}
                                         placeholder='enter your password'
                                     />
-                                    <span className='absolute cursor-pointer right-4 top-4 ' onClick={() => setishowrepss((prev) => !prev)}  >
-                                        {ishowrepss ?
+                                    <span className='absolute cursor-pointer right-4 top-4 ' onClick={() => setShowRepeatPassword((prev) => !prev)}  >
+                                        {showRepeatPassword ?
                                             (<ImEye className='text-[22px] text-[var(--icon-color)] ' />) :
                                             (<ImEyeBlocked className='text-[22px] text-[var(--icon-color)] ' />)
                                         }
