@@ -7,7 +7,7 @@ export const fetchvaluedclient = createAsyncThunk("valuedclient/fetch",
     async (_, { rejectWithValue }) => {
         try {
             const res = await fetch(API);
-            if (!res.ok) throw new Error("Failed to fetch data");
+            if (!res.ok) console.log("Failed to fetch data");
             return await res.json();
         } catch (error) {
             return rejectWithValue(error.message);

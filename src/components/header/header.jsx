@@ -62,7 +62,7 @@ const Header = ({ toogleslidebar }) => {
                 }
 
                 if (!res.ok) {
-                    throw new Error(`HTTP error! status: ${res.status}`);
+                    console.log(`HTTP error! status: ${res.status}`);
                 }
 
                 const data = await res.json();

@@ -15,7 +15,7 @@ const Contactformsection = () => {
         const fetchContactForm = async () => {
             try {
                 const response = await fetch("https://websolex-admin.vercel.app/view_contactform");
-                if (!response.ok) throw new Error("Failed to fetch contact data.");
+                if (!response.ok) console.log("Failed to fetch contact data.");
                 const data = await response.json();
                 setContactData(data);
             } catch (error) {
@@ -26,7 +26,7 @@ const Contactformsection = () => {
         const fetchSubscribe = async () => {
             try {
                 const response = await fetch("https://websolex-admin.vercel.app/subscribe");
-                if (!response.ok) throw new Error("Failed to fetch subscriber data.");
+                if (!response.ok) console.log("Failed to fetch subscriber data.");
                 const data = await response.json();
                 setSubscribeData(data);
             } catch (error) {

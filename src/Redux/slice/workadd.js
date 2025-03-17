@@ -49,7 +49,7 @@ const workLogSlice = createSlice({
         dailyHistory: [],  // This holds the work log for a single user (filtered)
         allhistory: [],    // This holds the complete work log for all users
         status: 'idle',
-        feedback: null
+        feedback: { message: "", type: "" }
     },
     reducers: {
         clearFeedback: (state) => {

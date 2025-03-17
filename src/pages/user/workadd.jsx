@@ -26,8 +26,10 @@ const Workadd = () => {
   const [feedback, setFeedback] = useState({ message: '', type: '' });
 
   useEffect(() => {
-    if (error) {
-    console.log(error)
+    if (!error) {
+      setFeedback({ message: error.message, type: error.type })
+    } else {
+      setFeedback({ message: error.message, type: error.type })
     }
   }, [error]);
   useEffect(() => {
@@ -89,7 +91,7 @@ const Workadd = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    console.log(formdata)
     const workData = {
       userId: UserId,
       email,

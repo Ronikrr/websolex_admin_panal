@@ -104,7 +104,7 @@ const Valuedclientsection = () => {
                 setIsOpenModel(false);
                 resetFormFields();
             } else {
-                throw new Error("Invalid response from server");
+                console.log("Invalid response from server");
             }
         } catch (error) {
             console.error("Update Error:", error);

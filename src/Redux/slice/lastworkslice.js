@@ -6,7 +6,7 @@ const API = "https://websolex-admin.vercel.app/api/lastworkadd"
 export const fetchourwork = createAsyncThunk("ourwork/fetch", async (_, { rejectWithValue }) => {
     try {
         const response = await fetch(API);
-        if (!response.ok) throw new Error("Failed to fetch data");
+        if (!response.ok) console.log("Failed to fetch data");
         return await response.json();
     } catch (error) {
         return rejectWithValue(error.message);

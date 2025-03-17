@@ -108,7 +108,7 @@ export const updateStatics = createAsyncThunk(
                 body: JSON.stringify(formdata),
             });
 
-            if (!res.ok) throw new Error("Failed to update statics");
+            if (!res.ok) console.log("Failed to update statics");
             return await res.json();
         } catch (error) {
             return rejectWithValue(error.message);

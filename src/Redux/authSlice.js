@@ -9,7 +9,7 @@ export const fetchalluser = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         try {
             const res = await axios.get(`${API_URL}/users`);
-            if (!res.ok) throw new Error("Failed to fetch data");
+            if (!res.ok) console.log("Failed to fetch data");
 
             const data = await res.json();
             return data
