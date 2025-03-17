@@ -30,6 +30,7 @@ import { getuserprofile } from "./Redux/authSlice";
 import Allworkadd from "./pages/user/allworkadd";
 import Workadd from "./pages/user/workadd";
 import LoginHistory from "./pages/user/loginhistory";
+import Deletemodel from "./components/ui/deletemodel";
 
 const Layout = ({ children }) => {
   const dispatch = useDispatch();
@@ -83,6 +84,7 @@ const Layout = ({ children }) => {
 function App() {
   return (
     <>
+      <Deletemodel />
       <UserProvider>
         <div className="bg-[#f1f5f9] w-full ">
           <Router>

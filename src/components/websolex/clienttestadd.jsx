@@ -10,11 +10,14 @@ import Textarea from '../ui/textarea';
 import FeedbackMessage from '../ui/feedback';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchclientrate, addclientrate, deleteclientrate, updateclientrate } from '../../Redux/slice/testimonalapiSlice';
+import { useLocation } from 'react-router-dom';
+import Deletemodel from '../ui/deletemodel';
 
 const Clienttestadd = () => {
     const dispatch = useDispatch();
+    const location = useLocation();
     const { clientrate, feedback } = useSelector((state) => state.clientrate);
-
+    const [isOpenDeleteModel, setisOpenDeleteModel] = useState(false)
     const [isOpenAddModal, setIsOpenAddModal] = useState(false);
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
     const [currentEditId, setCurrentEditId] = useState(null);
@@ -148,6 +151,12 @@ const Clienttestadd = () => {
 
     const recentLead = clientrate?.[clientrate.length - 1];
 
+
+    const handleDeleteClick = async (id) => {
+        setisOpenDeleteModel(true)
+    };
+    const pagename = location.pathname.split('/').filter(Boolean).pop();
+
     return (
         <div className="p-4 bg-gray-100">
             {(feedback.message || localFeedback.message) && (
@@ -158,7 +167,12 @@ const Clienttestadd = () => {
                 <h1 className="text-xl font-semibold">Testimonials</h1>
                 <Breadcrumb />
             </div>
-
+            <Deletemodel
+                isOpen={isOpenDeleteModel}
+                onClose={() => setisOpenDeleteModel(false)}
+                onConfirm={handleDelete}
+                pagename={pagename}
+            />
 
             <div className="w-full p-5 bg-white rounded-md shadow-md mb-7">
                 <div className="flex items-center justify-between w-full">
@@ -220,7 +234,7 @@ const Clienttestadd = () => {
                                         <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(recentLead)}>
                                             <FaRegEdit />
                                         </button>
-                                        <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(recentLead._id)}>
+                                        <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDeleteClick(recentLead._id)}>
                                             <RiDeleteBin6Line />
                                         </button>
                                     </td>
@@ -282,7 +296,7 @@ const Clienttestadd = () => {
                                             <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(lead)}>
                                                 <FaRegEdit />
                                             </button>
-                                            <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(lead?._id)}>
+                                            <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDeleteClick(lead?._id)}>
                                                 <RiDeleteBin6Line />
                                             </button>
                                         </td>

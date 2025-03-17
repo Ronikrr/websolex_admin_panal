@@ -272,11 +272,11 @@ const Header = ({ toogleslidebar }) => {
                                             <CiUser className="text-[22px]" /> my profile
                                         </Link>
                                     </li>
-                                    {/* <li className='w-full' >
+                                    <li className='w-full' >
                                         <Link to='/loginhistory' className='flex items-center w-full gap-3 text-sm font-medium capitalize duration-300 ease-in-out hover:text-blue-400 lg:text-base' >
                                             <CiUser className='text-[22px]' /> login history
                                         </Link>
-                                    </li> */}
+                                    </li>
                                     <li
                                         className="w-full"
 

@@ -94,7 +94,7 @@ const Login = () => {
                                 <img
                                     src="https://www.t3bucket.com/f/0-HorizantalLogo.png"
                                     className="w-[150px]"
-                                    alt="Company Logo"
+                                    alt="Company Logo" 
                                 />
                             </Link>
                             <p className="2xl:px-20 text-[16px]">
@@ -104,7 +104,7 @@ const Login = () => {
                                 <img
                                     src="https://www.t3bucket.com/f/0-Group152.png"
                                     className="w-[350px] h-[350px]"
-                                    alt="Illustration"
+                                    alt="Illustration" 
                                 />
                             </span>
                         </div>
@@ -123,7 +123,7 @@ const Login = () => {
                                 {/* ✅ Email Input */}
                                 <div className="mb-4">
                                     <label
-                                        htmlFor="email"
+                                        htmlFor="email" 
                                         className="mb-2.5 block font-medium text-black capitalize"
                                     >
                                         Email
@@ -145,7 +145,7 @@ const Login = () => {
                                 {/* ✅ Password Input */}
                                 <div className="mb-6">
                                     <label
-                                        htmlFor="password"
+                                        htmlFor="password" 
                                         className="mb-2.5 block font-medium text-black capitalize"
                                     >
                                         Password
@@ -159,7 +159,7 @@ const Login = () => {
                                             placeholder="Enter your password"
                                         />
                                         <span
-                                            className="absolute cursor-pointer right-4 top-3 lg:top-4"
+                                            className="absolute cursor-pointer right-4 top-3 lg:top-4" 
                                             onClick={() => setishowpss((prev) => !prev)}
                                         >
                                             {ishowpss ? (

@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API = "http://localhost:8000/employee";
+const API = "https://websolex-admin.vercel.app/employee";
 
 // Fetch Employees
 export const fetchEmployee = createAsyncThunk(

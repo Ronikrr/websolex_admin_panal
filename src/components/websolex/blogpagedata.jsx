@@ -9,13 +9,17 @@ import Breadcrumb from "../ui/breadcrumb"
 import FeedbackMessage from "../ui/feedback"
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBlogs, addBlog, updateBlog, deleteBlog, clearFeedback } from "../../Redux/slice/blogslice";
+import Deletemodel from "../ui/deletemodel"
+import { useLocation } from "react-router-dom"
 
 const Blogpagesection = () => {
+    const location = useLocation();
     const dispatch = useDispatch();
     const { blogs, feedback } = useSelector((state) => state.blogs);
     const [isOpenModel, setIsOpenModel] = useState(false)
     const [isOpenAddModel, setIsOpenAddModel] = useState(false)
     const [errors, setErrors] = useState({})
+    const [isOpenDeleteModel, setisOpenDeleteModel] = useState(false)
     const [feedbacks, setfeedbacks] = useState({ message: "", type: "" })
     const [formData, setFormData] = useState({
         name: "",
@@ -156,10 +160,13 @@ const Blogpagesection = () => {
     }
 
     const handleDelete = async (id) => {
-        if (window.confirm("Are you sure you want to delete this blog?")) {
-            dispatch(deleteBlog(id));
-        }
+        dispatch(deleteBlog(id));
     };
+
+    const handleDeleteClick = async (id) => {
+        setisOpenDeleteModel(true)
+    };
+    const pagename = location.pathname.split('/').filter(Boolean).pop();
 
     return (
         <div className="w-full bg-gray-100 ">
@@ -168,6 +175,12 @@ const Blogpagesection = () => {
                 <h1 className='capitalize  text-[26px] font-semibold  '>blog page</h1>
                 <Breadcrumb />
             </div>
+            <Deletemodel
+                isOpen={isOpenDeleteModel}
+                onClose={() => setisOpenDeleteModel(false)}
+                onConfirm={handleDelete}
+                pagename={pagename}
+            />
 
             {/* Most Recent Lead */}
 
@@ -222,7 +235,7 @@ const Blogpagesection = () => {
                                         <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(recentLead)}>
                                             <FaRegEdit />
                                         </button>
-                                        <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(recentLead._id)}>
+                                        <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDeleteClick(recentLead._id)}>
                                             <RiDeleteBin6Line />
                                         </button>
                                     </td>
@@ -276,7 +289,7 @@ const Blogpagesection = () => {
                                             <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(lead)}>
                                                 <FaRegEdit />
                                             </button>
-                                            <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(lead?._id)}>
+                                            <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDeleteClick(lead?._id)}>
                                                 <RiDeleteBin6Line />
                                             </button>
                                         </td>
