@@ -97,8 +97,8 @@ const Workadd = () => {
       work: formdata.work,
       startTime: formdata.startTime,
       endTime: formdata.endTime,
-      totalHours: formdata.totalHours,  // Corrected to use formdata.totalHours
-      date: getCurrentDate()            // Using helper function for date
+      totalHours: formdata.totalHours,
+      date: getCurrentDate()
     };
 
     const result = await dispatch(addwork(workData)).unwrap();
