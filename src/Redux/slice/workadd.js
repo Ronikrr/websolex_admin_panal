@@ -113,7 +113,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API = "http://localhost:8000";
+const API = "https://websolex-admin.vercel.app";
 
 // Fetch all-day history (for admin)
 export const fetchAllDayHistory = createAsyncThunk('workLog/fetchAllDayHistory', async (_, { rejectWithValue }) => {

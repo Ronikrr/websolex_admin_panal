@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+// const API_URL = "http://localhost:8000";
 const API_URL = "https://websolex-admin.vercel.app";
 
 export const fetchalluser = createAsyncThunk(
@@ -83,7 +84,10 @@ export const updateuserprofile = createAsyncThunk(
         try {
             const token = getState().auth.token;
             const res = await axios.put(`${API_URL}/profile`, updatedData, {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data',
+                },
             });
             return res.data;
         } catch (error) {

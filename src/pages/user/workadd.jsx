@@ -15,8 +15,6 @@ const Workadd = () => {
   const email = useSelector((state) => state.auth.user?.user?.email);
   const allhistory = useSelector(state => state.workLog.dailyHistory);
   const error = useSelector(state => state.workLog.feedback);
-  
-
   const [isOpenAddModel, setIsOpenAddModel] = useState(false);
   const [formdata, setFormData] = useState({
     projectName: "",

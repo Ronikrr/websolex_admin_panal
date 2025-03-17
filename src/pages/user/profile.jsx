@@ -14,11 +14,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getuserprofile, updateuserprofile } from '../../Redux/authSlice';
 import Logoutmodel from '../../components/ui/logoutmodel';
 
+
 const Profile = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { user, error } = useSelector((state) => state.auth);
-    console.log(user)
+    const { user } = useSelector((state) => state.auth);
+    const error = useSelector((state) => state.auth.feedback);
     const [formData, setFormData] = useState({
         name: '',
         phoneNo: '',
@@ -40,6 +41,11 @@ const Profile = () => {
     const handleopenmodel = () => {
         setisModelOpen(!isModelOpen)
     }
+    useEffect(() => {
+        if (!error) {
+            setFeedback({ message: error.message, type: error.type })
+        }
+    }, [error])
     useEffect(() => {
         if (user?.user) {
             setFormData({
@@ -64,6 +70,7 @@ const Profile = () => {
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
+        console.log(file)
         if (file && ["image/png", "image/jpeg", "image/gif"].includes(file.type)) {
             setNewProfileImage(file);
         } else {
@@ -73,6 +80,7 @@ const Profile = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        // console.log(newProfileImage)
         const token = localStorage.getItem("Admintoken_websolex");
         if (!token) {
             navigate("/");
@@ -89,6 +97,7 @@ const Profile = () => {
         if (newProfileImage) {
             updatedData.append("profileImage", newProfileImage);
         }
+        // console.log(updatedData)
 
         dispatch(updateuserprofile(updatedData));
     };
