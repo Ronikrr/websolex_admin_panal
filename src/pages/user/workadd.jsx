@@ -31,15 +31,6 @@ const Workadd = () => {
       setFeedback({ message: error.message, type: error.type })
     }
   }, [error]);
-  const clicktoshownotifications = () => {
-    addNotification({
-      title: "Code with ronik",
-      message: `${email} is added update `,
-      duration: 9000,
-      logo: "",
-      native: true
-    })
-  }
   useEffect(() => {
     if (UserId) {
       dispatch(fetchdailyHistory({ userId: UserId }));
@@ -143,13 +134,7 @@ const Workadd = () => {
             >
               <IoMdAdd /> Add
             </button>
-            <button
-              className="flex items-center gap-3 rounded-lg px-6 py-2 shadow-md border text-[var(--primary-color)] border-[var(--primary-color)] uppercase hover:bg-[var(--primary-color)] hover:text-white duration-1000"
-              title="Add Work Log"
-              onClick={clicktoshownotifications}
-            >
-              <IoMdAdd /> Add
-            </button>
+
           </div>
 
           <table className="w-full mt-5 border border-collapse border-gray-200">
