@@ -8,7 +8,7 @@ import { fetchdailyHistory, addwork } from '../../Redux/slice/workadd';
 import { useDispatch, useSelector } from 'react-redux';
 import Seconduray from '../../components/ui/seconduray';
 import Primary from '../../components/ui/primary';
-
+import addNotification from 'react-push-notification'
 const Workadd = () => {
   const dispatch = useDispatch();
   const UserId = useSelector((state) => state.auth.user?.user?.id);
@@ -32,6 +32,15 @@ const Workadd = () => {
       setFeedback({ message: error.message, type: error.type })
     }
   }, [error]);
+  const clicktoshownotifications = () => {
+    addNotification({
+      title: "Code with ronik",
+      message: `${email} is added update `,
+      duration: 9000,
+      logo: "",
+      native: true
+    })
+  }
   useEffect(() => {
     if (UserId) {
       dispatch(fetchdailyHistory({ userId: UserId }));
@@ -132,6 +141,13 @@ const Workadd = () => {
               className="flex items-center gap-3 rounded-lg px-6 py-2 shadow-md border text-[var(--primary-color)] border-[var(--primary-color)] uppercase hover:bg-[var(--primary-color)] hover:text-white duration-1000"
               title="Add Work Log"
               onClick={() => setIsOpenAddModel(true)}
+            >
+              <IoMdAdd /> Add
+            </button>
+            <button
+              className="flex items-center gap-3 rounded-lg px-6 py-2 shadow-md border text-[var(--primary-color)] border-[var(--primary-color)] uppercase hover:bg-[var(--primary-color)] hover:text-white duration-1000"
+              title="Add Work Log"
+              onClick={clicktoshownotifications}
             >
               <IoMdAdd /> Add
             </button>
