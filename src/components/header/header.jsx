@@ -99,9 +99,6 @@ const Header = ({ toogleslidebar }) => {
         setisopen(false);
         setismessageopen(false);
     };
-    const onClickClose = () => {
-        setisuseropen(false);
-    }
     const handleSearchSubmit = (e) => {
         e.preventDefault(); // Prevents page refresh
         if (searchQuery.trim() !== "") {
@@ -118,7 +115,7 @@ const Header = ({ toogleslidebar }) => {
     }, []);
 
     return (
-        <div className="h-[80px] w-screen md:w-full flex px-5 lg:px-11 py-4  items-center justify-center bg-[#fff]" onClick={onClickClose} >
+        <div className="h-[80px] w-screen md:w-full flex px-5 lg:px-11 py-4  items-center justify-center bg-[#fff]"  >
             {error && (
                 <div
                     className={`fixed top-4 left-0 transform -translate-x-1/2 bg-red-500 text-white px-10 py-6 rounded shadow-lg transition-transform duration-500 ${showError
