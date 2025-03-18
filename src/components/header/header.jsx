@@ -41,7 +41,7 @@ const Header = ({ toogleslidebar }) => {
         const fetchData = async () => {
             const Admintoken_websolex = localStorage.getItem("Admintoken_websolex");
             if (!Admintoken_websolex) {
-                navigate("/"); // Redirect to login
+                navigate("/");
                 setisactive("offline");
                 return;
             }
@@ -99,6 +99,9 @@ const Header = ({ toogleslidebar }) => {
         setisopen(false);
         setismessageopen(false);
     };
+    const onClickClose = () => {
+        setisuseropen(false);
+    }
     const handleSearchSubmit = (e) => {
         e.preventDefault(); // Prevents page refresh
         if (searchQuery.trim() !== "") {
@@ -115,7 +118,7 @@ const Header = ({ toogleslidebar }) => {
     }, []);
 
     return (
-        <div className="h-[80px] w-screen md:w-full flex px-5 lg:px-11 py-4  items-center justify-center bg-[#fff] ">
+        <div className="h-[80px] w-screen md:w-full flex px-5 lg:px-11 py-4  items-center justify-center bg-[#fff]" onClick={onClickClose} >
             {error && (
                 <div
                     className={`fixed top-4 left-0 transform -translate-x-1/2 bg-red-500 text-white px-10 py-6 rounded shadow-lg transition-transform duration-500 ${showError
@@ -202,7 +205,7 @@ const Header = ({ toogleslidebar }) => {
                                 </div>
                             )}
                         </li>
-                        <li className="relative">
+                        {/* <li className="relative">
                             <Link
                                 className="w-[33.99px] relative h-[33.99px] rounded-full flex items-center justify-center border border-[0.5px] border-[rgba(226,232,240,1)] bg-[rgba(239,244,251,1)]"
                                 onClick={togglemessagedropdown}
@@ -236,9 +239,9 @@ const Header = ({ toogleslidebar }) => {
                                     </ul>
                                 </div>
                             )}
-                        </li>
+                        </li> */}
                         <li className="flex-col hidden lg:flex">
-                            <p>{user?.name}</p>
+                            <p className="capitalize" >{user?.name}</p>
                             <p>{user?.email}</p>
                         </li>
                     </ul>
