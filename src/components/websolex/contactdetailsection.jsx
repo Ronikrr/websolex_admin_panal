@@ -12,6 +12,7 @@ import { fetchContactDetails, updateContactDetails } from '../../Redux/slice/con
 import { fetchSocialDetails, updateSocialDetails } from '../../Redux/slice/socialslice';
 const Contactdetailsection = () => {
     const dispatch = useDispatch();
+    const { user } = useSelector((state) => state.auth?.user);
     const contactDetails = useSelector((state) => state.contact.data)
     const socialDetails = useSelector((state) => state.social.data)
     const contactFeedback = useSelector((state) => state.contact.feedback)
@@ -76,6 +77,7 @@ const Contactdetailsection = () => {
                                             <div className="relative">
                                                 <input
                                                     name={'address'}
+                                                    disabled={user?.role === 'user'}
                                                     value={contactDetails?.address}
                                                     onChange={(e) => handleInputChange(e, 'contact')}
                                                     placeholder={"contact address"}
@@ -91,6 +93,7 @@ const Contactdetailsection = () => {
                                             <div className="relative">
                                                 <input
                                                     name={'phoneno'}
+                                                    disabled={user?.role === 'user'}
                                                     value={contactDetails?.phoneno}
                                                     onChange={(e) => handleInputChange(e, 'contact')}
                                                     placeholder={"enter phone number"}
@@ -108,6 +111,7 @@ const Contactdetailsection = () => {
                                             <div className="relative">
                                                 <input
                                                     name={'avaliablity'}
+                                                    disabled={user?.role === 'user'}
                                                     value={contactDetails?.avaliablity}
                                                     onChange={(e) => handleInputChange(e, 'contact')}
                                                     placeholder={"enter avaliablity"}
@@ -122,10 +126,11 @@ const Contactdetailsection = () => {
                                             <div className="relative">
                                                 <input
                                                     name={'email'}
+                                                    disabled={user?.role === 'user'}
                                                     value={contactDetails?.email}
                                                     onChange={(e) => handleInputChange(e, 'contact')}
                                                     placeholder={"enter email"}
-                                                    className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 pl-4 pr-10 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
+                                                    className={`w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 pl-4 pr-10 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize`}
                                                 />
                                                 <div className="absolute top-4 right-4 ">
                                                     <MdOutlineMailOutline className='text-[20px] text-[#64748b]' />
@@ -135,7 +140,7 @@ const Contactdetailsection = () => {
                                     </div>
                                     <div className="flex justify-end gap-4">
                                         <Seconduray label={"Cancel"} />
-                                        <Primary label={"Save"} />
+                                        <Primary disabled={user?.role === 'user'} label={"Save"} />
                                     </div>
                                 </form>
                             </div>
@@ -157,6 +162,7 @@ const Contactdetailsection = () => {
                                                 <input
                                                     name={'facebook'}
                                                     onChange={(e) => handleInputChange(e, 'social')}
+                                                    disabled={user?.role === 'user'}
                                                     value={socialDetails?.facebook}
                                                     placeholder={"enter facebook link"}
                                                     className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 pl-4 pr-10 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
@@ -172,6 +178,7 @@ const Contactdetailsection = () => {
                                                 <input
                                                     name={'whatsapp'}
                                                     onChange={(e) => handleInputChange(e, 'social')}
+                                                    disabled={user?.role === 'user'}
                                                     value={socialDetails?.whatsapp}
                                                     placeholder={"enter whatsapp link"}
                                                     className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 pl-4 pr-10 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
@@ -190,6 +197,7 @@ const Contactdetailsection = () => {
                                                     name={'instagram'}
                                                     onChange={(e) => handleInputChange(e, 'social')}
                                                     value={socialDetails?.instagram}
+                                                    disabled={user?.role === 'user'}
                                                     placeholder={"enter instagram link"}
                                                     className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 pl-4 pr-10 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
                                                 />
@@ -207,6 +215,7 @@ const Contactdetailsection = () => {
                                                     name={'linkedin'}
                                                     onChange={(e) => handleInputChange(e, 'social')}
                                                     value={socialDetails?.linkedin}
+                                                    disabled={user?.role === 'user'}
                                                     placeholder={"enter linkedin link"}
                                                     className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 pl-4 pr-10 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
                                                 />
@@ -218,7 +227,7 @@ const Contactdetailsection = () => {
                                     </div>
                                     <div className="flex justify-end gap-4">
                                         <Seconduray label={"Cancel"} />
-                                        <Primary onClick={handlesocialSubmit} label={"Save"} />
+                                        <Primary onClick={handlesocialSubmit} disabled={user?.role === 'user'} label={"Save"} />
                                     </div>
                                 </form>
                             </div>

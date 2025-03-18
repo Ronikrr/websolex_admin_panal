@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Breadcrumb from "../ui/breadcrumb";
 import FeedbackMessage from "../ui/feedback";
-
 const Contactformsection = () => {
     const [contactData, setContactData] = useState([]);
     const [subscribeData, setSubscribeData] = useState([]);
     const [feedback, setFeedback] = useState({ message: "", type: "" });
-
     const handleClear = () => {
         setFeedback({ message: "", type: "" });
     };
-
     useEffect(() => {
         const fetchContactForm = async () => {
             try {

@@ -5,13 +5,15 @@ import Input from "../ui/input";
 import FeedbackMessage from '../ui/feedback';
 import { useDispatch, useSelector } from "react-redux";
 import { fetchStatics, updateStatics } from "../../Redux/slice/staticSlice";
+import { useLocation } from "react-router-dom";
 
 const Static = () => {
     const dispatch = useDispatch();
-    const staticsDetails = useSelector((state) => state.statics.statics);  // Corrected: 'statics' instead of 'data'
+    const location = useLocation();
+    const { user } = useSelector((state) => state.auth?.user);
+    const staticsDetails = useSelector((state) => state.statics.statics);  
     const staticsFeedback = useSelector((state) => state.statics.feedback);
-const [feedback, setFeedback] = useState({ message: '', type: '' });
-    // Fetch the statics data when component mounts
+    const [feedback, setFeedback] = useState({ message: '', type: '' });
     useEffect(() => {
         dispatch(fetchStatics());
     }, [dispatch]);
@@ -53,6 +55,7 @@ const [feedback, setFeedback] = useState({ message: '', type: '' });
                         placeholder="Successful Project"
                         value={staticsDetails?.successfulproject || ""}
                         onChange={handleInputChange}
+                        disabled={user?.role === 'user'}
                     />
                 </div>
             </div>
@@ -70,6 +73,7 @@ const [feedback, setFeedback] = useState({ message: '', type: '' });
                     placeholder="Joining Companies"
                     value={staticsDetails?.joiningcomparies || ""}
                     onChange={handleInputChange}
+                    disabled={user?.role === 'user'}
                 />
             </div>
 
@@ -86,6 +90,7 @@ const [feedback, setFeedback] = useState({ message: '', type: '' });
                     placeholder="Registered Customers"
                     value={staticsDetails?.registeredcustomers || ""}
                     onChange={handleInputChange}
+                    disabled={user?.role === 'user'}
                 />
             </div>
 

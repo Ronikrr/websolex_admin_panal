@@ -13,7 +13,7 @@ const Workadd = () => {
   const UserId = useSelector((state) => state.auth.user?.user?.id);
   const email = useSelector((state) => state.auth.user?.user?.email);
   const allhistory = useSelector(state => state.workLog.dailyHistory);
-  const error = useSelector(state => state.workLog.feedback);
+  const error = useSelector(state => state?.workLog?.feedback);
   const [isOpenAddModel, setIsOpenAddModel] = useState(false);
   const [formdata, setFormData] = useState({
     projectName: "",
@@ -25,12 +25,17 @@ const Workadd = () => {
   const [feedback, setFeedback] = useState({ message: '', type: '' });
 
   useEffect(() => {
-    if (!error) {
-      setFeedback({ message: error.message, type: error.type })
+    if (error) {
+      setFeedback({
+        message: typeof error.message === 'string' ? error.message : JSON.stringify(error.message),
+        type: typeof error.type === 'string' ? error.type : JSON.stringify(error.type)
+      });
     } else {
-      setFeedback({ message: error.message, type: error.type })
+      setFeedback({ message: '', type: '' });
     }
   }, [error]);
+
+
   useEffect(() => {
     if (UserId) {
       dispatch(fetchdailyHistory({ userId: UserId }));
@@ -116,7 +121,7 @@ const Workadd = () => {
     <div className="w-full bg-gray-100 2xl:p-10 2xl:pb-0 md:p-6">
       <div className='w-full'>
         {feedback.message && (
-          <FeedbackMessage message={feedback.message} type={feedback.type} onClear={handleClear} />
+          <FeedbackMessage message={feedback?.message} type={feedback?.type} onClear={handleClear} />
         )}
 
         <div className="flex items-center justify-between mb-4">

@@ -211,11 +211,11 @@ import { MdOutlineWorkspacePremium } from "react-icons/md";
 import { RiContactsFill } from "react-icons/ri";
 import { MdContactPage } from "react-icons/md";
 import { FaUserNinja } from "react-icons/fa6";
-import { FaPaperclip } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { getuserprofile, updateuserprofile, logoutUser } from '../../Redux/authSlice';
+import { getuserprofile } from '../../Redux/authSlice';
 import { BiTask } from "react-icons/bi";
 function Sidebar({ isopensidebar, closeslidebar }) {
+    const { user } = useSelector((state) => state.auth?.user);
     const [activeMenu, setActiveMenu] = useState(null);
     const [activeSubMenu, setActiveSubMenu] = useState(null);
     const [activeSubSubMenu, setActiveSubSubMenu] = useState(null);
@@ -381,18 +381,19 @@ function Sidebar({ isopensidebar, closeslidebar }) {
                 <nav className="flex-1 px-4 py-6 space-y-4">
                     {menuItems.map((menu) => (
                         <div key={menu.id}>
-                            <div className="flex items-center justify-between p-3 rounded cursor-pointer" onClick={() => handleMenuClick(menu.id)}>
+                            {/* <div className="flex items-center justify-between p-3 rounded cursor-pointer" onClick={() => handleMenuClick(menu.id)}>
                                 <div className="flex items-center space-x-3">
                                     <span>{menu.icon}</span>
                                     <span className="font-semibold">{menu.label}</span>
                                 </div>
-                            </div>
+                            </div> */}
 
-                            {activeMenu === menu.id && menu.subMenu && (
+                            {/* {activeMenu === menu.id && menu.subMenu && ( */}
                                 <ul className="mt-2 space-y-2">
                                     {menu.subMenu.map((subMenu) => (
                                         <li key={subMenu.id}>
-                                            <div className="flex items-center justify-between p-2 rounded cursor-pointer" onClick={() => handleSubMenuClick(subMenu.id)}>
+                                            {/* {user?.role === "admin" } */}
+                                            <div className="flex items-center justify-between p-2 bg-gray-900 rounded cursor-pointer" onClick={() => handleSubMenuClick(subMenu.id)}>
                                                 <div className="flex items-center space-x-3">
                                                     <span>{subMenu.icon}</span>
                                                     <span>{subMenu.label}</span>
@@ -402,7 +403,7 @@ function Sidebar({ isopensidebar, closeslidebar }) {
                                                 <ul className="pl-2 mt-2 space-y-2">
                                                     {subMenu.subsubmenu.map((subsubmenu) => (
                                                         <li key={subsubmenu.id}>
-                                                            <Link to={subsubmenu.link} className="flex items-center p-2 space-x-3 rounded cursor-pointer hover:bg-gray-700">
+                                                            <Link to={subsubmenu.link} className={`flex items-center capitalize p-2 gap-3 rounded cursor-pointer hover:bg-gray-700 z-10 ${activeSubSubMenu === subsubmenu.id ? "bg-gray-700 relative after:absolute after:w-[30px] after:h-[40px] after:rounded-l-full after:bg-[rgb(243,244,246)] after:shadow-l-xl z-0 after:-right-[16px]" : "bg-gray-900"}`}>
                                                                 <span>{subsubmenu.icon}</span>
                                                                 <span>{subsubmenu.label}</span>
                                                             </Link>
@@ -413,7 +414,7 @@ function Sidebar({ isopensidebar, closeslidebar }) {
                                         </li>
                                     ))}
                                 </ul>
-                            )}
+                            {/* )} */}
                         </div>
                     ))}
                 </nav>

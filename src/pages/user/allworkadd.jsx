@@ -3,8 +3,12 @@ import Breadcrumb from '../../components/ui/breadcrumb';
 import FeedbackMessage from '../../components/ui/feedback';
 import { fetchAllDayHistory } from '../../Redux/slice/workadd';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const AllWorkadd = () => {
+  const navigate = useNavigate();
+  // const dispatch = useDispatch();
+  const { user } = useSelector((state) => state?.auth?.user);
   const dispatch = useDispatch();
   const allhistory = useSelector((state) => state.workLog.allhistory);
   const error = useSelector((state) => state.workLog.feedback);
@@ -12,8 +16,17 @@ const AllWorkadd = () => {
   const [feedback, setFeedback] = useState({ message: '', type: '' });
 
   useEffect(() => {
+    // ✅ Redirect if user is not an admin
+    if (user?.role === 'user' || user?.role === 'employee') {
+      navigate('/unauthorized');
+      return;
+    }
+
+
+  }, [user, navigate]);
+  useEffect(() => {
     if (error) {
-      setFeedback({ message: error, type: 'error' });
+      setFeedback({ message: error.message, type: error.type });
     }
   }, [error]);
 

@@ -9,8 +9,11 @@ import Submit from '../ui/submit';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import FeedbackMessage from '../ui/feedback';
 import emailjs from 'emailjs-com';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 const Userloginedsection = () => {
-
+    const navigate = useNavigate();
+    const { user } = useSelector((state) => state?.auth?.user);
     const [isOpenAddModel, setIsOpenAddModel] = useState(false);
     const [Users, setUsers] = useState([]);
     const [formData, setFormData] = useState({});
@@ -21,6 +24,15 @@ const Userloginedsection = () => {
     // const API = "http://localhost:8000";
     const API = "https://websolex-admin.vercel.app";
 
+    useEffect(() => {
+        // ✅ Redirect if user is not an admin
+        if (user?.role === 'user' || user?.role === 'employee') {
+            navigate('/unauthorized');
+            return;
+        }
+
+
+    }, [user, navigate]);
     // Clear Feedback
     const handleClear = () => setFeedback({ message: "", type: "" });
 

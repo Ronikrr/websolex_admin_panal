@@ -11,10 +11,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchBlogs, addBlog, updateBlog, deleteBlog, clearFeedback } from "../../Redux/slice/blogslice";
 import Deletemodel from "../ui/deletemodel"
 import { useLocation } from "react-router-dom"
+import { FaEye } from "react-icons/fa";
 
 const Blogpagesection = () => {
-    const location = useLocation();
     const dispatch = useDispatch();
+    const location = useLocation();
+    const { user } = useSelector((state) => state.auth?.user);
     const { blogs, feedback } = useSelector((state) => state.blogs);
     const [isOpenModel, setIsOpenModel] = useState(false)
     const [isOpenAddModel, setIsOpenAddModel] = useState(false)
@@ -232,12 +234,20 @@ const Blogpagesection = () => {
                                         {recentLead?.name}
                                     </td>
                                     <td className="px-2.5 py-5 xl:px-3 xl:py-10 flex justify-center gap-2">
-                                        <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(recentLead)}>
-                                            <FaRegEdit />
-                                        </button>
-                                        <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDeleteClick(recentLead._id)}>
-                                            <RiDeleteBin6Line />
-                                        </button>
+                                        {user?.role === "user" ? (
+                                            <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(recentLead)}>
+                                                <FaEye />
+                                            </button>
+                                        ) : (
+                                            <>
+                                                    <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(recentLead)}>
+                                                        <FaRegEdit />
+                                                    </button>
+                                                    <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDeleteClick(recentLead._id)}>
+                                                        <RiDeleteBin6Line />
+                                                    </button>
+                                            </>
+                                        )}
                                     </td>
                                 </tr>
 
@@ -286,12 +296,21 @@ const Blogpagesection = () => {
                                         </td>
 
                                         <td className="px-2.5 py-5 xl:px-3 xl:py-10 flex justify-center gap-2">
-                                            <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(lead)}>
-                                                <FaRegEdit />
-                                            </button>
-                                            <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDeleteClick(lead?._id)}>
-                                                <RiDeleteBin6Line />
-                                            </button>
+                                            {user?.role === "user" ? (
+                                                <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(lead)}>
+                                                    <FaEye />
+                                                </button>
+                                            ) : (
+                                                <>
+                                                        <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(lead)}>
+                                                            <FaRegEdit />
+                                                        </button>
+                                                        <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDeleteClick(lead?._id)}>
+                                                            <RiDeleteBin6Line />
+                                                        </button>
+                                                </>
+                                            )}
+
                                         </td>
                                     </tr>
                                 ))
@@ -321,6 +340,7 @@ const Blogpagesection = () => {
                                     value={formData.name}
                                     onChange={(e) => setFormData((prevState) => ({ ...prevState, name: e.target.value }))}
                                     placeholder="Enter name"
+                                    disabled={user?.role === 'user'}
                                 />
                                 {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
                             </div>
@@ -335,6 +355,7 @@ const Blogpagesection = () => {
                                             value={item.title}
                                             onChange={(e) => handleInputChange(index, "title", e.target.value)}
                                             placeholder={`Enter title ${index + 1}`}
+                                            disabled={user?.role === 'user'}
                                         />
                                         {errors[`title${index + 1}`] && (
                                             <p className="text-sm text-red-500">{errors[`title${index + 1}`]}</p>
@@ -349,6 +370,7 @@ const Blogpagesection = () => {
                                             value={item.subtitle}
                                             onChange={(e) => handleInputChange(index, "subtitle", e.target.value)}
                                             placeholder={`Enter subtitle ${index + 1}`}
+                                            disabled={user?.role === 'user'}
                                         />
                                         {errors[`subtitle${index + 1}`] && (
                                             <p className="text-sm text-red-500">{errors[`subtitle${index + 1}`]}</p>
@@ -363,6 +385,7 @@ const Blogpagesection = () => {
                                             value={item.description}
                                             onChange={(e) => handleInputChange(index, "description", e.target.value)}
                                             placeholder={`Enter description ${index + 1}`}
+                                            disabled={user?.role === 'user'}
                                         />
                                         {errors[`description${index + 1}`] && (
                                             <p className="text-sm text-red-500">{errors[`description${index + 1}`]}</p>
@@ -373,16 +396,22 @@ const Blogpagesection = () => {
                             <button
                                 type="button"
                                 onClick={handleAddInputSet}
-                                className="px-4 py-2 mt-2 text-sm font-medium text-white bg-[var(--primary-color)] rounded-md hover:bg-[var(--primary-light-color)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                disabled={user?.role === 'user'}
+                                className={`px-4 py-2 mt-2 text-sm font-medium text-white rounded-md 
+        ${user?.role === 'user'
+                                        ? 'bg-gray-400 cursor-not-allowed' // Disabled state
+                                        : 'bg-[var(--primary-color)] hover:bg-[var(--primary-light-color)]'} 
+        focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
                             >
                                 Add Input Set
                             </button>
+
 
                             {/* Image Upload */}
                             <div className="flex flex-row w-full mb-3">
                                 <div className="flex flex-col w-8/12">
                                     <label className="text-gray-600">Image:</label>
-                                    <Input type="file" name="image_blog_work" accept="image/*" onChange={handleFileChange} />
+                                    <Input type="file" name="image_blog_work" accept="image/*" onChange={handleFileChange} disabled={user?.role === 'user'} />
                                     {errors.image && <p className="text-sm text-red-500">{errors.image}</p>}
                                 </div>
                                 {formData.imagePreview && (
@@ -394,7 +423,7 @@ const Blogpagesection = () => {
 
                             {/* Buttons */}
                             <div className="flex justify-between mt-4">
-                                <Primary type="submit" label={isOpenAddModel ? "Save" : "Update"} />
+                                <Primary type="submit" disabled={user?.role === 'user'} label={isOpenAddModel ? "Save" : "Update"} />
                                 <Seconduray
                                     type="button"
                                     label={"Cancel"}

@@ -4,18 +4,27 @@ import Breadcrumb from '../ui/breadcrumb';
 import FeedbackMessage from '../ui/feedback';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchEmployee } from '../../Redux/slice/employyeslice';
+import { useNavigate } from 'react-router-dom';
 
 const Blogpagesection = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { user } = useSelector((state) => state?.auth?.user);
     const employees = useSelector((state) => state?.employees);
     const feedbacks = useSelector((state) => state?.employees);
-
-
     const [feedback, setFeedback] = useState({ message: '', type: '' });
     const handleClear = () => {
         setFeedback({ message: "", type: "" });
     };
+    useEffect(() => {
+        // ✅ Redirect if user is not an admin
+        if (user?.role === 'user' || user?.role === 'employee') {
+            navigate('/unauthorized');
+            return;
+        }
 
+        dispatch(fetchEmployee());
+    }, [dispatch, user, navigate]);
     useEffect(() => {
 
         dispatch(fetchEmployee());
@@ -31,7 +40,7 @@ const Blogpagesection = () => {
             {feedback.message && (
                 <FeedbackMessage message={feedback.message} type={feedback.type} onClear={handleClear} />
             )}
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-col items-center justify-between mb-4 lg:flex-row">
                 <h1 className='capitalize text-[26px] font-semibold  '>employee mangement</h1>
                 <Breadcrumb />
             </div>

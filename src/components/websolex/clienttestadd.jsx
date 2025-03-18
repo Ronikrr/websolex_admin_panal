@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaRegEdit, FaRegStar, FaStar } from 'react-icons/fa';
+import { FaEye, FaRegEdit, FaRegStar, FaStar } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { IoMdAdd } from 'react-icons/io';
 import Input from '../ui/input';
@@ -16,6 +16,7 @@ import Deletemodel from '../ui/deletemodel';
 const Clienttestadd = () => {
     const dispatch = useDispatch();
     const location = useLocation();
+    const { user } = useSelector((state) => state.auth?.user);
     const { clientrate, feedback } = useSelector((state) => state.clientrate);
     const [isOpenDeleteModel, setisOpenDeleteModel] = useState(false)
     const [isOpenAddModal, setIsOpenAddModal] = useState(false);
@@ -231,12 +232,21 @@ const Clienttestadd = () => {
                                         </div>
                                     </td>
                                     <td className="px-2.5 py-5 xl:px-3 xl:py-10 flex justify-center gap-2">
-                                        <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(recentLead)}>
-                                            <FaRegEdit />
-                                        </button>
-                                        <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDeleteClick(recentLead._id)}>
-                                            <RiDeleteBin6Line />
-                                        </button>
+                                        {user?.role === "user" ? (
+                                            <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(recentLead)}>
+                                                <FaEye />
+                                            </button>
+                                        ) : (
+
+                                            <>
+                                                    <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(recentLead)}>
+                                                        <FaRegEdit />
+                                                    </button>
+                                                    <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDeleteClick(recentLead._id)}>
+                                                        <RiDeleteBin6Line />
+                                                    </button>
+                                            </>
+                                        )}
                                     </td>
                                 </tr>
 
@@ -293,12 +303,22 @@ const Clienttestadd = () => {
                                             </div>
                                         </td>
                                         <td className="px-2.5 py-5 xl:px-3 xl:py-10 flex justify-center gap-2">
-                                            <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(lead)}>
-                                                <FaRegEdit />
-                                            </button>
-                                            <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDeleteClick(lead?._id)}>
-                                                <RiDeleteBin6Line />
-                                            </button>
+
+                                            {user?.role === "user" ? (
+                                                <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(lead)}>
+                                                    <FaEye />
+                                                </button>
+                                            ) : (
+
+                                                <>
+                                                        <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(lead)}>
+                                                            <FaRegEdit />
+                                                        </button>
+                                                        <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDeleteClick(lead?._id)}>
+                                                            <RiDeleteBin6Line />
+                                                        </button>
+                                                </>
+                                            )}
                                         </td>
                                     </tr>
                                 ))
@@ -329,6 +349,7 @@ const Clienttestadd = () => {
                                         value={formData?.name}
                                         onChange={handleChange}
                                         placeholder="Enter name"
+                                        disabled={user?.role === 'user'}
                                     />
                                     {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
                                 </div>
@@ -340,6 +361,7 @@ const Clienttestadd = () => {
                                         name="business"
                                         value={formData.business}
                                         onChange={handleChange}
+                                        disabled={user?.role === 'user'}
                                         placeholder="Enter business"
                                     />
                                     {errors.business && <p className="text-sm text-red-500">{errors.business}</p>}
@@ -353,6 +375,7 @@ const Clienttestadd = () => {
                                     name="description"
                                     className="p-2.5 xl:p-3 border border-gray-200 rounded-md"
                                     value={formData?.description}
+                                    disabled={user?.role === 'user'}
                                     onChange={handleChange}
                                     placeholder="Enter description"
                                 />
@@ -366,6 +389,7 @@ const Clienttestadd = () => {
                                 <label className="text-gray-600">Rate:</label>
                                 <Input
                                     type="number"
+                                    disabled={user?.role === 'user'}
                                     name="rate"
                                     value={formData?.rate}
                                     onChange={handleChange}
@@ -381,6 +405,7 @@ const Clienttestadd = () => {
                                 <div className="flex flex-col w-8/12">
                                     <label className="text-gray-600">Image:</label>
                                     <Input
+                                        disabled={user?.role === 'user'}
                                         type="file"
                                         name="image_client_work"
                                         accept="image/*"
@@ -397,7 +422,7 @@ const Clienttestadd = () => {
 
                             {/* Buttons */}
                             <div className="flex justify-between mt-4">
-                                <Primary type="submit" label={isOpenAddModal ? 'Save' : 'Update'} />
+                                <Primary type="submit" disabled={user?.role === 'user'} label={isOpenAddModal ? 'Save' : 'Update'} />
                                 <Secondary
                                     type="button"
                                     label={"Cancel"}

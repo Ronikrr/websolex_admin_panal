@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaRegEdit } from 'react-icons/fa';
+import { FaEye, FaRegEdit } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { IoMdAdd } from 'react-icons/io';
 import Input from '../ui/input'
@@ -30,6 +30,7 @@ const Latestworkaddsection = () => {
     const [isOpenLastAll, setIsOpenLastAll] = useState(false);
     const [feedback, setFeedback] = useState({ message: '', type: '' });
     const [formData, setformData] = useState(initialState);
+    const { user } = useSelector((state) => state.auth?.user);
     useEffect(() => {
         dispatch(fetchourwork());
 
@@ -236,12 +237,21 @@ const Latestworkaddsection = () => {
                                                 {recentLead?.category}
                                             </td>
                                             <td className="px-2.5 py-5 xl:px-3 xl:py-10 flex justify-center gap-2">
-                                                <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(recentLead)}>
-                                                    <FaRegEdit />
-                                                </button>
-                                                <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(recentLead._id)}>
-                                                    <RiDeleteBin6Line />
-                                                </button>
+                                                {user?.role === "user" ? (
+                                                    <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(recentLead)}>
+                                                        <FaEye />
+                                                    </button>
+                                                ) : (
+                                                    <>
+                                                            <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(recentLead)}>
+                                                                <FaRegEdit />
+                                                            </button>
+                                                            <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(recentLead._id)}>
+                                                                <RiDeleteBin6Line />
+                                                            </button>
+                                                    </>
+                                                )}
+
                                             </td>
                                         </tr>
                                     ) : (
@@ -281,11 +291,11 @@ const Latestworkaddsection = () => {
                                                         to={lead?.image} className='cursor-pointer' target='_blank
                                                         ' >
 
-                                                    <img
-                                                        src={lead?.image}
-                                                        alt={lead?.name || 'Lead Image'}
-                                                        className="object-cover w-8 h-8 mx-auto lg:w-16 lg:h-16 aspect-square"
-                                                    />
+                                                        <img
+                                                            src={lead?.image}
+                                                            alt={lead?.name || 'Lead Image'}
+                                                            className="object-cover w-8 h-8 mx-auto lg:w-16 lg:h-16 aspect-square"
+                                                        />
                                                     </Link>
                                                 </td>
                                                 <td
@@ -302,12 +312,21 @@ const Latestworkaddsection = () => {
                                                 </td>
 
                                                 <td className="px-2.5 py-5 xl:px-3 xl:py-10 flex justify-center gap-2">
-                                                    <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(lead)}>
-                                                        <FaRegEdit />
-                                                    </button>
-                                                    <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(lead?._id)}>
-                                                        <RiDeleteBin6Line />
-                                                    </button>
+
+                                                    {user?.role === "user" ? (
+                                                        <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(lead)}>
+                                                            <FaEye />
+                                                        </button>
+                                                    ) : (
+                                                        <>
+                                                                <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(lead)}>
+                                                                    <FaRegEdit />
+                                                                </button>
+                                                                <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(lead?._id)}>
+                                                                    <RiDeleteBin6Line />
+                                                                </button>
+                                                        </>
+                                                    )}
                                                 </td>
                                             </tr>
                                         ))
@@ -357,6 +376,7 @@ const Latestworkaddsection = () => {
                                         value={formData?.name}
                                         onChange={handleInputChange}
                                         placeholder="Enter name"
+                                        disabled={user?.role === 'user'}
                                     />
                                     {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
                                 </div>
@@ -368,6 +388,7 @@ const Latestworkaddsection = () => {
                                         value={formData?.work}
                                         onChange={handleInputChange}
                                         placeholder="Enter work"
+                                        disabled={user?.role === 'user'}
                                     />
                                     {errors.work && <p className="text-sm text-red-500">{errors.work}</p>}
                                 </div>
@@ -382,6 +403,7 @@ const Latestworkaddsection = () => {
                                         value={formData?.description}
                                         onChange={handleInputChange}
                                         placeholder="Enter description"
+                                        disabled={user?.role === 'user'}
                                     />
                                     {errors.description && <p className="text-sm text-red-500">{errors.description}</p>}
                                 </div>
@@ -392,6 +414,7 @@ const Latestworkaddsection = () => {
                                         className='w-full rounded border border-[var(--border-color)] bg-[rgb(239,244,251)] py-3 px-4 text-black focus:border-[var(--border-color)] focus-visible:outline-none placeholder:capitalize '
                                         value={formData?.category}
                                         onChange={handleInputChange}
+                                        disabled={user?.role === 'user'}
                                     >
                                         <option value="">Select category</option>
                                         <option value="web design">web design</option>
@@ -412,6 +435,7 @@ const Latestworkaddsection = () => {
                                         name="image_work"
                                         accept="image/*"
                                         onChange={handleFileChange}
+                                        disabled={user?.role === 'user'}
                                     />
                                     {errors.image && <p className="text-sm text-red-500">{errors.image}</p>}
                                 </div>
@@ -424,9 +448,8 @@ const Latestworkaddsection = () => {
 
                             {/* Buttons */}
                             <div className="flex justify-between mt-4">
-                                <Primary type="submit" label={isOpenAddModel ? 'Save' : 'Update'} className="btn btn-primary">
+                                <Primary type="submit" label={isOpenAddModel ? 'Save' : 'Update'} className="btn btn-primary" disabled={user?.role === 'user'} />
 
-                                </Primary>
                                 <Seconduray
                                     type="button"
                                     label={"Cancel"}

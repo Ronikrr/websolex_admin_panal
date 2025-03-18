@@ -104,12 +104,12 @@ function App() {
   }, [socket])
   return (
     <>
-      <Deletemodel />
       <UserProvider>
         <div className="bg-[#f1f5f9] w-full ">
           <Router>
             <ScrollToTop />
             <Routes>
+
               <Route
                 path="/websolex/emmangement"
                 element={

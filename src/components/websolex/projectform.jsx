@@ -10,7 +10,7 @@ const FormWithApiData = () => {
     const dispatch = useDispatch();
     const projectDetails = useSelector((state) => state.project.data);
     const projectFeedback = useSelector((state) => state.project.feedback);
-
+    const { user } = useSelector((state) => state.auth?.user);
     // Local state for form input
     const [formData, setFormData] = useState({
         totalClients: "",
@@ -71,6 +71,7 @@ const FormWithApiData = () => {
                         placeholder="Total clients"
                         value={formData.totalClients}
                         onChange={handleChange}
+                        disabled={user?.role === 'user'}
                     />
                 </div>
             </div>
@@ -85,6 +86,7 @@ const FormWithApiData = () => {
                     placeholder="Completed projects"
                     value={formData.completedProjects}
                     onChange={handleChange}
+                    disabled={user?.role === 'user'}
                 />
             </div>
 
