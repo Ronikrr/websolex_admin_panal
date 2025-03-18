@@ -98,7 +98,7 @@ const Login = () => {
                                 />
                             </Link>
                             <p className="2xl:px-20 text-[16px]">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit suspendisse.
+                                Sign in with your credentials to access the Websolex admin panel.
                             </p>
                             <span className="inline-block mt-16">
                                 <img
@@ -116,8 +116,8 @@ const Login = () => {
                             <span className="mb-1.5 block font-medium capitalize">
                                 Start for free
                             </span>
-                            <h2 className="text-2xl text-black mb-9 font-bold">
-                                Sign In to TailAdmin
+                            <h2 className="text-2xl font-bold text-black mb-9">
+                                Sign In to Websolex Admin
                             </h2>
                             <form onSubmit={onSubmit}>
                                 {/* ✅ Email Input */}
