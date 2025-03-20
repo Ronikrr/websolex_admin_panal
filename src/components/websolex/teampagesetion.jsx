@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaRegEdit } from 'react-icons/fa';
+import { FaEye, FaRegEdit } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { IoMdAdd } from 'react-icons/io';
 import Input from '../ui/input'
@@ -19,6 +19,7 @@ const initialState = {
     imagePreview: null
 }
 const Servicepagesection = () => {
+    const { user } = useSelector((state) => state.auth?.user)
     const dispatch = useDispatch();
     const { teamMember: leads, feedback: feedbackdata } = useSelector(state => state.teamMember);
     const [errors, setErrors] = useState({});
@@ -251,12 +252,26 @@ const Servicepagesection = () => {
                                         {recentLead?.name}
                                     </td>
                                     <td className="px-2.5 py-5 xl:px-3 xl:py-10 flex justify-center gap-2">
-                                        <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(recentLead)}>
+                                        {user?.role === "user" ? (
+                                            <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(recentLead)}>
+                                                <FaEye />
+                                            </button>
+                                        ) : (
+                                            <>
+                                                    <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(recentLead)}>
+                                                        <FaRegEdit />
+                                                    </button>
+                                                <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(recentLead._id)}>
+                                                    <RiDeleteBin6Line />
+                                                </button>
+                                            </>
+                                        )}
+                                        {/* <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(recentLead)}>
                                             <FaRegEdit />
                                         </button>
                                         <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(recentLead?._id)}>
                                             <RiDeleteBin6Line />
-                                        </button>
+                                        </button> */}
                                     </td>
                                 </tr>
 
@@ -308,12 +323,26 @@ const Servicepagesection = () => {
                                         </td>
 
                                         <td className="px-2.5 py-5 xl:px-3 xl:py-10 flex justify-center gap-2">
-                                            <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(lead)}>
+                                            {/* <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(lead)}>
                                                 <FaRegEdit />
                                             </button>
                                             <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(lead?._id)}>
                                                 <RiDeleteBin6Line />
-                                            </button>
+                                            </button> */}
+                                            {user?.role === "user" ? (
+                                                <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(lead)}>
+                                                    <FaEye />
+                                                </button>
+                                            ) : (
+                                                <>
+                                                        <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(lead)}>
+                                                            <FaRegEdit />
+                                                        </button>
+                                                        <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(lead?._id)}>
+                                                            <RiDeleteBin6Line />
+                                                        </button>
+                                                </>
+                                            )}
                                         </td>
                                     </tr>
                                 ))
@@ -347,6 +376,7 @@ const Servicepagesection = () => {
                                         value={formData?.name}
                                         onChange={handleInputChange}
                                         placeholder="Enter name"
+                                        disabled={user?.role === 'user'}
                                     />
                                     {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
                                 </div>
@@ -359,6 +389,7 @@ const Servicepagesection = () => {
                                         value={formData?.post}
                                         onChange={handleInputChange}
                                         placeholder="Enter post"
+                                        disabled={user?.role === 'user'}
                                     />
                                     {errors.insta && <p className="text-sm text-red-500">{errors.insta}</p>}
                                 </div>
@@ -373,6 +404,7 @@ const Servicepagesection = () => {
                                         value={formData?.linkedin}
                                         onChange={handleInputChange}
                                         placeholder="Enter LinkedIn"
+                                        disabled={user?.role === 'user'}
                                     />
                                     {errors.linkedin && <p className="text-sm text-red-500">{errors.linkedin}</p>}
                                 </div>
@@ -384,6 +416,7 @@ const Servicepagesection = () => {
                                         value={formData?.insta}
                                         onChange={handleInputChange}
                                         placeholder="Enter Instagram"
+                                        disabled={user?.role === 'user'}
                                     />
                                     {errors.insta && <p className="text-sm text-red-500">{errors.insta}</p>}
                                 </div>
@@ -396,6 +429,7 @@ const Servicepagesection = () => {
                                     value={formData?.facebook}
                                     onChange={handleInputChange}
                                     placeholder="Enter Facebook"
+                                    disabled={user?.role === 'user'}
 
                                 />
                                 {errors.facebook && <p className="text-sm text-red-500">{errors.facebook}</p>}
@@ -410,6 +444,7 @@ const Servicepagesection = () => {
                                         name="image"
                                         accept="image/*"
                                         onChange={handleFileChange}
+                                        disabled={user?.role === 'user'}
 
                                     />
                                     {errors.image && <p className="text-sm text-red-500">{errors.image}</p>}
@@ -423,7 +458,7 @@ const Servicepagesection = () => {
 
                             <div className="flex justify-between mt-4">
 
-                                <Primary type="submit" label={isOpenAddModel ? 'Save' : 'Update'} />
+                                <Primary type="submit" disabled={user?.role === 'user'} label={isOpenAddModel ? 'Save' : 'Update'} />
                                 <Seconduray
                                     type="button"
                                     label={"Cancel"}

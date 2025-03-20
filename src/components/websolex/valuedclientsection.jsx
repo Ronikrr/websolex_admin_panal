@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaRegEdit } from 'react-icons/fa';
+import { FaEye, FaRegEdit } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { IoMdAdd } from 'react-icons/io';
 import Input from '../ui/input'
@@ -17,6 +17,7 @@ const initialState = {
 const Valuedclientsection = () => {
     const dispatch = useDispatch();
     const { valuedclient, feedbacks } = useSelector((state) => state.valuedclient)
+    const { user } = useSelector((state) => state.auth?.user);
     const [isOpenModel, setIsOpenModel] = useState(false);
     const [isOpenAddModel, setIsOpenAddModel] = useState(false);
     const [errors, setErrors] = useState({});
@@ -76,7 +77,7 @@ const Valuedclientsection = () => {
 
             }
             if (res.status === 200) {
-                
+
             }
         }
         catch (error) {
@@ -189,8 +190,8 @@ const Valuedclientsection = () => {
                     </div>
                     <div className="flex items-center">
                         <div className="relative cursor-pointer ">
-                            <button className='flex items-center gap-3 rounded-lg px-4 py-1 lg:px-6 lg:py-2 shadow-md border text-[var(--primary-color)] border-[var(--primary-color)] uppercase hover:bg-[var(--primary-color)] hover:text-white duration-1000' title='add' 
-                            onClick={()=>setIsOpenAddModel(true)} 
+                            <button className='flex items-center gap-3 rounded-lg px-4 py-1 lg:px-6 lg:py-2 shadow-md border text-[var(--primary-color)] border-[var(--primary-color)] uppercase hover:bg-[var(--primary-color)] hover:text-white duration-1000' title='add'
+                                onClick={() => setIsOpenAddModel(true)}
                             >
                                 <IoMdAdd /> add
                             </button>
@@ -228,6 +229,20 @@ const Valuedclientsection = () => {
                                         <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(recentLead?._id)}>
                                             <RiDeleteBin6Line />
                                         </button>
+                                        {user?.role === "user" ? (
+                                            <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(recentLead)}>
+                                                <FaEye />
+                                            </button>
+                                        ) : (
+                                            <>
+                                                <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(recentLead)}>
+                                                    <FaRegEdit />
+                                                </button>
+                                                <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(recentLead._id)}>
+                                                    <RiDeleteBin6Line />
+                                                </button>
+                                            </>
+                                        )}
                                     </td>
                                 </tr>
 
@@ -240,7 +255,7 @@ const Valuedclientsection = () => {
                     </table>
                 </div>
             </div>
-           
+
 
             <div className="w-full p-5 bg-white rounded-md shadow-md">
                 <h1 className="capitalize teaxt-[15px] lg:text-[26px] py-6 font-semibold">All added</h1>
@@ -272,12 +287,26 @@ const Valuedclientsection = () => {
                                         </td>
                                         <td className="p-2.5 xl:p-3 border border-gray-200 hidden lg:table-cell capitalize text-wrap">{lead.name}</td>
                                         <td className="px-2.5 py-5 xl:px-3 xl:py-10 flex justify-center gap-2">
-                                            <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(lead)}>
+                                            {/* <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(lead)}>
                                                 <FaRegEdit />
                                             </button>
                                             <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(lead._id)}>
                                                 <RiDeleteBin6Line />
-                                            </button>
+                                            </button> */}
+                                            {user?.role === "user" ? (
+                                                <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(lead)}>
+                                                    <FaEye />
+                                                </button>
+                                            ) : (
+                                                <>
+                                                        <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(lead)}>
+                                                            <FaRegEdit />
+                                                        </button>
+                                                        <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(lead?._id)}>
+                                                            <RiDeleteBin6Line />
+                                                        </button>
+                                                </>
+                                            )}
                                         </td>
                                     </tr>
                                 ))
