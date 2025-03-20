@@ -39,7 +39,7 @@ const AllWorkadd = () => {
   };
 
   return (
-    <div className="w-full min-h-screen p-6 bg-gray-50 md:p-8">
+    <div className="bg-gray-50 p-6 w-full md:p-8 min-h-[90vh]">
       {/* Feedback Message */}
       {feedback.message && (
         <div className="mb-4">
@@ -48,25 +48,25 @@ const AllWorkadd = () => {
       )}
 
       {/* Header Section */}
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold text-gray-800">Daily Work Updates</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl text-gray-800 font-semibold">Daily Work Updates</h1>
         <Breadcrumb />
       </div>
 
       {/* Cards Grid */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-4 sm:grid-cols-2">
         {allhistory?.length > 0 ? (
           allhistory.map((log, index) => (
-            <div key={index} className="p-5 space-y-4 bg-white rounded-lg shadow-md">
-              <div className="flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-gray-700">{log.projectName}</h2>
-                <span className="text-xs text-gray-500">{log.date}</span>
+            <div key={index} className="bg-white p-5 rounded-lg shadow-md space-y-4">
+              <div className="flex justify-between items-center">
+                <h2 className="text-gray-700 text-lg font-semibold">{log.projectName}</h2>
+                <span className="text-gray-500 text-xs">{log.date}</span>
               </div>
-              <div className="text-sm text-gray-600">
+              <div className="text-gray-600 text-sm">
                 <p><strong>Work:</strong> {log.work}</p>
                 <p><strong>Email:</strong> {log.email}</p>
               </div>
-              <div className="flex justify-between text-sm text-gray-500">
+              <div className="flex justify-between text-gray-500 text-sm">
                 <div>
                   <p><strong>Start:</strong> {log.startTime}</p>
                   <p><strong>End:</strong> {log.endTime}</p>
