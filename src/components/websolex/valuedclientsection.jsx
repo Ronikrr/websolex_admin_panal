@@ -223,12 +223,12 @@ const Valuedclientsection = () => {
                                     </td>
                                     <td className="p-2.5 xl:p-3 border border-gray-200 hidden lg:table-cell capitalize ">{recentLead.name}</td>
                                     <td className="px-2.5 py-5 xl:px-3 xl:py-10 flex justify-center gap-2">
-                                        <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(recentLead)}>
+                                        {/* <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(recentLead)}>
                                             <FaRegEdit />
                                         </button>
                                         <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(recentLead?._id)}>
                                             <RiDeleteBin6Line />
-                                        </button>
+                                        </button> */}
                                         {user?.role === "user" ? (
                                             <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(recentLead)}>
                                                 <FaEye />
