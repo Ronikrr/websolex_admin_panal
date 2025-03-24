@@ -8,7 +8,7 @@ import { FaRegUser } from 'react-icons/fa';
 import { RiContactsBook3Line } from 'react-icons/ri';
 import { MdOutlineMailOutline } from 'react-icons/md';
 import { ImEye, ImEyeBlocked } from 'react-icons/im';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import FeedbackMessage from '../../components/ui/feedback';
 import { useSelector, useDispatch } from 'react-redux';
 import { getuserprofile, updateuserprofile } from '../../Redux/authSlice';
@@ -32,6 +32,33 @@ const Profile = () => {
     const [newProfileImage, setNewProfileImage] = useState(null);
     const [isShowPass, setIsShowPass] = useState(false);
     const [feedback, setFeedback] = useState({ message: '', type: '' });
+    const [history, setHistory] = useState([]);
+
+    useEffect(() => {
+        const fetchLoginHistory = async () => {
+            try {
+                const response = await fetch('https://websolex-admin.vercel.app/login-history', {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('Admintoken_websolex')}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setHistory(data[data.length - 1]);
+                    console.log(data)
+                } else {
+                    console.error('Failed to fetch login history');
+                }
+            } catch (error) {
+                console.error('Error fetching login history:', error);
+            }
+        };
+        fetchLoginHistory();
+    }, []);
+
 
 
     useEffect(() => {
@@ -58,10 +85,11 @@ const Profile = () => {
             });
         }
         else if (error) {
-            setFeedback({ message: `Error :${error}`, type: "error" });
+            setFeedback({ message: `${error.message}`, type: error.message });
         }
 
     }, [user, error]);
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -128,7 +156,11 @@ const Profile = () => {
                     <div className="w-full">
                         <div className="bg-white border rounded-sm border-[var(--border-color)] shadow-default">
                             <div className="py-4 border-b border-[var(--border-color)] capitalize px-7">
-                                Personal Information
+
+                                <div className="flex items-center justify-between w-full">
+                                    <span> Personal Information</span>
+                                    <span> <Link to={"/loginhistory"} >{new Date(history.loginTime).toLocaleString()}</Link> </span>
+                                </div>
                             </div>
                             <div className="p-7">
                                 <form onSubmit={handleSubmit}>

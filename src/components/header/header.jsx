@@ -7,6 +7,7 @@ import { RiMessage2Line } from "react-icons/ri";
 import { FaBars } from "react-icons/fa6";
 import { TbLogin2 } from "react-icons/tb";
 import Logoutmodel from "../ui/logoutmodel";
+import { FaHistory } from "react-icons/fa";
 const Header = ({ toogleslidebar }) => {
     const [user, setUser] = useState({});
     const [showError, setShowError] = useState("");
@@ -111,7 +112,7 @@ const Header = ({ toogleslidebar }) => {
             setisopen(false);
             setismessageopen(false);
             setisuseropen(false);
-        }, 5000);
+        }, 3000);
     }, []);
 
     return (
@@ -276,11 +277,11 @@ const Header = ({ toogleslidebar }) => {
                                             <CiUser className="text-[22px]" /> my profile
                                         </Link>
                                     </li>
-                                    <li className='w-full' >
+                                    {/* <li className='w-full' >
                                         <Link to='/loginhistory' className='flex items-center w-full gap-3 text-sm font-medium capitalize duration-300 ease-in-out hover:text-blue-400 lg:text-base' >
-                                            <CiUser className='text-[22px]' /> login history
+                                            <FaHistory className='text-[22px]' /> login history
                                         </Link>
-                                    </li>
+                                    </li> */}
                                     <li
                                         className="w-full"
 

@@ -16,7 +16,7 @@ const LoginHistory = () => {
     
                 if (response.ok) {
                     const data = await response.json();
-                    setHistory(data);
+                    setHistory(data[data.length - 1]);
                     console.log(data)
                 } else {
                     console.error('Failed to fetch login history');
@@ -31,7 +31,7 @@ const LoginHistory = () => {
 
     return (
         <div className='w-full bg-gray-100 2xl:p-10 md:p-6' >
-            <div className="w-full bg-gray-100 pt-0 md:pt-10 ">
+            <div className="w-full pt-0 bg-gray-100 md:pt-10 ">
                 <div className="w-full p-5 bg-white rounded-md shadow-md mb-7">
                     <div className="flex items-center justify-between w-full">
                         <div className="py-6">
@@ -51,24 +51,22 @@ const LoginHistory = () => {
                             </thead>
                             {/* Table Body */}
                             <tbody>
-                                {
-                                    history.map((item, index) => (
 
-                                        <tr key={item._id} className="text-center border-b border-gray-200">
-                                            <td className="p-2.5 xl:p-3 border border-gray-200">{index + 1}</td>
+
+                                <tr key={history._id} className="text-center border-b border-gray-200">
+                                    <td className="p-2.5 xl:p-3 border border-gray-200">1</td>
                                             <td className="p-2.5 xl:p-3 border border-gray-200">
-                                                {item.userId?.email}
+                                        {history.userId?.email}
                                             </td>
                                             <td
                                                 className="p-2.5 xl:p-3 border border-gray-200 hidden lg:table-cell capitalize overflow-hidden whitespace-nowrap text-ellipsis max-w-[150px] cursor-pointer"
                                                 title={""}
                                             >
-                                                {new Date(item.loginTime).toLocaleString()}
+                                        {new Date(history.loginTime).toLocaleString()}
                                             </td>
 
                                         </tr>
-                                    ))
-                                }
+
                             </tbody>
                         </table>
                     </div>
