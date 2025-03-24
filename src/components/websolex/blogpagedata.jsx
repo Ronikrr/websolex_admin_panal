@@ -243,9 +243,11 @@ const Blogpagesection = () => {
                                                     <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(recentLead)}>
                                                         <FaRegEdit />
                                                     </button>
+                                                    {user?.role === "admin" && (
                                                     <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDeleteClick(recentLead._id)}>
                                                         <RiDeleteBin6Line />
                                                     </button>
+                                                    )}
                                             </>
                                         )}
                                     </td>
@@ -305,9 +307,11 @@ const Blogpagesection = () => {
                                                         <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(lead)}>
                                                             <FaRegEdit />
                                                         </button>
+                                                        {user?.role === "admin" && (
                                                         <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDeleteClick(lead?._id)}>
                                                             <RiDeleteBin6Line />
                                                         </button>
+                                                        )}
                                                 </>
                                             )}
 

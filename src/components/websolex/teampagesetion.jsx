@@ -261,17 +261,13 @@ const Servicepagesection = () => {
                                                     <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(recentLead)}>
                                                         <FaRegEdit />
                                                     </button>
-                                                <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(recentLead._id)}>
-                                                    <RiDeleteBin6Line />
-                                                </button>
+                                                    {user?.role === "admin" && (
+                                                        <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(recentLead._id)}>
+                                                            <RiDeleteBin6Line />
+                                                        </button>
+                                                    )}
                                             </>
                                         )}
-                                        {/* <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(recentLead)}>
-                                            <FaRegEdit />
-                                        </button>
-                                        <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(recentLead?._id)}>
-                                            <RiDeleteBin6Line />
-                                        </button> */}
                                     </td>
                                 </tr>
 
@@ -323,12 +319,7 @@ const Servicepagesection = () => {
                                         </td>
 
                                         <td className="px-2.5 py-5 xl:px-3 xl:py-10 flex justify-center gap-2">
-                                            {/* <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(lead)}>
-                                                <FaRegEdit />
-                                            </button>
-                                            <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(lead?._id)}>
-                                                <RiDeleteBin6Line />
-                                            </button> */}
+
                                             {user?.role === "user" ? (
                                                 <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(lead)}>
                                                     <FaEye />
@@ -338,9 +329,11 @@ const Servicepagesection = () => {
                                                         <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(lead)}>
                                                             <FaRegEdit />
                                                         </button>
+                                                        {user?.role === "admin" && (
                                                         <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(lead?._id)}>
                                                             <RiDeleteBin6Line />
                                                         </button>
+                                                        )}
                                                 </>
                                             )}
                                         </td>

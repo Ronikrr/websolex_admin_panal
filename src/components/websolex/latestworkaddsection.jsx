@@ -246,9 +246,11 @@ const Latestworkaddsection = () => {
                                                             <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(recentLead)}>
                                                                 <FaRegEdit />
                                                             </button>
+                                                            {user?.role === "admin" && (
                                                             <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(recentLead._id)}>
                                                                 <RiDeleteBin6Line />
                                                             </button>
+                                                            )}
                                                     </>
                                                 )}
 
@@ -322,9 +324,11 @@ const Latestworkaddsection = () => {
                                                                 <button className="text-gray-600 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleEditClick(lead)}>
                                                                     <FaRegEdit />
                                                                 </button>
+                                                                {user?.role === "admin" && (
                                                                 <button className="text-red-500 hover:text-black text-[10px] lg:text-[15px]" onClick={() => handleDelete(lead?._id)}>
                                                                     <RiDeleteBin6Line />
                                                                 </button>
+                                                                )}
                                                         </>
                                                     )}
                                                 </td>
