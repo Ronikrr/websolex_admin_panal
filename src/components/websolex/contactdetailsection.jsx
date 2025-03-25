@@ -18,7 +18,6 @@ const Contactdetailsection = () => {
     const contactFeedback = useSelector((state) => state.contact.feedback)
     const socialFeedback = useSelector((state) => state.social.feedback)
     const [feedback, setFeedback] = useState({ message: '', type: '' });
-    console.log(socialDetails)
     const handleClear = () => {
         setFeedback({ message: "", type: "" });
     };

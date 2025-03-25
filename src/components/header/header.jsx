@@ -139,33 +139,7 @@ const Header = ({ toogleslidebar }) => {
                 </div>
                 <div className="flex items-center space-x-3 search">
                     <div className="relative flex items-center gap-2">
-                        {/* <IoIosSearch
-                            onClick={handleSearchSubmit}
-                            className="text-[20px] cursor-pointer"
-                        />
-                        <input
-                            type="text"
-                            className="py-2 px-3 rounded-lg bg-[#f1f5f9] "
-                            placeholder="Search ..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                        {searchQuery && (
-                            <ul className="absolute left-0 w-full mt-2 bg-white border rounded-lg shadow-md top-full">
-                                {filteredItems.length > 0 ? (
-                                    filteredItems.map((item, index) => (
-                                        <li
-                                            key={index}
-                                            className="p-2 cursor-pointer hover:bg-gray-200"
-                                        >
-                                            {item}
-                                        </li>
-                                    ))
-                                ) : (
-                                    <li className="p-2 text-gray-500">No results found</li>
-                                )}
-                            </ul>
-                        )} */}
+
                         <form onSubmit={handleSubmit} >
                             <input type="search" name='search' value={search} onChange={(e) => setSearch(e.target.value)} className="py-2 px-3 rounded-lg bg-[#f1f5f9] " placeholder="Search..." />
                         </form>
@@ -206,41 +180,6 @@ const Header = ({ toogleslidebar }) => {
                                 </div>
                             )}
                         </li>
-                        {/* <li className="relative">
-                            <Link
-                                className="w-[33.99px] relative h-[33.99px] rounded-full flex items-center justify-center border border-[0.5px] border-[rgba(226,232,240,1)] bg-[rgba(239,244,251,1)]"
-                                onClick={togglemessagedropdown}
-                            >
-                                <RiMessage2Line />
-                                <div className="absolute w-[10px] h-[10px] bg-red-500 rounded-full right-0 top-0"></div>
-                            </Link>
-                            {ismessageopen && (
-                                <div className="absolute flex flex-col block mt-2 bg-white border rounded-sm -right-27 h-90 w-75 border-stroke shadow-default dark:border-strokedark dark:bg-boxdark sm:right-0 sm:w-80">
-                                    <div className="px-5 py-3">
-                                        <h5 className="text-sm font-medium capitalize text-[#8a99af]">
-                                            message
-                                        </h5>
-                                    </div>
-                                    <ul className="flex flex-col h-auto p-5 overflow-y-auto">
-                                        <li>
-                                            <Link className="flex gap-4 px-4 py-3 border-t border-stroke hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4">
-                                                <div className="w-12 h-12 rounded-full">
-                                                    <img
-                                                        src="https://react-demo.tailadmin.com/assets/user-02-5a304001.png"
-                                                        alt="user"
-                                                    />
-                                                </div>
-                                                <div className="">
-                                                    <h6>Mariya Desoja</h6>
-                                                    <p className="text-sm">I like your confidence 💪</p>
-                                                    <p className="text-xs">2min ago</p>
-                                                </div>
-                                            </Link>
-                                        </li>
-                                    </ul>
-                                </div>
-                            )}
-                        </li> */}
                         <li className="flex-col hidden lg:flex">
                             <p className="capitalize" >{user?.name}</p>
                             <p>{user?.email}</p>
