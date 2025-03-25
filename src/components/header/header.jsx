@@ -3,18 +3,18 @@ import { IoIosSearch } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 import { RiNotification2Line } from "react-icons/ri";
 import { CiUser } from "react-icons/ci";
-import { RiMessage2Line } from "react-icons/ri";
+// import { RiMessage2Line } from "react-icons/ri";
 import { FaBars } from "react-icons/fa6";
 import { TbLogin2 } from "react-icons/tb";
 import Logoutmodel from "../ui/logoutmodel";
-import { FaHistory } from "react-icons/fa";
+// import { FaHistory } from "react-icons/fa";
 const Header = ({ toogleslidebar }) => {
     const [user, setUser] = useState({});
     const [showError, setShowError] = useState("");
     const [error, setError] = useState(null);
     const [isopen, setisopen] = useState(false);
     const [isuser, setisuseropen] = useState(false);
-    const [ismessageopen, setismessageopen] = useState(false);
+    const [search, setSearch] = useState("");
     const [isactive, setisactive] = useState(null);
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState("");
@@ -34,9 +34,13 @@ const Header = ({ toogleslidebar }) => {
     };
 
     // Filtered list based on search query
-    const filteredItems = items.filter((item) =>
-        item.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (search.trim()) {
+            navigate(`/search?query=${encodeURIComponent(search)}`);
+        }
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -86,19 +90,15 @@ const Header = ({ toogleslidebar }) => {
 
     const toggledropdown = () => {
         setisopen(!isopen);
-        setismessageopen(false);
+        // setismessageopen(false);
         setisuseropen(false);
     };
 
-    const togglemessagedropdown = () => {
-        setismessageopen(!ismessageopen);
-        setisopen(false);
-        setisuseropen(false);
-    };
+
     const isuseropen = () => {
         setisuseropen(!isuser);
         setisopen(false);
-        setismessageopen(false);
+        // setismessageopen(false);
     };
     const handleSearchSubmit = (e) => {
         e.preventDefault(); // Prevents page refresh
@@ -110,7 +110,7 @@ const Header = ({ toogleslidebar }) => {
     useEffect(() => {
         setTimeout(() => {
             setisopen(false);
-            setismessageopen(false);
+            // setismessageopen(false);
             setisuseropen(false);
         }, 3000);
     }, []);
@@ -139,7 +139,7 @@ const Header = ({ toogleslidebar }) => {
                 </div>
                 <div className="flex items-center space-x-3 search">
                     <div className="relative flex items-center gap-2">
-                        <IoIosSearch
+                        {/* <IoIosSearch
                             onClick={handleSearchSubmit}
                             className="text-[20px] cursor-pointer"
                         />
@@ -165,7 +165,10 @@ const Header = ({ toogleslidebar }) => {
                                     <li className="p-2 text-gray-500">No results found</li>
                                 )}
                             </ul>
-                        )}
+                        )} */}
+                        <form onSubmit={handleSubmit} >
+                            <input type="search" name='search' value={search} onChange={(e) => setSearch(e.target.value)} className="py-2 px-3 rounded-lg bg-[#f1f5f9] " placeholder="Search..." />
+                        </form>
                     </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -277,11 +280,7 @@ const Header = ({ toogleslidebar }) => {
                                             <CiUser className="text-[22px]" /> my profile
                                         </Link>
                                     </li>
-                                    {/* <li className='w-full' >
-                                        <Link to='/loginhistory' className='flex items-center w-full gap-3 text-sm font-medium capitalize duration-300 ease-in-out hover:text-blue-400 lg:text-base' >
-                                            <FaHistory className='text-[22px]' /> login history
-                                        </Link>
-                                    </li> */}
+
                                     <li
                                         className="w-full"
 
