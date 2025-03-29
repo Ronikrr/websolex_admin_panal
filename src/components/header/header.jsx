@@ -177,12 +177,14 @@ const Header = ({ toogleslidebar }) => {
                                         src="https://www.t3bucket.com/f/0-user.svg"
                                         alt="Profile"
                                         className="object-cover w-12 h-12 rounded-full"
+                                        loading="lazy"
                                     />
                                 ) : (
                                     <img
                                         src={user?.profileImage}
                                         alt="Profile"
                                         className="object-cover w-12 h-12 rounded-full"
+                                            loading="lazy"
                                     />
                                 )}
                                 {isactive === "active" ? (
