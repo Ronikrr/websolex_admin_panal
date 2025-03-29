@@ -95,6 +95,7 @@ const Login = () => {
                                     src="https://www.t3bucket.com/f/0-HorizantalLogo.png"
                                     className="w-[150px]"
                                     alt="Company Logo" 
+                                    loading='lazy'
                                 />
                             </Link>
                             <p className="2xl:px-20 text-[16px]">
@@ -105,6 +106,7 @@ const Login = () => {
                                     src="https://www.t3bucket.com/f/0-Group152.png"
                                     className="w-[350px] h-[350px]"
                                     alt="Illustration" 
+                                    loading='lazy'
                                 />
                             </span>
                         </div>
