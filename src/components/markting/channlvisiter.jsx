@@ -306,7 +306,7 @@ const Channlvisiter = () => {
             <div className="flex flex-col gap-7">
               <div className="relative z-10 flex gap-5">
                 <div className="w-full h-16 max-w-16 rounded-full border-[3px] border-[var(--border-color)] ">
-                  <img src="https://react-demo.tailadmin.com/assets/user-14-eba44d22.png" alt="" />
+                  <img src="https://react-demo.tailadmin.com/assets/user-14-eba44d22.png" loading='lazy' alt="" />
                 </div>
                 <div className="">
                   <p className='text-black' >
@@ -324,7 +324,7 @@ const Channlvisiter = () => {
               </div>
               <div className="relative z-10 flex gap-5">
                 <div className="w-full h-16 max-w-16 rounded-full border-[3px] border-[var(--border-color)] ">
-                  <img src="https://react-demo.tailadmin.com/assets/user-14-eba44d22.png" alt="" />
+                  <img src="https://react-demo.tailadmin.com/assets/user-14-eba44d22.png" loading='lazy' alt="" />
                 </div>
                 <div className="">
                   <p className='text-black' >
@@ -342,7 +342,7 @@ const Channlvisiter = () => {
               </div>
               <div className="relative z-10 flex gap-5">
                 <div className="w-full h-16 max-w-16 rounded-full border-[3px] border-[var(--border-color)] ">
-                  <img src="https://react-demo.tailadmin.com/assets/user-14-eba44d22.png" alt="" />
+                  <img src="https://react-demo.tailadmin.com/assets/user-14-eba44d22.png" loading='lazy' alt="" />
                 </div>
                 <div className="">
                   <p className='text-black' >

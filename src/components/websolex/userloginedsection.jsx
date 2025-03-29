@@ -249,9 +249,9 @@ const Userloginedsection = () => {
                                             <td className="p-2.5 xl:p-4 border border-gray-200 hidden lg:table-cell">
                                                 <div className="flex justify-center rounded-full">
                                                     {user?.profileImage ? (
-                                                        <img src={user?.profileImage} className="object-cover w-12 h-12 rounded-full" alt="Profile" />
+                                                        <img loading='lazy' src={user?.profileImage} className="object-cover w-12 h-12 rounded-full" alt="Profile" />
                                                     ) : (
-                                                        <img src="https://www.t3bucket.com/f/0-user.svg" alt="Profile" className="object-cover w-12 h-12 rounded-full" />
+                                                            <img loading='lazy' src="https://www.t3bucket.com/f/0-user.svg" alt="Profile" className="object-cover w-12 h-12 rounded-full" />
                                                     )}
                                                 </div>
                                             </td>

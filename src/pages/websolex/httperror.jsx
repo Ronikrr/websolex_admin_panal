@@ -6,7 +6,7 @@ const UnauthorizedPage = () => {
         <div className="flex items-center justify-center h-screen m-0 bg-gray-100">
             <div className="w-full p-10 text-center ">
                 
-                <img src={un} className='w-[600px] h-[600px] object-cover aspect-square mx-auto ' alt="" />
+                <img src={un} loading='lazy' className='w-[600px] h-[600px] object-cover aspect-square mx-auto ' alt="" />
                 <p className="mt-4 text-[30px] font-bold text-gray-600 capitalize ">The website server is down. <br /> Please come back after a few minutes.</p>
                 <div className="mt-6 space-x-4">
                     <Link

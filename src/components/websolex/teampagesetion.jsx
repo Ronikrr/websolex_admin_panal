@@ -239,7 +239,7 @@ const Servicepagesection = () => {
                                 <tr key={recentLead?.id} className="text-center border-b border-gray-200">
                                     <td className="p-2.5 xl:p-3 border border-gray-200">1</td>
                                     <td className="p-2.5 xl:p-3 border border-gray-200">
-                                        <img
+                                        <img loading='lazy'
                                             src={recentLead?.image}
                                             alt={recentLead?.name || 'Lead Image'}
                                             className="object-cover w-8 h-8 mx-auto lg:w-16 lg:h-16 aspect-square"
@@ -305,7 +305,7 @@ const Servicepagesection = () => {
                                     <tr key={lead.id || index} className="text-center border-b border-gray-200">
                                         <td className="p-2.5 xl:p-3 border border-gray-200">{lead?.id || index + 1}</td>
                                         <td className="p-2.5 xl:p-3 border border-gray-200">
-                                            <img
+                                            <img loading='lazy'
                                                 src={lead?.image}
                                                 alt={lead?.name || 'Lead Image'}
                                                 className="object-cover w-8 h-8 mx-auto lg:w-16 lg:h-16 aspect-square"
@@ -444,7 +444,7 @@ const Servicepagesection = () => {
                                 </div>
                                 {formData?.imagePreview && (
                                     <div className="flex justify-center mt-2">
-                                        <img src={formData?.imagePreview} alt="Preview" className="w-16 h-16" />
+                                        <img loading='lazy' src={formData?.imagePreview} alt="Preview" className="w-16 h-16" />
                                     </div>
                                 )}
                             </div>

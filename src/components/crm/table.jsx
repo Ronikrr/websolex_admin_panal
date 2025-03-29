@@ -75,6 +75,7 @@ const LeadsReport = () => {
               >
                 <td className="flex items-center justify-center px-2 py-2 md:py-4 md:px-6">
                   <img
+                    loading='lazy'
                     src={lead.image}
                     alt={lead.name}
                     className="w-10 h-10 mr-3 rounded-full"

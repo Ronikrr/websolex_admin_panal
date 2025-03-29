@@ -147,7 +147,7 @@ const Section_three = () => {
                             return (
                                 <a className="flex items-center gap-5 py-3 px-7 hover:bg-[rgb(250,250,250)] dark:hover:bg-meta-4" key={id} href="/">
                                     <div className="relative rounded-full h-14 w-14">
-                                        <img src={item.profile} alt="" />
+                                        <img loading='lazy' src={item.profile} alt="" />
                                         <div className={`absolute right-0 bottom-0 h-3.5  ${item.status === "online" ? "bg-[rgb(16,185,129)]" : "bg-[rgb(255,5,5)]"}  w-3.5 rounded-full border-2 border-white`}></div>
                                     </div>
                                     <div className="flex items-center justify-between flex-1">
@@ -223,6 +223,7 @@ const Section_three = () => {
                                         {/* Source */}
                                         <div className="p-2.5 xl:p-4 flex items-center flex-1">
                                             <img
+                                                loading='lazy'
                                                 src={lead.image}
                                                 alt={lead.name}
                                                 className="w-10 h-10 mr-3 rounded-full"

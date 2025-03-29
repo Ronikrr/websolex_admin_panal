@@ -243,7 +243,7 @@ const Blogpagesection = () => {
                         <div className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200">
                             <div className="flex-1 p-2.5">1</div>
                             <div className="flex-1 p-2.5">
-                                <img src={recentLead?.image} alt={recentLead?.name} className="object-cover w-16 h-16 aspect-square" />
+                                <img loading='lazy' src={recentLead?.image} alt={recentLead?.name} className="object-cover w-16 h-16 aspect-square" />
                             </div>
                             <div className="flex-1 p-2.5">{recentLead?.name}</div>
 
@@ -280,7 +280,7 @@ const Blogpagesection = () => {
                             <div key={index} className="flex items-center w-full p-2.5 xl:p-3 border-b border-gray-200">
                                 <div className="p-2.5  flex-1">{index + 1}</div>
                                 <div className="p-2.5  flex-1">
-                                    <img src={lead?.image} alt={lead?.name || 'Lead Image'} className="object-cover w-16 h-16 aspect-w-1 aspect-h-1" />
+                                    <img loading='lazy' src={lead?.image} alt={lead?.name || 'Lead Image'} className="object-cover w-16 h-16 aspect-w-1 aspect-h-1" />
                                 </div>
                                 <div className="p-2.5  flex-1">{lead?.name}</div>
 
@@ -404,7 +404,7 @@ const Blogpagesection = () => {
                                 </div>
                                 {imagePreview && (
                                     <div className="flex justify-center mt-2">
-                                        <img src={isOpenModel ? imagePreview : imagePreview} alt="Preview" className="w-16 h-16" />
+                                        <img loading='lazy' src={isOpenModel ? imagePreview : imagePreview} alt="Preview" className="w-16 h-16" />
                                     </div>
                                 )}
                             </div>

@@ -121,7 +121,7 @@ function Sidebar({ isopensidebar, closeslidebar }) {
         <div className="relative">
             <div className={`flex-col hidden overflow-y-scroll box_container md:flex md:w-[289.9px] main_class h-full text-white bg-[#1C2434] transition-all duration-500 ease-in-out`}>
                 <div className="flex items-center p-6 space-x-2 text-2xl font-bold">
-                    <img src={Image} className="h-[40px] w-full object-contain" alt="Logo" />
+                    <img src={Image} className="h-[40px] w-full object-contain" loading='lazy' alt="Logo" />
                 </div>
 
                 <nav className="flex-1 px-4 py-6 space-y-4">
@@ -175,7 +175,7 @@ function Sidebar({ isopensidebar, closeslidebar }) {
 
             <div className={`flex-col absolute z-20 md:h-full flex md:hidden w-[200px] text-white bg-[#1C2434] transition-all duration-500 ease-in-out ${isopensidebar ? 'block' : 'hidden'}`}>
                 <div className="flex items-center w-full px-6 py-4 space-x-2 text-2xl font-bold">
-                    <img src={Image} className="h-[60px] w-11/12 object-contain" alt="Logo" />
+                    <img src={Image} loading='lazy' className="h-[60px] w-11/12 object-contain" alt="Logo" />
                     <div className="flex justify-end w-1.5/12">
                         <IoMdClose onClick={closeslidebar} />
                     </div>

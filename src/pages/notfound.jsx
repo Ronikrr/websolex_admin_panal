@@ -10,7 +10,7 @@ const Notfound = () => {
                     <div className="container w-full h-full mx-auto ">
                         <div className="flex flex-wrap px-[15px] w-full  h-full">
                             <div className="w-full h-full ">
-                                <img src={Notfound_iamge} className='object-contain w-full h-full aspect-square' alt="" />
+                                <img loading='lazy' src={Notfound_iamge} className='object-contain w-full h-full aspect-square' alt="" />
                                 {/* <svg
                                     width="100%"
                                     height="600px"

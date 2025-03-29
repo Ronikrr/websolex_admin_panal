@@ -155,6 +155,7 @@ const Marktingtable = () => {
                                 >
                                     <td className="flex items-center p-2.5 xl:p-4">
                                         <img
+                                            loading='lazy'
                                             src={lead.image}
                                             alt={lead.name}
                                             className="w-10 h-10 mr-3 rounded-full"

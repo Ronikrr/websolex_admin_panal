@@ -114,7 +114,7 @@ const Userallchats = () => {
                                     >
                                         <div className="relative w-16 h-12">
                                             {user.profileImage && (
-                                                <img
+                                                <img loading='lazy'
                                                     src={profileImage}
                                                     className="object-cover object-center w-full h-full rounded-full aspect-square"
                                                     alt={user.name}
@@ -142,7 +142,7 @@ const Userallchats = () => {
                             <div className="flex sticky top-0 bg-white items-center justify-between px-6 py-7 border-b border-[var(--border-color)]">
                                 <div className="flex items-center">
                                     <div className="mr-[1.125rem] h-12 w-12 max-w-12 overflow-hidden rounded-full">
-                                        <img
+                                        <img loading='lazy'
                                             src={activeChat.profileImage
                                                 ? activeChat.profileImage
                                                 : defaultim}

@@ -50,7 +50,7 @@ const UploadForm = () => {
 
               {/* Image Preview */}
               {previews[type] && (
-                <img src={previews[type]} alt={`${type} Preview`} className="w-auto h-16 mt-3 rounded-lg shadow-md" />
+                <img loading='lazy' src={previews[type]} alt={`${type} Preview`} className="w-auto h-16 mt-3 rounded-lg shadow-md" />
               )}
             </div>
           ))}

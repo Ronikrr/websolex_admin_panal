@@ -164,7 +164,7 @@ const Campng = () => {
                                     <div className="flex items-center justify-between" key={item.id} >
                                         <div className="flex flex-grow gap-4 item-center">
                                             <div className="w-16 h-16 flex items-center justify-center rounded-full border border-[--border-color]  ">
-                                                <img src={item.logo} alt="" />
+                                                <img src={item.logo} loading='lazy' alt="" />
                                             </div>
                                             <div className="">
                                                 <h4 className='mb-2 font-medium text-black ' >{ item.title }</h4>
