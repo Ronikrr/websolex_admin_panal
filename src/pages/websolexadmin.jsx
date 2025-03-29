@@ -197,8 +197,10 @@ const Websolexhome = () => {
                             </div>
                             <div className="flex items-end justify-start mt-4">
                                 <div className="text-left">
-                                    <h4 className="text-[24px] font-semibold">{item.balance}</h4>
-                                    <span className="text-sm font-bold flex text-[#64748B]">{item.totalview}</span>
+                                    <h4 className="text-[24px] font-semibold">
+                                        {item.balance !== null ? item.balance : "Loading..."}
+                                    </h4>
+                                    <span className="text-sm font-bold flex text-[#64748B]">  {item.totalview || "Loading..."}</span>
                                 </div>
                             </div>
                         </div>
