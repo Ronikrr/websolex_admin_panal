@@ -119,14 +119,14 @@ function Sidebar({ isopensidebar, closeslidebar }) {
     return (
         <div className="relative">
             <div className={`flex-col hidden overflow-y-scroll box_container md:flex md:w-[289.9px] main_class h-full text-white bg-[#1C2434] transition-all duration-500 ease-in-out`}>
-                <div className="flex p-6 text-2xl font-bold items-center space-x-2">
-                    <img src="https://www.t3bucket.com/f/0-Asset6@4x.png" className="h-[60px] w-full object-contain" alt="Logo" />
+                <div className="flex items-center p-6 space-x-2 text-2xl font-bold">
+                    <img src="https://www.t3bucket.com/f/0-Asset6@4x.png" className="h-[40px] w-full object-contain" alt="Logo" />
                 </div>
 
                 <nav className="flex-1 px-4 py-6 space-y-4">
                     {menuItems.map((menu) => (
                         <div key={menu.id}>
-                            <div className="flex justify-between p-3 rounded cursor-pointer items-center" onClick={() => handleMenuClick(menu.id)}>
+                            <div className="flex items-center justify-between p-3 rounded cursor-pointer" onClick={() => handleMenuClick(menu.id)}>
                                 <div className="flex items-center space-x-3">
                                     <span>{menu.icon}</span>
                                     <span className="font-semibold">{menu.label}</span>
@@ -140,14 +140,14 @@ function Sidebar({ isopensidebar, closeslidebar }) {
                                             className={`flex items-center p-2 justify-between rounded cursor-pointer ${activeSubMenu === subMenu.id ? "bg-gray-700" : "bg-gray-900"}`}
                                             onClick={() => handleSubMenuClick(subMenu.id)}
                                         >
-                                            <div className="flex capitalize gap-3 items-center">
+                                            <div className="flex items-center gap-3 capitalize">
                                                 {subMenu.icon}
                                                 {subMenu.label}
                                             </div>
                                             {subMenu.subsubmenu && (activeSubMenu === subMenu.id ? <FaAngleUp /> : <FaAngleDown />)}
                                         </div>
                                         {activeSubMenu === subMenu.id && subMenu.subsubmenu && (
-                                            <ul className="mt-2 pl-8 space-y-2">
+                                            <ul className="pl-8 mt-2 space-y-2">
                                                 {subMenu.subsubmenu.map((subsubmenu) => (
                                                     <li key={subsubmenu.id}>
                                                         <Link to={subsubmenu.link}
@@ -173,7 +173,7 @@ function Sidebar({ isopensidebar, closeslidebar }) {
             </div>
 
             <div className={`flex-col absolute z-20 md:h-full flex md:hidden w-[200px] text-white bg-[#1C2434] transition-all duration-500 ease-in-out ${isopensidebar ? 'block' : 'hidden'}`}>
-                <div className="flex text-2xl w-full font-bold items-center px-6 py-4 space-x-2">
+                <div className="flex items-center w-full px-6 py-4 space-x-2 text-2xl font-bold">
                     <img src="https://www.t3bucket.com/f/0-Asset6@4x.png" className="h-[60px] w-11/12 object-contain" alt="Logo" />
                     <div className="flex justify-end w-1.5/12">
                         <IoMdClose onClick={closeslidebar} />
@@ -183,7 +183,7 @@ function Sidebar({ isopensidebar, closeslidebar }) {
                 <nav className="flex-1 px-4 py-6 space-y-4">
                     {menuItems.map((menu) => (
                         <div key={menu.id}>
-                            {/* <div className="flex justify-between p-3 rounded cursor-pointer items-center" onClick={() => handleMenuClick(menu.id)}>
+                            {/* <div className="flex items-center justify-between p-3 rounded cursor-pointer" onClick={() => handleMenuClick(menu.id)}>
                                 <div className="flex items-center space-x-3">
                                     <span>{menu.icon}</span>
                                     <span className="font-semibold">{menu.label}</span>
@@ -195,14 +195,14 @@ function Sidebar({ isopensidebar, closeslidebar }) {
                                     {menu.subMenu.map((subMenu) => (
                                         <li key={subMenu.id}>
                                             {/* {user?.role === "admin" } */}
-                                            <div className="flex bg-gray-900 justify-between p-2 rounded cursor-pointer items-center" onClick={() => handleSubMenuClick(subMenu.id)}>
+                                            <div className="flex items-center justify-between p-2 bg-gray-900 rounded cursor-pointer" onClick={() => handleSubMenuClick(subMenu.id)}>
                                                 <div className="flex items-center space-x-3">
                                                     <span>{subMenu.icon}</span>
                                                     <span>{subMenu.label}</span>
                                                 </div>
                                             </div>
                                             {/* {activeSubMenu === subMenu.id && subMenu.subsubmenu && (
-                                                <ul className="mt-2 pl-2 space-y-2">
+                                                <ul className="pl-2 mt-2 space-y-2">
                                                     {subMenu.subsubmenu.map((subsubmenu) => (
                                                         <li key={subsubmenu.id}>
                                                             <Link to={subsubmenu.link} className={`flex items-center capitalize p-2 gap-3 rounded cursor-pointer hover:bg-gray-700 z-10 ${activeSubSubMenu === subsubmenu.id ? "bg-gray-700 relative after:absolute after:w-[30px] after:h-[40px] after:rounded-l-full after:bg-[rgb(243,244,246)] after:shadow-l-xl z-0 after:-right-[16px]" : "bg-gray-900"}`}>
@@ -214,7 +214,7 @@ function Sidebar({ isopensidebar, closeslidebar }) {
                                                 </ul>
                                             )} */}
                                             {activeSubMenu === subMenu.id && subMenu.subsubmenu && (
-                                                <ul className="mt-2 pl-8 space-y-2">
+                                                <ul className="pl-8 mt-2 space-y-2">
                                                     {subMenu.subsubmenu.map((subsubmenu) => (
                                                         <li key={subsubmenu.id}>
                                                             <Link to={subsubmenu.link}
@@ -245,4 +245,3 @@ function Sidebar({ isopensidebar, closeslidebar }) {
 }
 
 export default Sidebar;
-
