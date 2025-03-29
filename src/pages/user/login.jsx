@@ -116,9 +116,9 @@ const Login = () => {
                             <span className="mb-1.5 block font-medium capitalize">
                                 Start for free
                             </span>
-                            <h2 className="text-2xl font-bold text-black mb-9">
+                            <span className="text-xl font-bold text-black mb-9">
                                 Sign In to Websolex Admin
-                            </h2>
+                            </span>
                             <form onSubmit={onSubmit}>
                                 {/* ✅ Email Input */}
                                 <div className="mb-4">
