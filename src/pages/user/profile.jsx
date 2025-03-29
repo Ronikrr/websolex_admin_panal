@@ -149,7 +149,7 @@ const Profile = () => {
             />
             <div className="mx-auto max-w-[67.5rem]">
                 <div className="flex flex-col gap-3 mb-6 sm:flex-row sm:items-center sm:justify-between">
-                    <h2 className="font-semibold text-black text-[26px]">Settings</h2>
+                    <h2 className="font-semibold text-black text-[15px]">Settings</h2>
                     <BreadcrumbNav />
                 </div>
                 <div className="flex flex-wrap gap-8">
@@ -171,6 +171,7 @@ const Profile = () => {
                                                     src={formData?.profileImage || 'https://www.t3bucket.com/f/0-user.svg'}
                                                     alt="Profile"
                                                     className="object-cover w-12 h-12 rounded-full"
+                                                    loading='lazy'
                                                 />
                                             </div>
                                             <div>
