@@ -188,7 +188,7 @@ const Websolexhome = () => {
 
             <div className="flex flex-wrap w-full mb-7">
                 {first.map((item) => (
-                    <div key={item.id} className="flex w-full lg:w-6/12 xl:w-3/12 mb-7 lg:odd:justify-start lg:even:justify-end">
+                    <div key={item.id} className="flex w-full lg:w-6/12 xl:w-3/12 mb-7">
                         <div className="w-full py-6 bg-white border text-center rounded-sm shadow-md lg:w-11/12 border-[var(--border-color)] px-7">
                             <div className="flex justify-start w-full">
                                 <div className="flex items-center justify-center bg-gray-100 rounded-full h-11 w-11">
@@ -200,7 +200,7 @@ const Websolexhome = () => {
                                     <h4 className="text-[24px] font-semibold">
                                         {item.balance !== null ? item.balance : "Loading..."}
                                     </h4>
-                                    <span className="text-sm font-bold flex text-[#64748B]">  {item.totalview || "Loading..."}</span>
+                                    <span className=" text-[10px] font-bold flex text-[#64748B]">  {item.totalview || "Loading..."}</span>
                                 </div>
                             </div>
                         </div>
