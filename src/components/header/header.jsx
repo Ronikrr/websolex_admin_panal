@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { IoIosSearch } from "react-icons/io";
+
 import { Link, useNavigate } from "react-router-dom";
 import { RiNotification2Line } from "react-icons/ri";
 import { CiUser } from "react-icons/ci";
@@ -17,18 +17,7 @@ const Header = ({ toogleslidebar }) => {
     const [search, setSearch] = useState("");
     const [isactive, setisactive] = useState(null);
     const navigate = useNavigate();
-    const [searchQuery, setSearchQuery] = useState("");
     const [isModelOpen, setisModelOpen] = useState(false);
-
-    // Example list of items (replace with your actual list)
-    const items = [
-        "Dashboard",
-        "Users",
-        "Settings",
-        "Notifications",
-        "Messages",
-        "Reports",
-    ];
     const handleOnClickOpenModel = () => {
         setisModelOpen(!isModelOpen);
     };
@@ -100,12 +89,7 @@ const Header = ({ toogleslidebar }) => {
         setisopen(false);
         // setismessageopen(false);
     };
-    const handleSearchSubmit = (e) => {
-        e.preventDefault(); // Prevents page refresh
-        if (searchQuery.trim() !== "") {
-            navigate(`/search?query=${searchQuery}`); // Navigate to search results page
-        }
-    };
+
 
     useEffect(() => {
         setTimeout(() => {
