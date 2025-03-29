@@ -211,8 +211,8 @@ const Profile = () => {
                                                     name="name"
                                                     value={formData?.name} onChange={handleChange} placeholder="Enter full name"
                                                 />
-                                                <div className="absolute top-4 right-4">
-                                                    <FaRegUser className="text-[20px] text-[#64748b]" />
+                                                <div className="absolute top-2 lg:top-4 right-2 lg:right-4">
+                                                    <FaRegUser className="text-[15px] lg:text-[20px] text-[#64748b]" />
                                                 </div>
                                             </div>
 
@@ -228,8 +228,8 @@ const Profile = () => {
                                                     value={formData?.phoneNo}
                                                     onChange={handleChange} placeholder="Enter phone number"
                                                 />
-                                                <div className="absolute top-4 right-4">
-                                                    <RiContactsBook3Line className="text-[20px] text-[#64748b]" />
+                                                <div className="absolute top-2 lg:top-4 right-2 lg:right-4">
+                                                    <RiContactsBook3Line className="text-[15px] lg:text-[20px] text-[#64748b]" />
                                                 </div>
                                             </div>
                                         </div>
@@ -247,8 +247,8 @@ const Profile = () => {
                                                 onChange={handleChange}
                                                 placeholder="Enter email address"
                                             />
-                                            <div className="absolute top-4 right-4">
-                                                <MdOutlineMailOutline className="text-[20px] text-[#64748b]" />
+                                            <div className="absolute top-2 lg:top-4 right-2 lg:right-4">
+                                                <MdOutlineMailOutline className="text-[15px] lg:text-[20px] text-[#64748b]" />
                                             </div>
                                         </div>
                                     </div>
@@ -267,10 +267,10 @@ const Profile = () => {
                                                 placeholder="Enter password"
                                             />
                                             <div
-                                                className="absolute cursor-pointer top-4 right-4"
+                                                className="absolute cursor-pointer top-2 lg:top-4 right-2 lg:right-4"
                                                 onClick={() => setIsShowPass(!isShowPass)}
                                             >
-                                                {isShowPass ? <ImEyeBlocked className="text-[22px]" /> : <ImEye className="text-[22px]" />}
+                                                {isShowPass ? <ImEyeBlocked className="text-[15px] lg:text-[20px] text-[#64748b]" /> : <ImEye className="text-[15px] lg:text-[20px] text-[#64748b]" />}
                                             </div>
                                         </div>
                                     </div>
@@ -290,7 +290,7 @@ const Profile = () => {
                                             Logout
                                         </button>
                                         <div className="flex items-center gap-4">
-                                            <Secondurary label="Cancel" />
+
                                             <Primary label="Save" type="submit" />
                                         </div>
                                     </div>
