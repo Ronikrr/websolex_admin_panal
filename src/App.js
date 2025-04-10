@@ -32,7 +32,7 @@ import Workadd from "./pages/user/workadd";
 import LoginHistory from "./pages/user/loginhistory";
 import Deletemodel from "./components/ui/deletemodel";
 import { io } from "socket.io-client";
-
+import { Analytics } from "@vercel/analytics/react"
 const Layout = ({ children }) => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
@@ -108,6 +108,7 @@ function App() {
         <div className="bg-[#f1f5f9] w-full ">
           <Router>
             <ScrollToTop />
+            <Analytics />
             <Routes>
 
               <Route
