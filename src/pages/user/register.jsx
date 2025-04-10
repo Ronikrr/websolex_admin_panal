@@ -6,6 +6,7 @@ import { AiOutlineUser } from "react-icons/ai";
 import Input from '../../components/ui/input';
 import Submit from '../../components/ui/submit';
 import FeedbackMessage from '../../components/ui/feedback';
+import illution from '../../assets/img/webp/0-Group152.webp'
 const Register = () => {
     const [formdata, setformdata] = useState({});
     const [ishowpss, setishowpss] = useState(false);
@@ -89,7 +90,7 @@ const Register = () => {
                             <Link to="/" className='inline-block text-[50px] capitalize font-semibold mb-3' >websolex </Link>
                             <p className='2xl:px-20 text-[30px]' >admin</p>
                             <span className="inline-block mt-16">
-                                <img loading='lazy' src="https://www.t3bucket.com/f/0-Group152.png" className='w-[350px] h-[350px]' alt="" />
+                                <img loading='lazy' src={illution} className='w-[350px] h-[350px]' alt="" />
                             </span>
                         </div>
                     </div>
