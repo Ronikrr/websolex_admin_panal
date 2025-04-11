@@ -1,29 +1,24 @@
 import React, { useEffect, useState } from "react";
-
 import { Link, useNavigate } from "react-router-dom";
 import { RiNotification2Line } from "react-icons/ri";
 import { CiUser } from "react-icons/ci";
-// import { RiMessage2Line } from "react-icons/ri";
 import { FaBars } from "react-icons/fa6";
 import { TbLogin2 } from "react-icons/tb";
 import Logoutmodel from "../ui/logoutmodel";
-// import { FaHistory } from "react-icons/fa";
+import { useSelector } from "react-redux";
 const Header = ({ toogleslidebar }) => {
-    const [user, setUser] = useState({});
-    const [showError, setShowError] = useState("");
-    const [error, setError] = useState(null);
+    const {user} = useSelector((state) => state?.auth?.user);
     const [isopen, setisopen] = useState(false);
     const [isuser, setisuseropen] = useState(false);
     const [search, setSearch] = useState("");
-    const [isactive, setisactive] = useState(null);
     const navigate = useNavigate();
     const [isModelOpen, setisModelOpen] = useState(false);
     const handleOnClickOpenModel = () => {
         setisModelOpen(!isModelOpen);
     };
-
-    // Filtered list based on search query
-
+    if (!user) {
+        navigate('/')
+    }
     const handleSubmit = (e) => {
         e.preventDefault();
         if (search.trim()) {
@@ -31,46 +26,6 @@ const Header = ({ toogleslidebar }) => {
         }
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const Admintoken_websolex = localStorage.getItem("Admintoken_websolex");
-            if (!Admintoken_websolex) {
-                navigate("/");
-                setisactive("offline");
-                return;
-            }
-            setisactive("active");
-
-            try {
-                const res = await fetch(`https://websolex-admin.vercel.app/profile`, {
-                    method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${Admintoken_websolex}`,
-                        "Content-Type": "application/json",
-                    },
-                });
-                if (res.status === 401) {
-                    localStorage.removeItem("Admintoken_websolex");
-                    navigate("/");
-                    return;
-                }
-
-                if (!res.ok) {
-                    console.log(`HTTP error! status: ${res.status}`);
-                }
-
-                const data = await res.json();
-                setUser(data?.user);
-            } catch (error) {
-                console.error("Error fetching user data:", error);
-                setError(error.message);
-                setShowError(true);
-                setTimeout(() => setShowError(false), 3000);
-            }
-        };
-
-        fetchData();
-    }, [navigate]);
 
     const logout = () => {
         localStorage.removeItem("Admintoken_websolex");
@@ -101,16 +56,7 @@ const Header = ({ toogleslidebar }) => {
 
     return (
         <div className="h-[80px] w-screen md:w-full flex px-5 lg:px-11 py-4  items-center justify-center bg-[#fff]"  >
-            {error && (
-                <div
-                    className={`fixed top-4 left-0 transform -translate-x-1/2 bg-red-500 text-white px-10 py-6 rounded shadow-lg transition-transform duration-500 ${showError
-                        ? "translate-x-0  opacity-100"
-                        : "-translate-x-[500px] opacity-0"
-                        }`}
-                >
-                    {error}
-                </div>
-            )}
+         
             <Logoutmodel
                 isOpen={isModelOpen}
                 onClose={() => setisModelOpen(false)}
@@ -172,7 +118,7 @@ const Header = ({ toogleslidebar }) => {
                     <div className="relative">
                         <Link className="flex items-center gap-4" onClick={isuseropen}>
                             <span className="relative w-12 h-12 rounded-full">
-                                {user.profileImage == null ? (
+                                {user?.profileImage == null ? (
                                     <img
                                         src="https://www.t3bucket.com/f/0-user.svg"
                                         alt="Profile"
@@ -187,11 +133,7 @@ const Header = ({ toogleslidebar }) => {
                                             loading="lazy"
                                     />
                                 )}
-                                {isactive === "active" ? (
-                                    <div className="w-[10px] h-[10px] bg-green-500 rounded-full absolute right-0 bottom-[3px] ring-1 ring-white"></div>
-                                ) : (
-                                    <div className="w-[10px] h-[10px] bg-red-500 rounded-full absolute right-0 bottom-[3px] ring-1 ring-white"></div>
-                                )}
+                             
                             </span>
                         </Link>
                         {isuser && (

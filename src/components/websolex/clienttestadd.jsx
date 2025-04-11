@@ -10,12 +10,13 @@ import Textarea from '../ui/textarea';
 import FeedbackMessage from '../ui/feedback';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchclientrate, addclientrate, deleteclientrate, updateclientrate } from '../../Redux/slice/testimonalapiSlice';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Deletemodel from '../ui/deletemodel';
 
 const Clienttestadd = () => {
     const dispatch = useDispatch();
     const location = useLocation();
+    const navigate = useNavigate();
     const { user } = useSelector((state) => state.auth?.user);
     const { clientrate, feedback } = useSelector((state) => state.clientrate);
     const [isOpenDeleteModel, setisOpenDeleteModel] = useState(false)
@@ -35,7 +36,11 @@ const Clienttestadd = () => {
         image: null,
         imagePreview: null,
     });
-
+    useEffect(() => {
+        if (!user) {
+            navigate('/')
+        }
+    }, [user, navigate])
     useEffect(() => {
         dispatch(fetchclientrate());
     }, [dispatch]);

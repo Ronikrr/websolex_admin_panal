@@ -9,13 +9,17 @@ import Breadcrumb from '../ui/breadcrumb';
 import FeedbackMessage from '../ui/feedback';
 import { useDispatch, useSelector } from 'react-redux';
 import { addvaluedClient, deleteValuedClient, fetchvaluedclient, updateValuedClient } from '../../Redux/slice/valuedclientslice';
+import { useNavigate } from 'react-router-dom';
+
 const initialState = {
     name: '',
     image: null,
     imagePreview: null
 }
 const Valuedclientsection = () => {
+    
     const dispatch = useDispatch();
+    const navigate = useNavigate()
     const { valuedclient, feedbacks } = useSelector((state) => state.valuedclient)
     const { user } = useSelector((state) => state.auth?.user);
     const [isOpenModel, setIsOpenModel] = useState(false);
@@ -24,6 +28,11 @@ const Valuedclientsection = () => {
     const [isOpenLastAll, setIsOpenLastAll] = useState(false);
     const [feedback, setFeedback] = useState({ message: '', type: '' });
     const [fromdata, setfromdata] = useState(initialState)
+    useEffect(() => {
+        if (!user) {
+            navigate('/')
+        }
+    }, [user, navigate])
     const handleClear = () => {
         setFeedback({ message: "", type: "" });
     };

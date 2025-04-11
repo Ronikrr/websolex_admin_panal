@@ -11,7 +11,6 @@ import { FaUserNinja } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { getuserprofile } from '../../Redux/authSlice';
 import Image from '../../assets/img/Asset 6@4x.webp'
-import { BiTask } from "react-icons/bi";
 function Sidebar({ isopensidebar, closeslidebar }) {
     const [activeMenu, setActiveMenu] = useState(null);
     const [activeSubMenu, setActiveSubMenu] = useState(null);
@@ -43,7 +42,7 @@ function Sidebar({ isopensidebar, closeslidebar }) {
                         { id: 9, icon: <RiContactsFill />, label: "contact & subscribe", link: "/websolex/contactform" },
                         { id: 10, icon: <FaUsers />, label: "logined users", link: "/userlogined" },
                         { id: 11, icon: <FaUserNinja />, label: "emplyee", link: "/websolex/emmangement" },
-                        { id: 12, icon: <BiTask />, label: "daily work", link: "/allworkadd" },
+                       
                     ],
                 },
                 {
@@ -82,7 +81,7 @@ function Sidebar({ isopensidebar, closeslidebar }) {
                         { id: 7, icon: <FaPen />, label: "blog page", link: "/websolex/blogpage" },
                         { id: 8, icon: <MdContactPage />, label: "contact details", link: "/websolex/contactdetails" },
                         { id: 9, icon: <RiContactsFill />, label: "contact & subscribe", link: "/websolex/contactform" },
-                        { id: 10, icon: <BiTask />, label: "daily work", link: "/workadd" },
+                       
                     ],
                 },
             ],

@@ -9,10 +9,9 @@ import Breadcrumb from '../ui/breadcrumb';
 import Textarea from '../ui/textarea';
 import ProjectForm from './projectform'
 import FeedbackMessage from '../ui/feedback';
-import Static from './static';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchourwork, addOurWork, updateOurwork, deleteOurwork } from '../../Redux/slice/lastworkslice';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 const initialState = {
     name: '',
     description: '',
@@ -23,6 +22,7 @@ const initialState = {
 }
 const Latestworkaddsection = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { ourwork, feedback: feedbackdata } = useSelector((state) => state.ourwork)
     const [isOpenModel, setIsOpenModel] = useState(false);
     const [isOpenAddModel, setIsOpenAddModel] = useState(false);
@@ -31,6 +31,11 @@ const Latestworkaddsection = () => {
     const [feedback, setFeedback] = useState({ message: '', type: '' });
     const [formData, setformData] = useState(initialState);
     const { user } = useSelector((state) => state.auth?.user);
+     useEffect(() => {
+            if (!user) {
+                navigate('/')
+            }
+        }, [user, navigate])
     useEffect(() => {
         dispatch(fetchourwork());
 
@@ -351,15 +356,6 @@ const Latestworkaddsection = () => {
                         </div>
                         <div className="p-7">
                             <ProjectForm />
-                        </div>
-
-                    </div>
-                    <div className="bg-white lg:mt-7 border rounded-sm border-[var(--border-color)] shadow-default ">
-                        <div className="py-4 border-b border-[var(--border-color)] capitalize  px-7 ">
-                            set static
-                        </div>
-                        <div className="p-7">
-                            <Static />
                         </div>
 
                     </div>

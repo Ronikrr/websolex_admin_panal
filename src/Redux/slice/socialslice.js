@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API = "https://websolex-admin.vercel.app/api/socialdetails";
-
+// const API = "http://localhost:8000/api/v1/socialdetails";
+import { API_URL } from '../../envdata';
+const API = `${API_URL}/socialdetails`;
 // Fetch social details
 export const fetchSocialDetails = createAsyncThunk(
     "social/fetchDetails",

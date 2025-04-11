@@ -1,14 +1,20 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { API_URL } from '../../envdata';
+const API = `${API_URL}/blogpage`;
 
-const API = "https://websolex-admin.vercel.app/api/blogpage";
 
 // Fetch blogs from API
 export const fetchBlogs = createAsyncThunk(
     "blogs/fetchBlogs",
-    async (_, { rejectWithValue }) => {
+    async (_, { rejectWithValue,getState }) => {
         try {
-            const response = await axios.get(API);
+            const token = getState().auth.token; // Assuming you have a token in your auth slice
+            const response = await axios.get(API, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || "Failed to fetch blogs");
@@ -19,10 +25,11 @@ export const fetchBlogs = createAsyncThunk(
 // Add new blog
 export const addBlog = createAsyncThunk(
     "blogs/addBlog",
-    async (formData, { rejectWithValue }) => {
+    async (formData, { rejectWithValue,getState }) => {
         try {
+            const token = getState().auth.token; // Assuming you have a token in your auth slice
             const response = await axios.post(API, formData, {
-                headers: { "Content-Type": "multipart/form-data" },
+                headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
             });
             return response.data.blogadd.savedblogadd;
         } catch (error) {
@@ -34,10 +41,11 @@ export const addBlog = createAsyncThunk(
 // Update existing blog
 export const updateBlog = createAsyncThunk(
     "blogs/updateBlog",
-    async ({ id, formData }, { rejectWithValue }) => {
+    async ({ id, formData }, { rejectWithValue, getState }) => {
         try {
+            const token = getState().auth.token; 
             const response = await axios.put(`${API}/${id}`, formData, {
-                headers: { "Content-Type": "multipart/form-data" },
+                headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
             });
             return response.data.updatedBlog;
         } catch (error) {
@@ -49,9 +57,14 @@ export const updateBlog = createAsyncThunk(
 // Delete blog
 export const deleteBlog = createAsyncThunk(
     "blogs/deleteBlog",
-    async (id, { rejectWithValue }) => {
+    async (id, { rejectWithValue,getState }) => {
         try {
-            await axios.delete(`${API}/${id}`);
+            const token = getState().auth.token; 
+            await axios.delete(`${API}/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             return id;
         } catch (error) {
             return rejectWithValue(error.response?.data || "Failed to delete blog");

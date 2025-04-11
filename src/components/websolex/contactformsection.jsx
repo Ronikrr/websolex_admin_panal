@@ -1,39 +1,36 @@
 import React, { useEffect, useState } from "react";
 import Breadcrumb from "../ui/breadcrumb";
 import FeedbackMessage from "../ui/feedback";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchcontactform, fetchsubcribe } from "../../Redux/slice/contactDetailSlice";
+import { useNavigate } from "react-router-dom";
 const Contactformsection = () => {
-    const [contactData, setContactData] = useState([]);
-    const [subscribeData, setSubscribeData] = useState([]);
+    const navigate = useNavigate();
+    const { user } = useSelector((state) => state.auth?.user);
+    useEffect(() => {
+        if (!user) {
+            navigate('/')
+        }
+    }, [user, navigate])
     const [feedback, setFeedback] = useState({ message: "", type: "" });
     const handleClear = () => {
         setFeedback({ message: "", type: "" });
     };
+    const dispatch = useDispatch();
+    const { contactData } = useSelector((state) => state?.contactfrom);
+    const { subscribeData } = useSelector((state) => state?.contactfrom);
+    const feedbacks = useSelector((state) => state?.contactfrom?.feedback);
     useEffect(() => {
-        const fetchContactForm = async () => {
-            try {
-                const response = await fetch("https://websolex-admin.vercel.app/view_contactform");
-                if (!response.ok) console.log("Failed to fetch contact data.");
-                const data = await response.json();
-                setContactData(data);
-            } catch (error) {
-                setFeedback({ message: error.message, type: "error" });
-            }
-        };
+        if (feedbacks) {
+            setFeedback({ message: feedbacks.message, type: feedbacks.type })
 
-        const fetchSubscribe = async () => {
-            try {
-                const response = await fetch("https://websolex-admin.vercel.app/subscribe");
-                if (!response.ok) console.log("Failed to fetch subscriber data.");
-                const data = await response.json();
-                setSubscribeData(data);
-            } catch (error) {
-                setFeedback({ message: error.message, type: "error" });
-            }
-        };
+        }
+    }, [feedbacks])
+    useEffect(() => {
+        dispatch(fetchcontactform());
+        dispatch(fetchsubcribe());
+    }, [dispatch])
 
-        fetchContactForm();
-        fetchSubscribe();
-    }, []);
 
     return (
         <div className="w-full">
@@ -65,8 +62,8 @@ const Contactformsection = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {contactData.length > 0 ? (
-                                    contactData.map((contact, index) => (
+                                {contactData?.length > 0 ? (
+                                    contactData?.map((contact, index) => (
                                         <tr key={index} className="border-b border-gray-200">
                                             <td className="p-2.5 xl:p-4 border border-gray-200">{index + 1}</td>
                                             <td className="p-2.5 xl:p-4 border border-gray-200 hidden lg:table-cell">

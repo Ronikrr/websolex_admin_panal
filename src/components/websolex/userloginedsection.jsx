@@ -8,32 +8,37 @@ import { ImEye, ImEyeBlocked } from 'react-icons/im';
 import Submit from '../ui/submit';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import FeedbackMessage from '../ui/feedback';
-import emailjs from 'emailjs-com';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerUser, UserRoleChange, UserStatusChange, deleteUser, fetchalluser } from '../../Redux/authSlice';
+const initialState = {
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+}
 const Userloginedsection = () => {
+    const dispatch = useDispatch()
     const navigate = useNavigate();
-    const { user } = useSelector((state) => state?.auth?.user);
+    const { user } = useSelector((state) => state?.auth);
+    const Users = useSelector((state) => state?.auth?.users);
     const [isOpenAddModel, setIsOpenAddModel] = useState(false);
-    const [Users, setUsers] = useState([]);
-    const [formData, setFormData] = useState({});
+    const [formData, setFormData] = useState(initialState);
     const [showPassword, setShowPassword] = useState(false);
     const [showRepeatPassword, setShowRepeatPassword] = useState(false);
     const [feedback, setFeedback] = useState({ message: "", type: "" });
-
-    // const API = "http://localhost:8000";
-    const API = "https://websolex-admin.vercel.app";
-
+     useEffect(() => {
+            if (!user) {
+                navigate('/')
+            }
+        }, [user, navigate])
     useEffect(() => {
         // ✅ Redirect if user is not an admin
         if (user?.role === 'user' || user?.role === 'employee') {
             navigate('/unauthorized');
             return;
         }
-
-
     }, [user, navigate]);
-    // Clear Feedback
     const handleClear = () => setFeedback({ message: "", type: "" });
 
     // Handle Form Change
@@ -44,34 +49,11 @@ const Userloginedsection = () => {
             [name]: value,
         }));
     };
-
+    const token = localStorage.getItem('Admintoken_websolex');
     // Fetch Users
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const res = await fetch(`${API}/users`, { method: "GET" });
-
-                if (!res.ok) {
-                    const errorData = await res.json();
-                    setFeedback({
-                        message: `An error occurred while fetching data: ${errorData.message}`,
-                        type: "error",
-                    });
-                    return;
-                }
-
-                const data = await res.json();
-                setUsers(data.users);
-            } catch (error) {
-                setFeedback({
-                    message: `Error fetching user data: ${error.message}`,
-                    type: "error",
-                });
-            }
-        };
-
-        fetchData();
-    }, []);
+        dispatch(fetchalluser());
+    }, [token, dispatch]);
 
     // Submit Form
     const handleSubmit = async (e) => {
@@ -88,31 +70,20 @@ const Userloginedsection = () => {
         }
 
         try {
-            const res = await fetch(`${API}/users`, {
-                method: "POST",
-                body: JSON.stringify(formData),
-                headers: { "Content-Type": "application/json" },
-            });
+            const res = dispatch(registerUser(formData)).unwrap();
 
+            setIsOpenAddModel(false);
             if (!res.ok) {
                 const errorData = await res.json();
                 setFeedback({ message: `Error: ${errorData.message}`, type: "error" });
                 return;
             }
 
-            setIsOpenAddModel(false);
-
-            // Send Email (Optional)
-            const emailResponse = await emailjs.sendForm(
-                "service_szoqqsl",
-                "template_3vvce77",
-                e.target,
-                "OoU53v3GRHWpMFiXL"
-            );
-
-            if (emailResponse.status === 200) {
+            try {
+                setFormData(initialState)
                 setFeedback({ message: "User added successfully, and email sent!", type: "success" });
-            } else {
+            } catch (error) {
+                console.error("Error closing modal:", error);
                 setFeedback({ message: "User added successfully, but failed to send email.", type: "warning" });
             }
         } catch (error) {
@@ -121,89 +92,53 @@ const Userloginedsection = () => {
     };
 
     // Update Status (Active/Inactive)
-    const handleStatusChange = async (id, newStatus) => {
+    const handleStatusChange = async (userId, newStatus) => {
         try {
-            const res = await fetch(`${API}/users/${id}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ status: newStatus }),
-            });
-
-            if (!res.ok) {
-                const errorData = await res.json();
-                setFeedback({ message: `Error: ${errorData.message}`, type: "error" });
-                return;
-            }
-
-            // Update state
-            setUsers((prevUsers) =>
-                prevUsers.map((user) =>
-                    user._id === id ? { ...user, status: newStatus } : user
-                )
-            );
-
+           dispatch(UserStatusChange({ userId, newStatus })).unwrap()
+            // setUsers((prevUsers) =>
+            //     prevUsers.map((user) =>
+            //         user._id === userId ? { ...user, status: newStatus } : user
+            //     )
+            // );
             setFeedback({ message: "User status updated successfully!", type: "success" });
         } catch (error) {
             setFeedback({ message: `Error updating status: ${error.message}`, type: "error" });
         }
     };
-
-    // Update Role
-    const handleRoleChange = async (id, newRole) => {
+    const handleRoleChange = async (userId, newRole) => {
         try {
-            const res = await fetch(`${API}/usersrole/${id}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ role: newRole }),
-            });
-
-            if (!res.ok) {
-                const errorData = await res.json();
-                setFeedback({ message: `Error: ${errorData.message}`, type: "error" });
-                return;
-            }
-
-            // Update state
-            setUsers((prevUsers) =>
-                prevUsers.map((user) =>
-                    user._id === id ? { ...user, role: newRole } : user
-                )
-            );
-
+            await dispatch(UserRoleChange({ userId, newRole })).unwrap();
+            
+            // setUsers((prevUsers) =>
+            //     prevUsers.map((user) =>
+            //         user._id === userId ? { ...user, role: newRole } : user
+            //     )
+            // );
             setFeedback({ message: "Role changed successfully!", type: "success" });
         } catch (error) {
-            setFeedback({ message: `Error updating role: ${error.message}`, type: "error" });
+            console.log(error)
+            setFeedback({ message: `Error updating role: ${error.message || "Unknown error"}`, type: "error" });
         }
     };
+
 
     // Delete User
     const handleDelete = async (id) => {
         try {
-            const res = await fetch(`${API}/users/${id}`, {
-                method: "DELETE",
-            });
-
+            const res = await dispatch(deleteUser(id)).unwrap()
             if (!res.ok) {
-                const errorData = await res.json();
-                setFeedback({ message: `Error: ${errorData.message}`, type: "error" });
+                setFeedback({ message: `Error: ${res.message}`, type: "error" });
                 return;
             }
-
-            // Update state
-            setUsers((prevUsers) => prevUsers.filter((user) => user._id !== id));
-
+            // setUsers((prevUsers) => prevUsers.filter((user) => user._id !== id));
             setFeedback({ message: "User deleted successfully!", type: "success" });
         } catch (error) {
             setFeedback({ message: `Error deleting user: ${error.message}`, type: "error" });
         }
     };
-
     const statusOptions = ["admin", "user", "employee"];
-
-
     return (
         <>
-
             <div className='w-full' >
                 {feedback.message && (
                     <FeedbackMessage message={feedback.message} type={feedback.type} onClear={handleClear} />
@@ -237,13 +172,13 @@ const Userloginedsection = () => {
                                     <th className="p-2.5 xl:p-4 border border-gray-200 ">role</th>
                                     {/* <th className="p-2.5 xl:p-4 border border-gray-200 hidden lg:table-cell">Username</th> */}
                                     <th className="p-2.5 xl:p-4 border border-gray-200">Email</th>
-                                    <th className="p-2.5 xl:p-4 border border-gray-200 hidden lg:table-cell">Phone</th>
+                                    {/* <th className="p-2.5 xl:p-4 border border-gray-200 hidden lg:table-cell">Phone</th> */}
                                     <th className="p-2.5 xl:p-4 border border-gray-200">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {Users.length > 0 ? (
-                                    Users.map((user) => (
+                                {Users?.length > 0 ? (
+                                    Users?.map((user) => (
                                         <tr key={user._id} className="border-b border-gray-200">
                                             <td className="p-2.5 xl:p-4 border border-gray-200 text-center capitalize ">{user?.name}</td>
                                             <td className="p-2.5 xl:p-4 border border-gray-200 hidden lg:table-cell">
@@ -251,7 +186,7 @@ const Userloginedsection = () => {
                                                     {user?.profileImage ? (
                                                         <img loading='lazy' src={user?.profileImage} className="object-cover w-12 h-12 rounded-full" alt="Profile" />
                                                     ) : (
-                                                            <img loading='lazy' src="https://www.t3bucket.com/f/0-user.svg" alt="Profile" className="object-cover w-12 h-12 rounded-full" />
+                                                        <img loading='lazy' src="https://www.t3bucket.com/f/0-user.svg" alt="Profile" className="object-cover w-12 h-12 rounded-full" />
                                                     )}
                                                 </div>
                                             </td>
@@ -268,7 +203,7 @@ const Userloginedsection = () => {
                                             </td>
                                             {/* <td className="p-2.5 xl:p-4 border border-gray-200 hidden lg:table-cell text-center">{user?.username}</td> */}
                                             <td className="p-2.5 xl:p-4 border border-gray-200 text-center">{user?.email}</td>
-                                            <td className="p-2.5 xl:p-4 border border-gray-200 hidden lg:table-cell text-center">{user?.phoneNo}</td>
+                                            {/* <td className="p-2.5 xl:p-4 border border-gray-200 hidden lg:table-cell text-center">{user?.phoneNo}</td> */}
                                             <td className="p-2.5 xl:p-4 border border-gray-200">
                                                 <div className="flex items-center justify-center gap-2">
                                                     <p>{user.status}</p>

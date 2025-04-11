@@ -10,8 +10,10 @@ import FeedbackMessage from '../ui/feedback';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchContactDetails, updateContactDetails } from '../../Redux/slice/contactslice';
 import { fetchSocialDetails, updateSocialDetails } from '../../Redux/slice/socialslice';
+import { useNavigate } from 'react-router-dom';
 const Contactdetailsection = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { user } = useSelector((state) => state.auth?.user);
     const contactDetails = useSelector((state) => state.contact.data)
     const socialDetails = useSelector((state) => state.social.data)
@@ -21,6 +23,11 @@ const Contactdetailsection = () => {
     const handleClear = () => {
         setFeedback({ message: "", type: "" });
     };
+     useEffect(() => {
+            if (!user) {
+                navigate('/')
+            }
+        }, [user, navigate])
     useEffect(() => {
         dispatch(fetchContactDetails());
         dispatch(fetchSocialDetails())

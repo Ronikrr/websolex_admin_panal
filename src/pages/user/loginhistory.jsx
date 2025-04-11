@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const LoginHistory = () => {
     const [history, setHistory] = useState([]);
-
+    const { user } = useSelector((state) => state.auth);
     useEffect(() => {
         const fetchLoginHistory = async () => {
             try {
-                const response = await fetch('https://websolex-admin.vercel.app/login-history', {
+                const response = await fetch(`http://localhost:8000/api/v1/login-history/${user?.user?.id}`, {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('Admintoken_websolex')}`, 
@@ -26,7 +27,7 @@ const LoginHistory = () => {
             }
         };
         fetchLoginHistory();
-    }, []);
+    }, [user]);
 
 
     return (

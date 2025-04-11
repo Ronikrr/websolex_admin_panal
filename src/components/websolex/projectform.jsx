@@ -5,12 +5,20 @@ import Input from "../ui/input";
 import FeedbackMessage from "../ui/feedback";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProject, updateProject } from "../../Redux/slice/projectSlice";
+import { useNavigate } from "react-router-dom";
 
 const FormWithApiData = () => {
     const dispatch = useDispatch();
-    const projectDetails = useSelector((state) => state.project.data);
+    const navigate = useNavigate();
+    const { projects: projectDetails } = useSelector((state) => state.project.data);
+    // console.log(projectDetails)
     const projectFeedback = useSelector((state) => state.project.feedback);
     const { user } = useSelector((state) => state.auth?.user);
+     useEffect(() => {
+            if (!user) {
+                navigate('/')
+            }
+        }, [user, navigate])
     // Local state for form input
     const [formData, setFormData] = useState({
         totalClients: "",
@@ -69,7 +77,7 @@ const FormWithApiData = () => {
                         type="text"
                         name="totalClients"
                         placeholder="Total clients"
-                        value={formData.totalClients}
+                        value={formData?.totalClients}
                         onChange={handleChange}
                         disabled={user?.role === 'user'}
                     />
@@ -84,7 +92,7 @@ const FormWithApiData = () => {
                     type="text"
                     name="completedProjects"
                     placeholder="Completed projects"
-                    value={formData.completedProjects}
+                    value={formData?.completedProjects}
                     onChange={handleChange}
                     disabled={user?.role === 'user'}
                 />

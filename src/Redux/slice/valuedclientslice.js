@@ -1,7 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API = "https://websolex-admin.vercel.app/api/valuedclients";
+// const API = "http://localhost:8000/api/v1/valuedclients";
+import { API_URL } from '../../envdata';
+const API = `${API_URL}/valuedclients`;
 
 export const fetchvaluedclient = createAsyncThunk("valuedclient/fetch",
     async (_, { rejectWithValue }) => {

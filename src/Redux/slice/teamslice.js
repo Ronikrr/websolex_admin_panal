@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API = "https://websolex-admin.vercel.app/api/teampage";
-
+// const API = "http://localhost:8000/api/v1/teampage";
+import { API_URL } from '../../envdata';
+const API = `${API_URL}/teampage`;
 // Fetch team members
 export const fetchteams = createAsyncThunk("teampage/fetch", async (_, { rejectWithValue }) => {
     try {

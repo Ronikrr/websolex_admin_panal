@@ -3,14 +3,22 @@ import React, { useEffect, useState } from 'react';
 import Breadcrumb from '../ui/breadcrumb';
 import FeedbackMessage from '../ui/feedback';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchEmployee } from '../../Redux/slice/employyeslice';
+import { fetchalluser } from '../../Redux/authSlice';
 import { useNavigate } from 'react-router-dom';
 
 const Blogpagesection = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state?.auth?.user);
-    const employees = useSelector((state) => state?.employees);
+    useEffect(() => {
+        if (!user) {
+            navigate('/')
+        }
+    }, [user, navigate])
+    const { users } = useSelector((state) => state?.auth);
+    const employeeRoles = users
+        ?.filter(user => user?.role === "employee")
+        .map(user => user);
     const feedbacks = useSelector((state) => state?.employees);
     const [feedback, setFeedback] = useState({ message: '', type: '' });
     const handleClear = () => {
@@ -22,12 +30,10 @@ const Blogpagesection = () => {
             navigate('/unauthorized');
             return;
         }
-
-        dispatch(fetchEmployee());
-    }, [dispatch, user, navigate]);
+    }, [user, navigate]);
     useEffect(() => {
-
-        dispatch(fetchEmployee());
+        // Fetch all users when the component mounts
+        dispatch(fetchalluser());
     }, [dispatch]);
     useEffect(() => {
         if (feedbacks) {
@@ -60,8 +66,8 @@ const Blogpagesection = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {employees?.employees?.length > 0 ? (
-                                employees?.employees.map((lead, index) => (
+                            {employeeRoles?.length > 0 ? (
+                                employeeRoles.map((lead, index) => (
                                     <tr key={index} className="border-b border-gray-200">
                                         <td className="p-2.5 xl:p-5 border border-gray-200 text-center ">{index + 1}</td>
                                         <td className="p-2.5 xl:p-5 border border-gray-200 text-center ">{lead?.email}</td>

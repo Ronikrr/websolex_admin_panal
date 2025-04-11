@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-const API = "https://websolex-admin.vercel.app/api/lastworkadd"
+// const API = "http://localhost:8000/api/v1/lastwork";
+import { API_URL } from '../../envdata';
+const API = `${API_URL}/lastwork`;
 
 
 export const fetchourwork = createAsyncThunk("ourwork/fetch", async (_, { rejectWithValue }) => {

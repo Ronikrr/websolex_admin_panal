@@ -48,7 +48,9 @@ const Login = () => {
 
     return (
         <div className="flex items-center justify-center w-screen h-screen">
-            {feedback && <FeedbackMessage {...feedback} onClear={handleClearFeedback} />}
+            {feedback?.message && (
+                <FeedbackMessage message={feedback?.message} type={feedback?.type} onClear={handleClearFeedback} />
+            )}
             <div className="border rounded-sm border-gray-300 bg-white w-[1280px] shadow-sm flex flex-wrap">
                 {/* Left Side */}
                 <div className="hidden px-24 py-16 text-center xl:block xl:w-1/2">

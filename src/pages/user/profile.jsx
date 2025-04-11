@@ -1,13 +1,11 @@
 
 import React, { useEffect, useState } from 'react';
-import Secondurary from '../../components/ui/seconduray';
 import Primary from '../../components/ui/primary';
 import Input from '../../components/ui/input';
 import BreadcrumbNav from '../../components/ui/breadcrumb';
 import { FaRegUser } from 'react-icons/fa';
 import { RiContactsBook3Line } from 'react-icons/ri';
 import { MdOutlineMailOutline } from 'react-icons/md';
-import { ImEye, ImEyeBlocked } from 'react-icons/im';
 import { Link, useNavigate } from 'react-router-dom';
 import FeedbackMessage from '../../components/ui/feedback';
 import { useSelector, useDispatch } from 'react-redux';
@@ -30,14 +28,13 @@ const Profile = () => {
     });
     const [isModelOpen, setisModelOpen] = useState(false)
     const [newProfileImage, setNewProfileImage] = useState(null);
-    const [isShowPass, setIsShowPass] = useState(false);
     const [feedback, setFeedback] = useState({ message: '', type: '' });
     const [history, setHistory] = useState([]);
 
     useEffect(() => {
         const fetchLoginHistory = async () => {
             try {
-                const response = await fetch('https://websolex-admin.vercel.app/login-history', {
+                const response = await fetch(`http://localhost:8000/api/v1/login-history/${user?.user?.id}`, {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('Admintoken_websolex')}`,
@@ -57,7 +54,7 @@ const Profile = () => {
             }
         };
         fetchLoginHistory();
-    }, []);
+    }, [user]);
 
 
 
@@ -79,7 +76,6 @@ const Profile = () => {
                 name: user?.user?.name || '',
                 phoneNo: user?.user?.phoneNo || '',
                 email: user?.user?.email || '',
-                password: user?.user?.password || '',
                 username: user?.user?.username || '',
                 profileImage: user?.user?.profileImage || '',
             });
@@ -120,7 +116,6 @@ const Profile = () => {
         updatedData.append("name", formData.name);
         updatedData.append("phoneNo", formData.phoneNo);
         updatedData.append("email", formData.email);
-        updatedData.append("password", formData.password);
         updatedData.append("username", formData.username);
         if (newProfileImage) {
             updatedData.append("profileImage", newProfileImage);
@@ -253,27 +248,6 @@ const Profile = () => {
                                         </div>
                                     </div>
 
-
-                                    <div className="mb-5">
-                                        <label className="block mb-3 text-sm font-medium text-black capitalize">
-                                            Password
-                                        </label>
-                                        <div className="relative">
-                                            <Input
-                                                name="password"
-                                                type={isShowPass ? "text" : "password"}
-                                                value={formData?.password}
-                                                onChange={handleChange}
-                                                placeholder="Enter password"
-                                            />
-                                            <div
-                                                className="absolute cursor-pointer top-2 lg:top-4 right-2 lg:right-4"
-                                                onClick={() => setIsShowPass(!isShowPass)}
-                                            >
-                                                {isShowPass ? <ImEyeBlocked className="text-[15px] lg:text-[20px] text-[#64748b]" /> : <ImEye className="text-[15px] lg:text-[20px] text-[#64748b]" />}
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div className="mb-5">
                                         <label className="block mb-3 text-sm font-medium text-black capitalize">
                                             Username

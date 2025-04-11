@@ -1,29 +1,32 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+import { API_URL } from '../envdata';
+const API = `${API_URL}/user`;
 // const API_URL = "http://localhost:8000";
-const API_URL = "https://websolex-admin.vercel.app";
+// const API_URL = "http://localhost:8000/api/v1/user";
 
 export const fetchalluser = createAsyncThunk(
     "users/fetchuser",
-    async (_, { rejectWithValue }) => {
+    async (_, { rejectWithValue, getState }) => {
         try {
-            const res = await axios.get(`${API_URL}/users`);
-            if (!res.ok) console.log("Failed to fetch data");
-
-            const data = await res.json();
-            return data
+            const token = getState().auth.token;
+            const res = await axios.get(`${API}/`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            return res.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || "Failed to fetch user");
         }
     }
-)
+);
+
 // Register User
 export const registerUser = createAsyncThunk(
     "auth/register",
     async (userData, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`${API_URL}/users`, userData);
+            const response = await axios.post(`${API}/register`, userData);
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || "Registration failed");
@@ -33,12 +36,15 @@ export const registerUser = createAsyncThunk(
 // patch User
 export const patchuserstatus = createAsyncThunk(
     "patch/user",
-    async ({ userId, newStatus }, { rejectWithValue }) => {
+    async ({ userId, newStatus }, { rejectWithValue, getState }) => {
         try {
-            const res = await axios.patch(`${API_URL}/approve_user`, {
-                userId,
-                status: newStatus
-            });
+            const token = getState().auth.token;
+            const res = await axios.patch(
+                `${API}/pending-approvals`,
+                { userId, status: newStatus },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
             return res.data;
         } catch (error) {
             return rejectWithValue(error.response ? error.response.data : error.message);
@@ -46,13 +52,48 @@ export const patchuserstatus = createAsyncThunk(
     }
 );
 
+export const UserStatusChange = createAsyncThunk(
+    "user/status",
+    async ({ userId, newStatus }, { rejectWithValue, getState }) => {
+        try {
+            const token = getState().auth.token;
+            await axios.patch(
+                `${API}/status/${userId}`,
+                { status: newStatus },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            // Explicitly return only what's needed for reducer
+            return { userId, newStatus };
+        } catch (error) {
+            return rejectWithValue(error.response ? error.response.data : error.message);
+        }
+    }
+);
+
+export const UserRoleChange = createAsyncThunk(
+    "user/role",
+    async ({ userId, newRole }, { rejectWithValue, getState }) => {
+        try {
+            const token = getState().auth.token;
+            await axios.patch(
+                `${API}/role/${userId}`,
+                { role: newRole },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            return { userId, newRole };
+        } catch (error) {
+            return rejectWithValue(error.response ? error.response.data : error.message);
+        }
+    }
+);
 
 // Login User
 export const loginuser = createAsyncThunk(
     "auth/login",
     async (userData, { rejectWithValue }) => {
         try {
-            const res = await axios.post(`${API_URL}/login`, userData);
+            const res = await axios.post(`${API}/login`, userData);
             localStorage.setItem("Admintoken_websolex", res.data.token);
             return res.data;
         } catch (error) {
@@ -67,7 +108,7 @@ export const getuserprofile = createAsyncThunk(
     async (_, { rejectWithValue, getState }) => {
         try {
             const token = getState().auth.token;
-            const res = await axios.get(`${API_URL}/profile`, {
+            const res = await axios.get(`${API}/profile`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             return res.data
@@ -83,7 +124,7 @@ export const updateuserprofile = createAsyncThunk(
     async (updatedData, { rejectWithValue, getState }) => {
         try {
             const token = getState().auth.token;
-            const res = await axios.put(`${API_URL}/profile`, updatedData, {
+            const res = await axios.put(`${API}/profile`, updatedData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
@@ -97,9 +138,16 @@ export const updateuserprofile = createAsyncThunk(
 );
 export const deleteUser = createAsyncThunk(
     "auth/deleteUser",
-    async (userId, { rejectWithValue }) => {
+    async (userId, { rejectWithValue, getState }) => {
         try {
-            await axios.delete(`${API_URL}/users/${userId}`);
+            const token = getState().auth.token;
+            await axios.delete(`${API}/${userId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
             return userId; // Return the userId to remove it from the state
         } catch (error) {
             return rejectWithValue(error.response?.data || "Failed to delete user");
@@ -133,11 +181,9 @@ const apiSlice = createSlice({
                 state.feedback = { message: "", type: "" };
             })
             .addCase(fetchalluser.fulfilled, (state, action) => {
-                console.log("Fetched Users:", action.payload);
                 state.loading = false;
-                state.users = Array.isArray(action.payload) ? action.payload : [];
-                state.feedback = { message: "Users fetched successfully.", type: "success" };
-                console.log("after Users:", action.payload);
+                state.users = action.payload.users;
+                state.feedback = { message: "", type: "" };
             })
             .addCase(fetchalluser.rejected, (state, action) => {
                 state.loading = false;
@@ -203,7 +249,7 @@ const apiSlice = createSlice({
             .addCase(getuserprofile.fulfilled, (state, action) => {
                 state.loading = false;
                 state.user = action.payload;
-                state.feedback = { message: "Profile fetched successfully.", type: "success" };
+                state.feedback = { message: "", type: "" };
             })
             .addCase(getuserprofile.rejected, (state, action) => {
                 state.loading = false;
@@ -247,7 +293,46 @@ const apiSlice = createSlice({
                 state.loading = false;
                 state.error = null;
                 state.feedback = { message: "Logged out successfully.", type: "success" };
-            });
+            })
+            // Delete User
+            .addCase(UserStatusChange.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+                state.feedback = { message: "", type: "" };
+            })
+            .addCase(UserStatusChange.fulfilled, (state, action) => {
+                state.loading = false;
+                const { userId, newStatus } = action.payload;
+                state.users = state.users.map(user =>
+                    user._id === userId ? { ...user, status: newStatus } : user
+                );
+                state.feedback = { message: "User status updated successfully.", type: "success" };
+            })
+            .addCase(UserStatusChange.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+                state.feedback = { message: "Failed to update user status.", type: "error" };
+            })
+            .addCase(UserRoleChange.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+                state.feedback = { message: "", type: "" };
+            })
+            .addCase(UserRoleChange.fulfilled, (state, action) => {
+                state.loading = false;
+                const { userId, newRole } = action.payload;
+                state.users = state.users.map(user =>
+                    user._id === userId ? { ...user, role: newRole } : user
+                );
+                state.feedback = { message: "User role updated successfully.", type: "success" };
+            })
+            .addCase(UserRoleChange.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+                state.feedback = { message: "Failed to update user role.", type: "error" };
+            })
+
+
     },
 
 });

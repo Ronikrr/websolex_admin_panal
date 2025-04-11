@@ -27,10 +27,9 @@ import SearchResults from "./components/websolex/SearchResults";
 import ScrollToTop from "./components/scrolltotop";
 import { useSelector, useDispatch } from "react-redux";
 import { getuserprofile } from "./Redux/authSlice";
-import Allworkadd from "./pages/user/allworkadd";
-import Workadd from "./pages/user/workadd";
+
 import LoginHistory from "./pages/user/loginhistory";
-import Deletemodel from "./components/ui/deletemodel";
+
 import { io } from "socket.io-client";
 import { Analytics } from "@vercel/analytics/react"
 const Layout = ({ children }) => {
@@ -241,24 +240,8 @@ function App() {
                   </Layout>
                 }
               />
-              <Route
-                path="/allworkadd"
-                element={
-                  <Layout>
-                    <Pagetitle title={"all work add "} />
-                    <Allworkadd />
-                  </Layout>
-                }
-              />
-              <Route
-                path="/workadd"
-                element={
-                  <Layout>
-                    <Pagetitle title={"work add "} />
-                    <Workadd />
-                  </Layout>
-                }
-              />
+             
+          
               <Route
                 path="*"
                 element={

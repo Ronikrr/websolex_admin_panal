@@ -9,6 +9,7 @@ import Breadcrumb from '../ui/breadcrumb';
 import FeedbackMessage from '../ui/feedback';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchteams, addteamMember, updateTeamMember, deleteTeamMember } from '../../Redux/slice/teamslice';
+import { useNavigate } from 'react-router-dom';
 const initialState = {
     name: '',
     post: '',
@@ -21,6 +22,7 @@ const initialState = {
 const Servicepagesection = () => {
     const { user } = useSelector((state) => state.auth?.user)
     const dispatch = useDispatch();
+    const navigate = useNavigate()
     const { teamMember: leads, feedback: feedbackdata } = useSelector(state => state.teamMember);
     const [errors, setErrors] = useState({});
     const [isOpenModel, setIsOpenModel] = useState(false);
@@ -28,7 +30,11 @@ const Servicepagesection = () => {
     const [isOpenAddModel, setIsOpenAddModel] = useState(false);
     const [feedback, setFeedback] = useState({ message: '', type: '' });
     const [formData, setformData] = useState(initialState)
-
+    useEffect(() => {
+        if (!user) {
+            navigate('/')
+        }
+    }, [user, navigate])
     const handleClear = () => {
         setFeedback({ message: "", type: "" });
     };

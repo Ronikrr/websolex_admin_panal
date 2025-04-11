@@ -2,14 +2,15 @@ import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API = "http://localhost:8000"
+import { API_URL } from '../../envdata';
+const API = `${API_URL}`;
+
 
 export const fetchcontactform = createAsyncThunk(
     "contactform/fetch",
     async (_, { rejectWithValue }) => {
         try {
-            const res = await axios.get(`http://localhost:8000/view_contactform`)
-
+            const res = await axios.get(`${API}/contactfrom`)
             return res.data
         } catch (error) {
             return rejectWithValue(error.res?.data || "Faild to fetch cotactform")
@@ -21,7 +22,7 @@ export const fetchsubcribe = createAsyncThunk(
     "subcribe/fetch",
     async (_, { rejectWithValue }) => {
         try {
-            const res = await axios.get(`${API}/subscribe`)
+            const res = await axios.get(`${API}/subscribefrom`)
             return res.data
         } catch (error) {
             return rejectWithValue(error.res?.data || "Faild to fetch cotactform")
@@ -68,7 +69,7 @@ const contactDetailSlice = createSlice({
             })
             .addCase(fetchsubcribe.fulfilled, (state, action) => {
                 state.loading = false;
-                state.contactData = action.payload;
+                state.subscribeData = action.payload;
                 state.feedback = ({ message: '', type: "" });
             })
             .addCase(fetchsubcribe.rejected, (state, action) => {
