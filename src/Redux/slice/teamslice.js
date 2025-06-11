@@ -15,12 +15,14 @@ export const fetchteams = createAsyncThunk("teampage/fetch", async (_, { rejectW
 });
 
 // Add team member
-export const addteamMember = createAsyncThunk("teampage/add", async (formData, { rejectWithValue }) => {
+export const addteamMember = createAsyncThunk("teampage/add", async (formData, { getState, rejectWithValue }) => {
+    const token = getState().auth.token;
     try {
         const res = await axios.post(API, formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
                 "Accept": "application/json"
+                , Authorization: `Bearer ${token}`
             }
         });
         return res.data;
@@ -30,12 +32,14 @@ export const addteamMember = createAsyncThunk("teampage/add", async (formData, {
 });
 
 // Update team member
-export const updateTeamMember = createAsyncThunk("teampage/update", async ({ id, formData }, { rejectWithValue }) => {
+export const updateTeamMember = createAsyncThunk("teampage/update", async ({ id, formData }, { getState, rejectWithValue }) => {
+    const token = getState().auth.token;
     try {
         const res = await axios.put(`${API}/${id}`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
                 "Accept": "application/json"
+                , Authorization: `Bearer ${token}`
             }
         });
         return res.data;
@@ -45,9 +49,16 @@ export const updateTeamMember = createAsyncThunk("teampage/update", async ({ id,
 });
 
 // Delete team member
-export const deleteTeamMember = createAsyncThunk("teampage/delete", async (id, { rejectWithValue }) => {
+export const deleteTeamMember = createAsyncThunk("teampage/delete", async (id, { getState, rejectWithValue }) => {
+    const token = getState().auth.token;
     try {
-        await axios.delete(`${API}/${id}`);
+        await axios.delete(`${API}/${id}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
         return id;
     } catch (error) {
         return rejectWithValue(error.response?.data || error.message || "Failed to delete team member");

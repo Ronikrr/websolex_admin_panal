@@ -99,12 +99,13 @@ export const fetchStatics = createAsyncThunk(
 // Update statics data
 export const updateStatics = createAsyncThunk(
     "statics/post",
-    async (formdata, { rejectWithValue }) => {
+    async (formdata, { getState,rejectWithValue }) => {
         try {
+            const token = getState().auth.token;
             const method = formdata.id ? "PUT" : "POST";
             const res = await fetch(`${API}/setstatic`, {
                 method,
-                headers: { "Content-Type": "application/json" },
+                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
                 body: JSON.stringify(formdata),
             });
 

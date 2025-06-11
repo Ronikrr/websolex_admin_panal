@@ -30,7 +30,6 @@ import { getuserprofile } from "./Redux/authSlice";
 
 import LoginHistory from "./pages/user/loginhistory";
 
-import { io } from "socket.io-client";
 import { Analytics } from "@vercel/analytics/react"
 const Layout = ({ children }) => {
   const dispatch = useDispatch();
@@ -82,25 +81,7 @@ const Layout = ({ children }) => {
 };
 
 function App() {
-  const socket = io("https://websolex-admin-panal.vercel.app")
-  useEffect(() => {
-    const handleNotitfication = (data) => {
-      console.log("notification recived:", data)
-
-      if (Notification.permission === "granted") {
-        new Notification("New Work Log added ", {
-          body: `${data.message}(${data.projectName})-${data.totalHours} hours`
-          , icon: "https://www.t3bucket.com/f/0-RoundLogo.png",
-
-        })
-      }
-    }
-    socket.on("notification", handleNotitfication)
-    return () => {
-      socket.off("notification", handleNotitfication);
-      socket.disconnect(); // Clean up socket connection
-    };
-  }, [socket])
+ 
   return (
     <>
       <UserProvider>

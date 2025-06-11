@@ -176,9 +176,8 @@ const Servicepagesection = () => {
     }
     const handleDelete = async (id) => {
         try {
-            if (window.confirm("Are you sure you want to delete this blog?")) {
-                dispatch(deleteTeamMember(id));
-            }
+
+            dispatch(deleteTeamMember(id));
         } catch (error) {
             setFeedback({
                 message: `Error deleting team member. Please try again.${error.response ? error.response.data : error.message}`,
@@ -201,9 +200,7 @@ const Servicepagesection = () => {
 
     return (
         <div className="w-full h-screen bg-gray-100 ">
-            {feedback.message && (
-                <FeedbackMessage message={feedback.message} type={feedback.type} onClear={handleClear} />
-            )}
+          
             <div className="flex flex-col items-center justify-between mt-4 mb-4 lg:mt-0 sm:flex-row">
                 <h1 className='capitalize text-[26px] font-semibold  '>team page</h1>
                 <Breadcrumb />

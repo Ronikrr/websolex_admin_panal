@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchclientrate, addclientrate, deleteclientrate, updateclientrate } from '../../Redux/slice/testimonalapiSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Deletemodel from '../ui/deletemodel';
+import User from '../ui/user';
 
 const Clienttestadd = () => {
     const dispatch = useDispatch();
@@ -168,6 +169,7 @@ const Clienttestadd = () => {
             {(feedback.message || localFeedback.message) && (
                 <FeedbackMessage message={feedback.message || localFeedback.message} type={feedback.type || localFeedback.type} onClear={onClear} />
             )}
+            <User />
 
             <div className="flex items-center justify-between mb-4">
                 <h1 className="text-xl font-semibold">Testimonials</h1>

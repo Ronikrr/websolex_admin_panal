@@ -20,10 +20,11 @@ export const fetchclientrate = createAsyncThunk(
 // Add a new client rate
 export const addclientrate = createAsyncThunk(
     "clientrate/addclientrate",
-    async (formData, { rejectWithValue }) => {
+    async (formData, { rejectWithValue, getState }) => {
         try {
+            const token = getState().auth.token; 
             const response = await axios.post(API, formData, {
-                headers: { "Content-Type": "multipart/form-data" },
+                headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
             });
             return response.data;
         } catch (error) {
@@ -35,10 +36,11 @@ export const addclientrate = createAsyncThunk(
 // Update an existing client rate
 export const updateclientrate = createAsyncThunk(
     "clientrate/updateclientrate",
-    async ({ id, data }, { rejectWithValue }) => {
+    async ({ id, data }, { rejectWithValue, getState }) => {
         try {
+            const token = getState().auth.token; 
             const response = await axios.put(`${API}/${id}`, data, {
-                headers: { "Content-Type": "application/json" },
+                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
             });
             return response.data;
         } catch (error) {
@@ -50,9 +52,14 @@ export const updateclientrate = createAsyncThunk(
 // Delete a client rate
 export const deleteclientrate = createAsyncThunk(
     "clientrate/deleteclientrate",
-    async (id, { rejectWithValue }) => {
+    async (id, { rejectWithValue, getState }) => {
         try {
-            await axios.delete(`${API}/${id}`);
+            const token = getState().auth.token; 
+            await axios.delete(`${API}/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             return id;
         } catch (error) {
             return rejectWithValue(error.response?.data || "Failed to delete client rate");

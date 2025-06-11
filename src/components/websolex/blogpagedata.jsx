@@ -12,12 +12,13 @@ import { fetchBlogs, addBlog, updateBlog, deleteBlog, clearFeedback } from "../.
 import Deletemodel from "../ui/deletemodel"
 import { useLocation, useNavigate } from "react-router-dom"
 import { FaEye } from "react-icons/fa"
+import User from "../ui/user"
 
 
 const Blogpagesection = () => {
     const dispatch = useDispatch()
     const location = useLocation()
-    const navigate = useNavigate();
+
     const  {user}  = useSelector((state) => state?.auth?.user)
     const { blogs, feedback } = useSelector((state) => state.blogs)
     const [isOpenModel, setIsOpenModel] = useState(false)
@@ -31,11 +32,7 @@ const Blogpagesection = () => {
         image: null,
         imagePreview: null,
     })
-    useEffect(() => {
-        if (!user) {
-            navigate('/')
-        }
-    }, [user, navigate])
+
     const onClear = () => {
         setfeedbacks({ message: "", type: "" })
     }
@@ -188,6 +185,7 @@ const Blogpagesection = () => {
 
     return (
         <div className="w-full bg-gray-100 ">
+            <User />
             {feedback && (
                 <FeedbackMessage
                     message={typeof feedbacks?.message === "object" ? JSON.stringify(feedbacks?.message) : feedbacks?.message}
@@ -450,12 +448,12 @@ const Blogpagesection = () => {
                                 type="button"
                                 onClick={handleAddInputSet}
                                 disabled={user?.role === "user"}
-                                className={`px-4 py-2 mt-2 text-sm font-medium text-white rounded-md 
-                                ${user?.role === "user"
-                                        ? "bg-gray-400 cursor-not-allowed" // Disabled state
-                                        : "bg-[var(--primary-color)] hover:bg-[var(--primary-light-color)]"
-                                    } 
-                                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
+                                className={`px-4 py-2 mt-2 text-sm font-medium text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${user?.role === "user"
+                                    ? 'bg-gray-400 cursor-not-allowed'
+                                    : 'bg-[var(--primary-color)] hover:bg-[var(--primary-light-color)]'
+                                    }`}
+
+
                             >
                                 Add Input Set
                             </button>

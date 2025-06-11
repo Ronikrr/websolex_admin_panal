@@ -19,10 +19,11 @@ export const fetchvaluedclient = createAsyncThunk("valuedclient/fetch",
 
 export const addvaluedClient = createAsyncThunk(
     "valuedclient/add",
-    async (formdata, { rejectWithValue }) => {
+    async (formdata, { rejectWithValue, getState }) => {
         try {
+            const token = getState().auth.token;
             const res = await axios.post(API, formdata, {
-                headers: { "Content-Type": "multipart/form-data" }
+                headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" }
             });
             return res.data;
         } catch (error) {
@@ -33,10 +34,11 @@ export const addvaluedClient = createAsyncThunk(
 
 export const updateValuedClient = createAsyncThunk(
     "valuedclient/update",
-    async ({ id, formdata }, { rejectWithValue }) => {
+    async ({ id, formdata }, { rejectWithValue, getState }) => {
         try {
+            const token = getState().auth.token;
             const res = await axios.put(`${API}/${id}`, formdata, {
-                headers: { "Content-Type": "multipart/form-data" }
+                headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" }
             });
             return res.data;
         } catch (error) {
@@ -47,9 +49,14 @@ export const updateValuedClient = createAsyncThunk(
 
 export const deleteValuedClient = createAsyncThunk(
     "valuedclient/delete",
-    async (id, { rejectWithValue }) => {
+    async (id, { rejectWithValue, getState }) => {
         try {
-            await axios.delete(`${API}/${id}`);
+            const token = getState().auth.token;
+            await axios.delete(`${API}/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             return id;
         } catch (error) {
             return rejectWithValue(error.response?.data || "Failed to delete valued client");

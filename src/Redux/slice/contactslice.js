@@ -7,7 +7,8 @@ const API = `${API_URL}/contactdetails`;
 
 export const fetchContactDetails = createAsyncThunk(
     "contactdetails/fetch",
-    async (_, { rejectWithvalue }) => {
+    async (_, {  rejectWithvalue }) => {
+        
         try {
             const res = await axios.get(API);
             return res.data;
@@ -21,10 +22,11 @@ export const fetchContactDetails = createAsyncThunk(
 
 export const updateContactDetails = createAsyncThunk(
     "social/update",
-    async (contactDetails) => {
+    async (contactDetails, { getState }) => {
+        const token = getState().auth.token;
         const response = await fetch(API, {
             method: contactDetails.id ? "PUT" : "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
             body: JSON.stringify(contactDetails),
         });
 

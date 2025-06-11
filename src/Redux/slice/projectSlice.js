@@ -18,20 +18,30 @@ export const fetchProject = createAsyncThunk("project/fetchProject", async (_, {
 // Update project data
 export const updateProject = createAsyncThunk(
     "project/updateProject",
-    async (formData, { rejectWithValue }) => {
+    async (formData, { getState, rejectWithValue }) => {
         try {
+            const token = getState()?.auth?.token;
+            if (!token) return rejectWithValue("Unauthorized: No token found");
+
             const method = formData.id ? "PUT" : "POST";
+            const url = formData.id ? `${API}/${formData.id}` : API;
+
             const res = await axios({
-                url: API,
+                url,
                 method,
                 data: formData,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
             });
+
             return res.data;
         } catch (error) {
-            return rejectWithValue(error.response?.data || error.message);
+            return rejectWithValue(error.response?.data || { message: error.message });
         }
     }
 );
+
 
 const projectSlice = createSlice({
     name: "project",

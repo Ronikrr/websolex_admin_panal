@@ -17,10 +17,11 @@ export const fetchourwork = createAsyncThunk("ourwork/fetch", async (_, { reject
 
 export const addOurWork = createAsyncThunk(
     "ourwork/add",
-    async (formData, { rejectWithValue }) => {
+    async (formData, { getState, rejectWithValue }) => {
+        const token = getState().auth.token; 
         try {
             const res = await axios.post(API, formData, {
-                headers: { "Content-Type": "multipart/form-data" }
+                headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` }
             })
             return res.data
         } catch (error) {
@@ -31,10 +32,14 @@ export const addOurWork = createAsyncThunk(
 
 export const updateOurwork = createAsyncThunk(
     "ourwork/update",
-    async ({ id, formdata }, { rejectWithValue }) => {
+    async ({ id, formdata }, { getState, rejectWithValue }) => {
+        const token = getState().auth.token;
         try {
             const res = await axios.put(`${API}/${id}`, formdata, {
-                headers: { "Content-Type": "multipart/from-data" }
+                headers: {
+                    "Content-Type": "multipart/from-data",
+                    Authorization: `Bearer ${token}`
+                }
             })
             return res.data
         } catch (error) {
@@ -45,9 +50,14 @@ export const updateOurwork = createAsyncThunk(
 
 export const deleteOurwork = createAsyncThunk(
     "ourwork/delete",
-    async (id, { rejectWithValue }) => {
+    async (id, { getState, rejectWithValue }) => {
         try {
-            await axios.delete(`${API}/${id}`);
+            const token = getState().auth.token;
+            await axios.delete(`${API}/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             return id;
         } catch (error) {
             return rejectWithValue(error.response?.data || "Failed to delete ourwork");
